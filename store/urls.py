@@ -29,4 +29,5 @@ urlpatterns = [
     path("manage/", views.admin_dashboard, name="admin_dashboard"),
     path("manage/sales/", views.sales_report, name="sales_report"),
     path("inbox/", views.inbox_view, name="inbox"),
+    path("contact/", views.contact_view, name="contact"),
 ]

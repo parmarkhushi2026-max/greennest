@@ -208,3 +208,27 @@ class CustomerEmailInbox(models.Model):
 
     def __str__(self):
         return f"Email to {self.recipient_email}: {self.subject}"
+
+
+class ContactInquiry(models.Model):
+    class Status(models.TextChoices):
+        NEW = "new", "New Inquiry"
+        IN_PROGRESS = "in_progress", "In Progress"
+        RESOLVED = "resolved", "Resolved"
+
+    name = models.CharField(max_length=120)
+    email = models.EmailField()
+    phone = models.CharField(max_length=30, blank=True)
+    subject = models.CharField(max_length=200, help_text="Plant Requirement / Inquiry Type")
+    message = models.TextField(help_text="Detailed plant requirements or question")
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.NEW)
+    admin_notes = models.TextField(blank=True, help_text="Internal note by nursery manager")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Contact Inquiry"
+        verbose_name_plural = "Contact Inquiries"
+
+    def __str__(self):
+        return f"{self.name} - {self.subject} ({self.get_status_display()})"

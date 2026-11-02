@@ -24,8 +24,8 @@
       border: 1px solid #e2e8f0;
     }
     .auth-card-top-icon {
-      width: 54px;
-      height: 54px;
+      width: 56px;
+      height: 56px;
       border-radius: 50%;
       background: #eaf4ee;
       color: #014e37;
@@ -33,7 +33,6 @@
       align-items: center;
       justify-content: center;
       margin: 0 auto 16px;
-      font-size: 26px;
     }
     .auth-simple-title {
       font-size: 1.75rem;
@@ -74,6 +73,23 @@
       color: #ffffff;
       box-shadow: 0 2px 8px rgba(1, 78, 55, 0.15);
     }
+    .auth-input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .auth-input-wrapper .input-icon {
+      position: absolute;
+      left: 14px;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+    .auth-input-wrapper input {
+      padding-left: 42px !important;
+    }
     @media (max-width: 540px) {
       .auth-simple-card {
         padding: 28px 20px;
@@ -91,8 +107,15 @@
   <div class="theme-container" style="max-width: 580px; width: 100%;">
     <div class="auth-simple-card">
 
-      <!-- Sprout Icon -->
-      <div class="auth-card-top-icon">🌱</div>
+      <!-- Sprout Vector Icon -->
+      <div class="auth-card-top-icon">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#014e37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M7 20h10" />
+          <path d="M10 20c5.5-2.5.8-6.4 3-10" />
+          <path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z" />
+          <path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.4 1.7-4.6-2.7.2-4.2.9-4.9 2z" />
+        </svg>
+      </div>
 
       <!-- Auth Tabs: Sign In / Create Account -->
       <div class="auth-tabs-nav">
@@ -105,11 +128,15 @@
       <p class="auth-simple-subtitle">Fill in your information below to register your Green Nest customer profile.</p>
 
       {% if form.non_field_errors %}
-      <div class="auth-alert-box error" style="margin-bottom: 20px;">
-        <span class="auth-alert-icon">⚠️</span>
+      <div class="auth-alert-box error" style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; color: #dc2626;">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
         <div>
           {% for error in form.non_field_errors %}
-          <p style="margin: 0;">{{ error }}</p>
+          <p style="margin: 0; font-size: 13px; font-weight: 600;">{{ error }}</p>
           {% endfor %}
         </div>
       </div>
@@ -124,7 +151,12 @@
           <div class="auth-field-group {% if form.first_name.errors %}has-error{% endif %}">
             <label for="{{ form.first_name.id_for_label }}">First Name <span class="req">*</span></label>
             <div class="auth-input-wrapper">
-              <span class="input-icon">👤</span>
+              <span class="input-icon">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </span>
               {{ form.first_name }}
             </div>
             {% if form.first_name.errors %}
@@ -135,7 +167,12 @@
           <div class="auth-field-group {% if form.last_name.errors %}has-error{% endif %}">
             <label for="{{ form.last_name.id_for_label }}">Last Name</label>
             <div class="auth-input-wrapper">
-              <span class="input-icon">👤</span>
+              <span class="input-icon">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </span>
               {{ form.last_name }}
             </div>
             {% if form.last_name.errors %}
@@ -148,7 +185,7 @@
         <div class="auth-field-group {% if form.username.errors %}has-error{% endif %}">
           <label for="{{ form.username.id_for_label }}">Choose a Username <span class="req">*</span></label>
           <div class="auth-input-wrapper">
-            <span class="input-icon">@</span>
+            <span class="input-icon" style="font-size: 16px; font-weight: 700; color: #94a3b8;">@</span>
             {{ form.username }}
           </div>
           {% if form.username.errors %}
@@ -160,7 +197,12 @@
         <div class="auth-field-group {% if form.email.errors %}has-error{% endif %}">
           <label for="{{ form.email.id_for_label }}">Email Address <span class="req">*</span></label>
           <div class="auth-input-wrapper">
-            <span class="input-icon">✉️</span>
+            <span class="input-icon">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+            </span>
             {{ form.email }}
           </div>
           {% if form.email.errors %}
@@ -173,10 +215,20 @@
           <div class="auth-field-group {% if form.password.errors %}has-error{% endif %}">
             <label for="{{ form.password.id_for_label }}">Password <span class="req">*</span></label>
             <div class="auth-input-wrapper">
-              <span class="input-icon">🔒</span>
+              <span class="input-icon">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </span>
               {{ form.password }}
-              <button type="button" class="password-toggle-trigger" aria-label="Toggle password view">
-                <span class="eye-icon">👁️</span>
+              <button type="button" class="password-toggle-trigger" aria-label="Toggle password view" style="border: none; background: none; cursor: pointer; color: #64748b; padding: 0 10px; display: flex; align-items: center;">
+                <span class="eye-icon">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                </span>
               </button>
             </div>
             {% if form.password.errors %}
@@ -187,7 +239,12 @@
           <div class="auth-field-group {% if form.password_confirm.errors %}has-error{% endif %}">
             <label for="{{ form.password_confirm.id_for_label }}">Confirm Password <span class="req">*</span></label>
             <div class="auth-input-wrapper">
-              <span class="input-icon">🔐</span>
+              <span class="input-icon">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </span>
               {{ form.password_confirm }}
             </div>
             {% if form.password_confirm.errors %}
@@ -198,7 +255,7 @@
 
         <!-- Submit Button -->
         <button type="submit" class="btn-auth-submit" style="margin-top: 10px;">
-          <span>CREATE ACCOUNT & START GROWING</span>
+          <span>CREATE ACCOUNT &amp; START GROWING</span>
           <span class="btn-arrow">→</span>
         </button>
       </form>

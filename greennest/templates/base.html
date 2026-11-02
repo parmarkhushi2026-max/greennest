@@ -411,6 +411,9 @@
         <li class="nav-item">
           <a class="nav-link nav-offer-link" href="{% url 'store:shop' %}">Offers <span class="offer-pill">10% OFF</span></a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'store:contact' %}">Contact Us</a>
+        </li>
         <!-- Direct Live Customer Mailbox Tab -->
         <li class="nav-item">
           <a class="nav-link" href="{% url 'store:inbox' %}" style="color: #014e37; font-weight: 700; background: #eaf4ee; border-radius: 8px; margin-block: 4px;" title="View Live Email Invoices">
@@ -518,6 +521,7 @@
           <h3 class="footer-col-title">Customer Care</h3>
           <ul class="footer-links-list">
             <li><a href="{% url 'store:guides' %}">Plant Care Guides</a></li>
+            <li><a href="{% url 'store:contact' %}">Contact &amp; Custom Requirements</a></li>
             <li><a href="{% url 'store:cart' %}">Shopping Bag</a></li>
             <li><a href="{% url 'store:orders' %}">Track Order Shipment</a></li>
             {% if user.is_authenticated %}
@@ -677,7 +681,7 @@
       if (el && el.classList.contains('shop-perk-pill')) {
         el.style.background = '#014e37';
         el.style.color = '#ffffff';
-        el.innerHTML = '🏷️ Coupon <strong>' + code + '</strong> Applied! ✓';
+        el.innerHTML = 'Coupon <strong>' + code + '</strong> Applied! ✓';
       }
 
       // 3. Auto-apply to server session via AJAX
@@ -710,7 +714,7 @@
           '<div class="gn-toast-sub">10% instant discount activated for your order.</div>' +
         '</div>' +
         '<div class="gn-toast-actions">' +
-          '<a href="/cart/" class="gn-toast-cta-btn">View Cart 🛒</a>' +
+          '<a href="/cart/" class="gn-toast-cta-btn">View Cart →</a>' +
           '<button type="button" class="gn-toast-x-btn" onclick="this.closest('.gn-coupon-toast').remove()">✕</button>' +
         '</div>';
 

@@ -1,178 +1,267 @@
 {% extends "store/base.html" %}
 {% load static %}
-{% block title %}Create Account · Green Nest Nursery{% endblock %}
+{% block title %}Create Account · Green Nest Nursery Chennai{% endblock %}
+
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'storefront/css/auth.css' %}">
+  <style>
+    .auth-page-wrap {
+      padding: 50px 0 80px;
+      background: linear-gradient(180deg, #f0f7f3 0%, #ffffff 100%);
+      min-height: calc(100vh - 240px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .auth-simple-card {
+      max-width: 540px;
+      width: 100%;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 40px 36px;
+      box-shadow: 0 16px 45px rgba(1, 78, 55, 0.08);
+      border: 1px solid #e2e8f0;
+    }
+    .auth-card-top-icon {
+      width: 56px;
+      height: 56px;
+      border-radius: 50%;
+      background: #eaf4ee;
+      color: #014e37;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 16px;
+    }
+    .auth-simple-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #0f172a;
+      text-align: center;
+      margin: 0 0 6px;
+      letter-spacing: -0.02em;
+    }
+    .auth-simple-subtitle {
+      font-size: 0.92rem;
+      color: #64748b;
+      text-align: center;
+      margin: 0 0 26px;
+      line-height: 1.5;
+    }
+    .auth-tabs-nav {
+      display: flex;
+      background: #f1f5f9;
+      padding: 4px;
+      border-radius: 10px;
+      margin-bottom: 24px;
+      gap: 4px;
+    }
+    .auth-tab-btn {
+      flex: 1;
+      text-align: center;
+      padding: 9px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: #64748b;
+      text-decoration: none;
+      border-radius: 7px;
+      transition: all 0.2s ease;
+    }
+    .auth-tab-btn.active {
+      background: #014e37;
+      color: #ffffff;
+      box-shadow: 0 2px 8px rgba(1, 78, 55, 0.15);
+    }
+    .auth-input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+    .auth-input-wrapper .input-icon {
+      position: absolute;
+      left: 14px;
+      color: #94a3b8;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+    }
+    .auth-input-wrapper input {
+      padding-left: 42px !important;
+    }
+    @media (max-width: 540px) {
+      .auth-simple-card {
+        padding: 28px 20px;
+        border-radius: 16px;
+      }
+      .auth-simple-title {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
 {% endblock %}
+
 {% block content %}
 <div class="auth-page-wrap">
-  <div class="theme-container auth-container">
-    <div class="auth-split-card">
-      
-      <!-- Left Column: Brand & Benefits -->
-      <div class="auth-brand-column">
-        <div class="auth-brand-top">
-          <div class="auth-brand-logo">
-            <svg viewBox="0 0 36 36" width="36" height="36" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M30 6C17 6 7 11 7 21c0 5.5 4 9 9 9 10.5 0 14-11 14-24Z" fill="#a4f3d2" stroke="#a4f3d2"/>
-              <path d="M6 30c4-7.5 9.5-12 17-15.5" stroke="#014e37" stroke-width="2.4"/>
-            </svg>
-            <span class="auth-brand-title">Green Nest</span>
-          </div>
-          <span class="auth-brand-badge">JOIN THE COMMUNITY</span>
-        </div>
+  <div class="theme-container" style="max-width: 580px; width: 100%;">
+    <div class="auth-simple-card">
 
-        <div class="auth-brand-body">
-          <h2 class="auth-brand-heading">Begin Your Plant Journey Today</h2>
-          <p class="auth-brand-sub">Create your free Green Nest Nursery account to enjoy personalized gardening guides, care tracking, and member-only specials.</p>
-
-          <div class="auth-perks-list">
-            <div class="auth-perk-row">
-              <span class="auth-perk-icon">🎁</span>
-              <div>
-                <strong>Instant Welcome Coupon</strong>
-                <small>Get 10% off your entire order with code <strong>GREEN10</strong>.</small>
-              </div>
-            </div>
-            <div class="auth-perk-row">
-              <span class="auth-perk-icon">🌱</span>
-              <div>
-                <strong>Custom Plant Reminders</strong>
-                <small>Never miss a watering cycle with customized scheduled notes.</small>
-              </div>
-            </div>
-            <div class="auth-perk-row">
-              <span class="auth-perk-icon">🚚</span>
-              <div>
-                <strong>Fast & Secure Checkout</strong>
-                <small>Save your delivery addresses for seamless one-click ordering.</small>
-              </div>
-            </div>
-            <div class="auth-perk-row">
-              <span class="auth-perk-icon">💚</span>
-              <div>
-                <strong>Nursery Support & Advice</strong>
-                <small>Ask questions and get expert tips from botanists anytime.</small>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="auth-brand-footer">
-          <span>🌿 Free membership · Takes less than 1 minute</span>
-        </div>
+      <!-- Sprout Vector Icon -->
+      <div class="auth-card-top-icon">
+        <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="#014e37" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M7 20h10" />
+          <path d="M10 20c5.5-2.5.8-6.4 3-10" />
+          <path d="M9.5 9.4c1.1.8 1.8 2.2 2.3 3.7-2 .4-3.5.4-4.8-.3-1.2-.6-2.3-1.9-3-4.2 2.8-.5 4.4 0 5.5.8z" />
+          <path d="M14.1 6a7 7 0 0 0-1.1 4c1.9-.1 3.3-.6 4.3-1.4 1-1 1.6-2.4 1.7-4.6-2.7.2-4.2.9-4.9 2z" />
+        </svg>
       </div>
 
-      <!-- Right Column: Register Form -->
-      <div class="auth-form-column">
-        <!-- Auth Switcher Tabs -->
-        <div class="auth-tabs-nav">
-          <a href="{% url 'store:login' %}" class="auth-tab-btn">Sign In</a>
-          <a href="{% url 'store:register' %}" class="auth-tab-btn active">Create Account</a>
+      <!-- Auth Tabs: Sign In / Create Account -->
+      <div class="auth-tabs-nav">
+        <a href="{% url 'store:login' %}" class="auth-tab-btn">Sign In</a>
+        <a href="{% url 'store:register' %}" class="auth-tab-btn active">Create Account</a>
+      </div>
+
+      <!-- Heading -->
+      <h1 class="auth-simple-title">Create Your Account</h1>
+      <p class="auth-simple-subtitle">Fill in your information below to register your Green Nest customer profile.</p>
+
+      {% if form.non_field_errors %}
+      <div class="auth-alert-box error" style="margin-bottom: 20px; display: flex; align-items: center; gap: 10px; padding: 12px 14px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; color: #dc2626;">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink: 0;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="12" y1="8" x2="12" y2="12"></line>
+          <line x1="12" y1="16" x2="12.01" y2="16"></line>
+        </svg>
+        <div>
+          {% for error in form.non_field_errors %}
+          <p style="margin: 0; font-size: 13px; font-weight: 600;">{{ error }}</p>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+      <!-- Register Form -->
+      <form class="auth-actual-form" method="post" action="{% url 'store:register' %}">
+        {% csrf_token %}
+
+        <!-- Name Grid -->
+        <div class="auth-form-grid-2">
+          <div class="auth-field-group {% if form.first_name.errors %}has-error{% endif %}">
+            <label for="{{ form.first_name.id_for_label }}">First Name <span class="req">*</span></label>
+            <div class="auth-input-wrapper">
+              <span class="input-icon">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </span>
+              {{ form.first_name }}
+            </div>
+            {% if form.first_name.errors %}
+            <span class="field-error-msg">{{ form.first_name.errors.0 }}</span>
+            {% endif %}
+          </div>
+
+          <div class="auth-field-group {% if form.last_name.errors %}has-error{% endif %}">
+            <label for="{{ form.last_name.id_for_label }}">Last Name</label>
+            <div class="auth-input-wrapper">
+              <span class="input-icon">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+              </span>
+              {{ form.last_name }}
+            </div>
+            {% if form.last_name.errors %}
+            <span class="field-error-msg">{{ form.last_name.errors.0 }}</span>
+            {% endif %}
+          </div>
         </div>
 
-        <div class="auth-form-inner">
-          <div class="auth-form-header">
-            <h1 class="auth-form-title">Join Green Nest</h1>
-            <p class="auth-form-subtitle">Fill in your information below to register your customer profile.</p>
+        <!-- Username -->
+        <div class="auth-field-group {% if form.username.errors %}has-error{% endif %}">
+          <label for="{{ form.username.id_for_label }}">Choose a Username <span class="req">*</span></label>
+          <div class="auth-input-wrapper">
+            <span class="input-icon" style="font-size: 16px; font-weight: 700; color: #94a3b8;">@</span>
+            {{ form.username }}
           </div>
-
-          {% if form.non_field_errors %}
-          <div class="auth-alert-box error">
-            <span class="auth-alert-icon">⚠️</span>
-            <div>
-              {% for error in form.non_field_errors %}
-              <p>{{ error }}</p>
-              {% endfor %}
-            </div>
-          </div>
+          {% if form.username.errors %}
+          <span class="field-error-msg">{{ form.username.errors.0 }}</span>
           {% endif %}
+        </div>
 
-          <form class="auth-actual-form" method="post" action="{% url 'store:register' %}">
-            {% csrf_token %}
-            {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+        <!-- Email -->
+        <div class="auth-field-group {% if form.email.errors %}has-error{% endif %}">
+          <label for="{{ form.email.id_for_label }}">Email Address <span class="req">*</span></label>
+          <div class="auth-input-wrapper">
+            <span class="input-icon">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                <polyline points="22,6 12,13 2,6"></polyline>
+              </svg>
+            </span>
+            {{ form.email }}
+          </div>
+          {% if form.email.errors %}
+          <span class="field-error-msg">{{ form.email.errors.0 }}</span>
+          {% endif %}
+        </div>
 
-            <!-- Full Name -->
-            <div class="auth-field-group {% if form.first_name.errors %}has-error{% endif %}">
-              <label for="{{ form.first_name.id_for_label }}">Full Name <span class="req">*</span></label>
-              <div class="auth-input-wrapper">
-                <span class="input-icon">👋</span>
-                {{ form.first_name }}
-              </div>
-              {% if form.first_name.errors %}
-              <span class="field-error-msg">{{ form.first_name.errors.0 }}</span>
-              {% endif %}
+        <!-- Password Fields Grid -->
+        <div class="auth-form-grid-2">
+          <div class="auth-field-group {% if form.password.errors %}has-error{% endif %}">
+            <label for="{{ form.password.id_for_label }}">Password <span class="req">*</span></label>
+            <div class="auth-input-wrapper">
+              <span class="input-icon">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </span>
+              {{ form.password }}
+              <button type="button" class="password-toggle-trigger" aria-label="Toggle password view" style="border: none; background: none; cursor: pointer; color: #64748b; padding: 0 10px; display: flex; align-items: center;">
+                <span class="eye-icon">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                  </svg>
+                </span>
+              </button>
             </div>
+            {% if form.password.errors %}
+            <span class="field-error-msg">{{ form.password.errors.0 }}</span>
+            {% endif %}
+          </div>
 
-            <!-- Username & Email Grid -->
-            <div class="auth-form-grid-2">
-              <div class="auth-field-group {% if form.username.errors %}has-error{% endif %}">
-                <label for="{{ form.username.id_for_label }}">Username <span class="req">*</span></label>
-                <div class="auth-input-wrapper">
-                  <span class="input-icon">👤</span>
-                  {{ form.username }}
-                </div>
-                {% if form.username.errors %}
-                <span class="field-error-msg">{{ form.username.errors.0 }}</span>
-                {% endif %}
-              </div>
-
-              <div class="auth-field-group {% if form.email.errors %}has-error{% endif %}">
-                <label for="{{ form.email.id_for_label }}">Email Address <span class="req">*</span></label>
-                <div class="auth-input-wrapper">
-                  <span class="input-icon">✉️</span>
-                  {{ form.email }}
-                </div>
-                {% if form.email.errors %}
-                <span class="field-error-msg">{{ form.email.errors.0 }}</span>
-                {% endif %}
-              </div>
+          <div class="auth-field-group {% if form.password_confirm.errors %}has-error{% endif %}">
+            <label for="{{ form.password_confirm.id_for_label }}">Confirm Password <span class="req">*</span></label>
+            <div class="auth-input-wrapper">
+              <span class="input-icon">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+              </span>
+              {{ form.password_confirm }}
             </div>
-
-            <!-- Password Fields Grid -->
-            <div class="auth-form-grid-2">
-              <div class="auth-field-group {% if form.password.errors %}has-error{% endif %}">
-                <label for="{{ form.password.id_for_label }}">Password <span class="req">*</span></label>
-                <div class="auth-input-wrapper">
-                  <span class="input-icon">🔒</span>
-                  {{ form.password }}
-                  <button type="button" class="password-toggle-trigger" aria-label="Toggle password view">
-                    <span class="eye-icon">👁️</span>
-                  </button>
-                </div>
-                {% if form.password.errors %}
-                <span class="field-error-msg">{{ form.password.errors.0 }}</span>
-                {% endif %}
-              </div>
-
-              <div class="auth-field-group {% if form.password_confirm.errors %}has-error{% endif %}">
-                <label for="{{ form.password_confirm.id_for_label }}">Confirm Password <span class="req">*</span></label>
-                <div class="auth-input-wrapper">
-                  <span class="input-icon">🔐</span>
-                  {{ form.password_confirm }}
-                </div>
-                {% if form.password_confirm.errors %}
-                <span class="field-error-msg">{{ form.password_confirm.errors.0 }}</span>
-                {% endif %}
-              </div>
-            </div>
-
-            <!-- Terms notice -->
-            <div class="auth-terms-note">
-              <span>By creating an account, you agree to Green Nest Nursery's safe plant delivery terms and care guarantee.</span>
-            </div>
-
-            <!-- Submit Button -->
-            <button type="submit" class="btn-auth-submit">
-              <span>CREATE MY ACCOUNT</span>
-              <span class="btn-arrow">→</span>
-            </button>
-          </form>
-
-          <div class="auth-switch-footer">
-            <p>Already have an account? <a href="{% url 'store:login' %}"><strong>Sign in here</strong></a>.</p>
+            {% if form.password_confirm.errors %}
+            <span class="field-error-msg">{{ form.password_confirm.errors.0 }}</span>
+            {% endif %}
           </div>
         </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn-auth-submit" style="margin-top: 10px;">
+          <span>CREATE ACCOUNT &amp; START GROWING</span>
+          <span class="btn-arrow">→</span>
+        </button>
+      </form>
+
+      <div class="auth-switch-footer" style="text-align: center; margin-top: 20px; font-size: 13.5px; color: #64748b;">
+        <p style="margin: 0;">Already have an account? <a href="{% url 'store:login' %}" style="color: #014e37; font-weight: 700; text-decoration: none;">Sign in here</a></p>
       </div>
 
     </div>

@@ -1,19 +1,271 @@
 {% load static %}
 <!doctype html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#014e37">
-  <meta name="description" content="Green Nest Nursery – Best Online Store for Nursery Plants, Indoor & Outdoor Plants, Planters and Plant Care.">
+  <meta name="description"
+    content="Green Nest Nursery – Best Online Store for Nursery Plants, Indoor & Outdoor Plants, Planters and Plant Care.">
   <title>{% block title %}Green Nest Nursery – Best Online Plant Store{% endblock %}</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
   <link rel="stylesheet" href="{% static 'storefront/css/styles.css' %}">
   {% block extra_css %}{% endblock %}
+  <style>
+    #greennest-preloader {
+      position: fixed !important;
+      top: 0 !important;
+      left: 0 !important;
+      width: 100vw !important;
+      height: 100vh !important;
+      background: radial-gradient(circle at center, #ffffff 15%, #eaf4ee 70%, #dbebe1 100%) !important;
+      z-index: 99999999 !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      opacity: 1;
+      visibility: visible;
+      transition: opacity 0.4s ease, visibility 0.4s ease !important;
+      margin: 0 !important;
+      padding: 0 !important;
+    }
+
+    #greennest-preloader.gn-done {
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+    }
+
+    .gn-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 30px 24px;
+      max-width: 380px;
+      font-family: 'Outfit', 'Work Sans', -apple-system, sans-serif;
+    }
+
+    .gn-circle-wrap {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .gn-circle-orbit {
+      position: absolute;
+      inset: -4px;
+      border-radius: 50%;
+      border: 3px dashed rgba(1, 78, 55, 0.25);
+      border-top-color: #014e37;
+      border-right-color: #10b981;
+      border-bottom-color: #34d399;
+      animation: gn-spin 2.2s linear infinite;
+    }
+
+    .gn-sprout-icon {
+      position: relative;
+      z-index: 2;
+      animation: gn-bounce 2s ease-in-out infinite;
+      filter: drop-shadow(0 4px 10px rgba(1, 78, 55, 0.18));
+    }
+
+    .gn-kicker {
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 0.18em;
+      color: #014e37;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+    }
+
+    .gn-title {
+      font-size: 23px;
+      font-weight: 800;
+      color: #0a2c20;
+      margin: 0 0 6px 0;
+      letter-spacing: -0.01em;
+    }
+
+    .gn-subtitle {
+      font-size: 13px;
+      color: #44594f;
+      margin: 0 0 16px 0;
+      font-weight: 500;
+    }
+
+    .gn-bar-track {
+      width: 200px;
+      height: 5px;
+      background: #cfded6;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 12px;
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.06);
+    }
+
+    .gn-bar-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #10b981, #014e37);
+      border-radius: 10px;
+      transition: width 0.2s ease-out;
+      box-shadow: 0 0 8px rgba(16, 185, 129, 0.45);
+    }
+
+    .gn-hint {
+      font-size: 11.5px;
+      color: #5c7569;
+    }
+
+    @keyframes gn-spin {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes gn-bounce {
+
+      0%,
+      100% {
+        transform: translateY(0) scale(1);
+      }
+
+      50% {
+        transform: translateY(-5px) scale(1.06);
+      }
+    }
+  
+  /* Floating Coupon Notification Toast */
+  .gn-coupon-toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 999999;
+    background: #013827;
+    color: #ffffff;
+    border: 1.5px solid #34d399;
+    border-radius: 14px;
+    padding: 14px 18px;
+    box-shadow: 0 16px 36px rgba(1, 56, 39, 0.45);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-family: inherit;
+    transform: translateY(120px) scale(0.95);
+    opacity: 0;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    max-width: 460px;
+  }
+  .gn-coupon-toast.show {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+  .gn-toast-badge {
+    background: #10b981;
+    color: #ffffff;
+    font-size: 0.75rem;
+    font-weight: 800;
+    padding: 5px 9px;
+    border-radius: 6px;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .gn-toast-head {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin-bottom: 2px;
+  }
+  .gn-toast-sub {
+    font-size: 0.82rem;
+    color: #a7f3d0;
+    line-height: 1.35;
+  }
+  .gn-toast-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+  }
+  .gn-toast-cta-btn {
+    background: #34d399;
+    color: #013827;
+    font-size: 0.82rem;
+    font-weight: 700;
+    text-decoration: none;
+    padding: 7px 14px;
+    border-radius: 8px;
+    white-space: nowrap;
+    transition: background 0.2s, transform 0.15s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .gn-toast-cta-btn:hover {
+    background: #ffffff;
+    color: #013827;
+    transform: translateY(-1px);
+  }
+  .gn-toast-x-btn {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.65);
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 2px 6px;
+    line-height: 1;
+    transition: color 0.15s;
+  }
+  .gn-toast-x-btn:hover {
+    color: #ffffff;
+  }
+  @media (max-width: 600px) {
+    .gn-coupon-toast {
+      left: 14px;
+      right: 14px;
+      bottom: 14px;
+      max-width: none;
+    }
+  }
+</style>
 </head>
+
 <body class="site-body">
+  <!-- Botanical Preloader Overlay (100% Styled & Responsive) -->
+  <div id="greennest-preloader">
+    <div class="gn-box">
+      <div class="gn-circle-wrap">
+        <div class="gn-circle-orbit"></div>
+        <div class="gn-sprout-icon">
+          <svg viewBox="0 0 48 48" width="58" height="58" fill="none">
+            <path d="M24 44V22" stroke="#014e37" stroke-width="3" stroke-linecap="round" />
+            <path d="M24 33C14 33 9 24 9 15c7 0 15 7 15 18Z" fill="#10b981" stroke="#014e37" stroke-width="1.8" />
+            <path d="M24 25c10 0 15-9 15-17-7 0-15 7-15 17Z" fill="#34d399" stroke="#014e37" stroke-width="1.8" />
+            <circle cx="24" cy="44" r="3.2" fill="#014e37" />
+          </svg>
+        </div>
+      </div>
+      <span class="gn-kicker">GREEN NEST NURSERY</span>
+      <h3 class="gn-title">Growing Your Greenery</h3>
+      <p class="gn-subtitle" id="gnTag">Nurturing fresh Chennai nursery plants...</p>
+      <div class="gn-bar-track">
+        <div class="gn-bar-fill" id="gnBarFill"></div>
+      </div>
+      <span class="gn-hint">Bringing nature closer to your home</span>
+    </div>
+  </div>
 {% block site_header %}
   <!-- Header Main -->
   <header class="header-main">
@@ -21,9 +273,10 @@
       <!-- Logo -->
       <a class="header-logo" href="{% url 'store:home' %}" aria-label="Green Nest Nursery home">
         <div class="logo-leaf-icon" aria-hidden="true">
-          <svg viewBox="0 0 36 36" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M30 6C17 6 7 11 7 21c0 5.5 4 9 9 9 10.5 0 14-11 14-24Z" fill="#014e37" stroke="#014e37"/>
-            <path d="M6 30c4-7.5 9.5-12 17-15.5" stroke="#ffffff" stroke-width="2.2"/>
+          <svg viewBox="0 0 36 36" width="34" height="34" fill="none" stroke="currentColor" stroke-width="2.2"
+            stroke-linecap="round" stroke-linejoin="round">
+            <path d="M30 6C17 6 7 11 7 21c0 5.5 4 9 9 9 10.5 0 14-11 14-24Z" fill="#014e37" stroke="#014e37" />
+            <path d="M6 30c4-7.5 9.5-12 17-15.5" stroke="#ffffff" stroke-width="2.2" />
           </svg>
         </div>
         <div class="logo-text-block">
@@ -32,22 +285,27 @@
         </div>
       </a>
 
-      <!-- Header Search Form (like greennestnursery.com woocommerce search) -->
+      <!-- Header Search Form (Instant Category Navigation & Keyword Search) -->
       <div class="header-search-wrap">
-        <form class="header-search-form" method="get" action="{% url 'store:home' %}#shop">
+        <form class="header-search-form" method="get" action="{% url 'store:shop' %}" id="headerSearchForm">
           <div class="search-category-dropdown">
-            <select name="category" aria-label="Filter by category">
-              <option value="" {% if not category_slug %}selected{% endif %}>All Categories</option>
+            <select name="category" id="headerCategorySelect" aria-label="Filter by category" onchange="handleHeaderCategorySelect(this)">
+              <option value="" {% if not category_slug %}selected{% endif %}>All Categories ({{ total_active_plants|default:"78" }})</option>
               {% for cat in nav_categories %}
-              <option value="{{ cat.slug }}" {% if category_slug == cat.slug %}selected{% endif %}>{{ cat.name }}</option>
+              <option value="{{ cat.slug }}" {% if category_slug == cat.slug %}selected{% endif %}>{{ cat.name }} ({{ cat.product_count }})</option>
               {% endfor %}
             </select>
           </div>
           <div class="search-input-wrap">
-            <input type="search" name="q" value="{{ query|default:'' }}" placeholder="Search Plants, Planters, Garden Tools..." autocomplete="off">
+            <input type="search" name="q" id="headerSearchInput" value="{{ query|default:'' }}"
+              placeholder="Search Plants, Planters, Garden Tools..." autocomplete="off">
           </div>
           <button type="submit" class="search-submit-btn" aria-label="Search products">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8" />
+              <path d="m21 21-4.35-4.35" />
+            </svg>
             <span>Search</span>
           </button>
         </form>
@@ -58,12 +316,15 @@
         <!-- User Account -->
         <div class="header-account-block">
           <div class="action-icon-circle">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12Zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8Z"/></svg>
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="currentColor">
+              <path
+                d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12Zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8Z" />
+            </svg>
           </div>
           <div class="account-labels">
             <span class="acc-top">My Account</span>
             {% if user.is_authenticated %}
-            <span class="acc-sub">{{ user.username|truncatechars:12 }} ▾</span>
+            <a class="acc-sub" href="{% url 'store:customer_dashboard' %}">{{ user.username|truncatechars:12 }} ▾</a>
             {% else %}
             <a class="acc-sub" href="{% url 'store:login' %}">Login / Register</a>
             {% endif %}
@@ -71,8 +332,10 @@
           {% if user.is_authenticated %}
           <div class="account-dropdown-menu">
             <div class="dropdown-header">Welcome, <strong>{{ user.username }}</strong></div>
-            <a href="{% url 'store:orders' %}">My Orders</a>
-            <a href="{% url 'store:reminders' %}">Care Reminders</a>
+            <a href="{% url 'store:customer_dashboard' %}">My Dashboard</a>
+            <a href="{% url 'store:customer_dashboard' %}?tab=orders">My Orders & Tracking</a>
+            <a href="{% url 'store:customer_dashboard' %}?tab=reminders">Plant Care Reminders</a>
+            <a href="{% url 'store:customer_dashboard' %}?tab=profile">Profile & Address</a>
             {% if user.is_staff %}
             <a href="{% url 'store:admin_dashboard' %}">Store Management</a>
             <a href="/admin/">Django Admin</a>
@@ -88,8 +351,11 @@
         <!-- Cart Bag -->
         <a class="header-cart-block" href="{% url 'store:cart' %}" title="View shopping cart">
           <div class="action-icon-circle cart-icon-circle">
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+              <line x1="3" y1="6" x2="21" y2="6" />
+              <path d="M16 10a4 4 0 0 1-8 0" />
             </svg>
             <span class="cart-pill-badge">{{ cart_item_count }}</span>
           </div>
@@ -145,6 +411,16 @@
         <li class="nav-item">
           <a class="nav-link nav-offer-link" href="{% url 'store:shop' %}">Offers <span class="offer-pill">10% OFF</span></a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'store:contact' %}">Contact Us</a>
+        </li>
+        <!-- Direct Live Customer Mailbox Tab -->
+        <li class="nav-item">
+          <a class="nav-link" href="{% url 'store:inbox' %}" style="color: #014e37; font-weight: 700; background: #eaf4ee; border-radius: 8px; margin-block: 4px;" title="View Live Email Invoices">
+            <span>Customer Mailbox</span>
+            <span style="background: #10b981; color: #ffffff; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 10px; margin-left: 5px;">LIVE</span>
+          </a>
+        </li>
 
         <!-- Account / Store Links (Organized Dropdown) -->
         {% if user.is_authenticated %}
@@ -158,6 +434,7 @@
             <li><a href="{% url 'store:customer_dashboard' %}?tab=orders">My Orders</a></li>
             <li><a href="{% url 'store:customer_dashboard' %}?tab=reminders">Care Reminders</a></li>
             <li><a href="{% url 'store:customer_dashboard' %}?tab=profile">Profile Settings</a></li>
+            <li><a href="{% url 'store:inbox' %}" style="color: #059669; font-weight: 700;">Customer Mailbox</a></li>
           </ul>
         </li>
         {% if user.is_staff %}
@@ -208,14 +485,16 @@
         <!-- Col 1: About -->
         <div class="footer-col footer-col-about">
           <div class="footer-brand-lockup">
-            <svg viewBox="0 0 36 36" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M30 6C17 6 7 11 7 21c0 5.5 4 9 9 9 10.5 0 14-11 14-24Z" fill="#014e37" stroke="#014e37"/>
-              <path d="M6 30c4-7.5 9.5-12 17-15.5" stroke="#ffffff" stroke-width="2.2"/>
+            <svg viewBox="0 0 36 36" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.2"
+              stroke-linecap="round" stroke-linejoin="round">
+              <path d="M30 6C17 6 7 11 7 21c0 5.5 4 9 9 9 10.5 0 14-11 14-24Z" fill="#014e37" stroke="#014e37" />
+              <path d="M6 30c4-7.5 9.5-12 17-15.5" stroke="#ffffff" stroke-width="2.2" />
             </svg>
             <span class="footer-brand-name">Green Nest Nursery</span>
           </div>
           <p class="footer-about-text">
-            Green Nest Nursery is your trusted online destination for premium indoor and outdoor plants, designer planters, organic fertilizers, and plant care essentials. Grown with love and shipped safely to your home.
+            Green Nest Nursery is your trusted online destination for premium indoor and outdoor plants, designer
+            planters, organic fertilizers, and plant care essentials. Grown with love and shipped safely to your home.
           </p>
           <div class="footer-contact-details">
             <p><strong>Location:</strong> Chennai, Tamil Nadu, India</p>
@@ -228,12 +507,12 @@
         <div class="footer-col">
           <h3 class="footer-col-title">Our Collections</h3>
           <ul class="footer-links-list">
-            <li><a href="{% url 'store:home' %}?category=indoor-plants#shop">Indoor Plants</a></li>
-            <li><a href="{% url 'store:home' %}?category=outdoor-plants#shop">Outdoor Plants</a></li>
-            <li><a href="{% url 'store:home' %}?category=air-purifying-plants#shop">Air Purifying Plants</a></li>
-            <li><a href="{% url 'store:home' %}?category=cactus-succulents#shop">Cactus & Succulents</a></li>
-            <li><a href="{% url 'store:home' %}?category=planters-pots#shop">Ceramic & Clay Pots</a></li>
-            <li><a href="{% url 'store:home' %}?category=plant-care-tools#shop">Organic Plant Mix & Care</a></li>
+            <li><a href="{% url 'store:shop' %}?category=indoor-plants">Indoor Plants</a></li>
+            <li><a href="{% url 'store:shop' %}?category=outdoor-plants">Outdoor Plants</a></li>
+            <li><a href="{% url 'store:shop' %}?category=air-purifying-plants">Air Purifying Plants</a></li>
+            <li><a href="{% url 'store:shop' %}?category=cactus-succulents">Cactus & Succulents</a></li>
+            <li><a href="{% url 'store:shop' %}?category=planters-pots">Ceramic & Clay Pots</a></li>
+            <li><a href="{% url 'store:shop' %}?category=plant-care-tools">Organic Plant Mix & Care</a></li>
           </ul>
         </div>
 
@@ -242,7 +521,9 @@
           <h3 class="footer-col-title">Customer Care</h3>
           <ul class="footer-links-list">
             <li><a href="{% url 'store:guides' %}">Plant Care Guides</a></li>
+            <li><a href="{% url 'store:contact' %}">Contact &amp; Custom Requirements</a></li>
             <li><a href="{% url 'store:cart' %}">Shopping Bag</a></li>
+            <li><a href="{% url 'store:orders' %}">Track Order Shipment</a></li>
             {% if user.is_authenticated %}
             <li><a href="{% url 'store:orders' %}">Track My Orders</a></li>
             <li><a href="{% url 'store:reminders' %}">Plant Care Reminders</a></li>
@@ -257,7 +538,8 @@
         <!-- Col 4: Newsletter -->
         <div class="footer-col">
           <h3 class="footer-col-title">Plant Notes</h3>
-          <p class="footer-newsletter-intro">Join our community of over 10,000 plant parents. Receive curated weekly care tips, seasonal guide updates, and subscriber discounts.</p>
+          <p class="footer-newsletter-intro">Join our community of over 10,000 plant parents. Receive curated weekly
+            care tips, seasonal guide updates, and subscriber discounts.</p>
           <form class="footer-newsletter-form" method="post" action="{% url 'store:subscribe' %}">
             {% csrf_token %}
             <input type="hidden" name="next" value="{{ request.get_full_path }}">
@@ -285,5 +567,172 @@
 {% endblock site_footer %}
 
   <script src="{% static 'storefront/js/main.js' %}" defer></script>
+  <script>
+    (function () {
+      var loader = document.getElementById('greennest-preloader');
+      var bar = document.getElementById('gnBarFill');
+      var tag = document.getElementById('gnTag');
+      if (!loader) return;
+
+      function fill(duration, callback) {
+        if (!bar) { if (callback) callback(); return; }
+        var start = performance.now();
+        bar.style.width = '0%';
+        function step(now) {
+          var elapsed = now - start;
+          var pct = Math.min(100, (elapsed / duration) * 100);
+          bar.style.width = pct.toFixed(1) + '%';
+          if (elapsed < duration) {
+            requestAnimationFrame(step);
+          } else if (callback) {
+            callback();
+          }
+        }
+        requestAnimationFrame(step);
+      }
+
+      function hide() {
+        if (!loader) return;
+        loader.classList.add('gn-done');
+      }
+
+      function show(msg) {
+        if (!loader) return;
+        if (msg && tag) tag.textContent = msg;
+        if (bar) bar.style.width = '10%';
+        loader.classList.remove('gn-done');
+      }
+
+      fill(350, function () {
+        setTimeout(hide, 80);
+      });
+
+      window.addEventListener('pageshow', hide);
+      setTimeout(hide, 1500);
+    })();
+  </script>
+  <script>
+    function handleHeaderCategorySelect(selectEl) {
+      var val = (selectEl.value || '').trim();
+      var form = selectEl.closest('form');
+      var qInput = form ? form.querySelector('input[name="q"]') : null;
+      var qVal = qInput ? qInput.value.trim() : '';
+
+      var targetUrl = "{% url 'store:shop' %}";
+      var params = [];
+      if (val) {
+        params.push('category=' + encodeURIComponent(val));
+      }
+      if (qVal) {
+        params.push('q=' + encodeURIComponent(qVal));
+      }
+      var qs = params.length > 0 ? '?' + params.join('&') : '';
+      window.location.href = targetUrl + qs;
+    }
+  </script>
+
+  <script>
+    function copyAndApplyCoupon(code, el) {
+      code = (code || 'GREEN10').trim().toUpperCase();
+
+      // 1. Reliable Clipboard Copy
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(code).catch(function() {
+          fallbackCopyText(code);
+        });
+      } else {
+        fallbackCopyText(code);
+      }
+
+      function fallbackCopyText(text) {
+        var ta = document.createElement("textarea");
+        ta.value = text;
+        ta.style.position = "fixed";
+        ta.style.left = "-9999px";
+        document.body.appendChild(ta);
+        ta.focus();
+        ta.select();
+        try {
+          document.execCommand('copy');
+        } catch (e) {
+          console.log('Copy fallback exception:', e);
+        }
+        document.body.removeChild(ta);
+      }
+
+      // 2. Visual Transformation on Card if exists
+      var card = el ? el.closest('.shop-promo-card') : document.getElementById('shopPromoCard');
+      if (card) {
+        card.classList.add('coupon-activated');
+        var pill = card.querySelector('.promo-code-pill');
+        var hint = card.querySelector('.promo-code-hint');
+        if (pill) {
+          pill.innerHTML = '✓ ' + code + ' (COPIED)';
+          pill.classList.add('is-copied');
+        }
+        if (hint) {
+          hint.innerHTML = '✓ 10% Discount Activated!';
+          hint.style.color = '#047857';
+          hint.style.fontWeight = '700';
+        }
+      }
+
+      // Also if clicked from perk pills
+      if (el && el.classList.contains('shop-perk-pill')) {
+        el.style.background = '#014e37';
+        el.style.color = '#ffffff';
+        el.innerHTML = 'Coupon <strong>' + code + '</strong> Applied! ✓';
+      }
+
+      // 3. Auto-apply to server session via AJAX
+      var applyUrl = "/cart/apply-coupon/?code=" + encodeURIComponent(code) + "&format=json";
+      fetch(applyUrl, {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+      }).then(function(res) {
+        return res.json();
+      }).then(function(data) {
+        console.log('Coupon session auto-applied:', data);
+      }).catch(function(err) {
+        console.log('Session fetch catch:', err);
+      });
+
+      // 4. Show Floating Toast Notification
+      showGlobalCouponToast(code);
+    }
+
+    function showGlobalCouponToast(code) {
+      var oldToast = document.getElementById('gnCouponToast');
+      if (oldToast) oldToast.remove();
+
+      var toast = document.createElement('div');
+      toast.id = 'gnCouponToast';
+      toast.className = 'gn-coupon-toast';
+      toast.innerHTML = 
+        '<div class="gn-toast-badge">✓ 10% OFF</div>' +
+        '<div>' +
+          '<div class="gn-toast-head">Code <strong>' + code + '</strong> Copied!</div>' +
+          '<div class="gn-toast-sub">10% instant discount activated for your order.</div>' +
+        '</div>' +
+        '<div class="gn-toast-actions">' +
+          '<a href="/cart/" class="gn-toast-cta-btn">View Cart →</a>' +
+          '<button type="button" class="gn-toast-x-btn" onclick="this.closest('.gn-coupon-toast').remove()">✕</button>' +
+        '</div>';
+
+      document.body.appendChild(toast);
+      setTimeout(function() {
+        toast.classList.add('show');
+      }, 15);
+
+      setTimeout(function() {
+        if (toast && toast.parentElement) {
+          toast.classList.remove('show');
+          setTimeout(function() {
+            if (toast.parentElement) toast.remove();
+          }, 350);
+        }
+      }, 6500);
+    }
+  </script>
 </body>
+
 </html>

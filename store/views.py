@@ -25,6 +25,7 @@ from .models import (
     CareGuide,
     CareReminder,
     Category,
+    ContactInquiry,
     Coupon,
     NewsletterSubscriber,
     Order,
@@ -826,7 +827,7 @@ def admin_dashboard(request):
     if request.method == "POST":
         action = request.POST.get("action")
         
-        # 1. Quick Add Product
+        # 1. Add Plant
         if action == "add_product":
             name = request.POST.get("name", "").strip()
             cat_id = request.POST.get("category_id")
@@ -836,6 +837,10 @@ def admin_dashboard(request):
             image_url = request.POST.get("image_url", "").strip()
             subtitle = request.POST.get("subtitle", "").strip()
             description = request.POST.get("description", "").strip() or subtitle
+            sunlight = request.POST.get("sunlight", "Bright Indirect").strip() or "Bright Indirect"
+            water_days = int(request.POST.get("water_days", 5) or 5)
+            pot_type = request.POST.get("pot_type", "Nursery Pot Inc.").strip() or "Nursery Pot Inc."
+            air_purifying = request.POST.get("air_purifying", "High Oxygen").strip() or "High Oxygen"
             
             if name and cat_id and price:
                 category = get_object_or_404(Category, pk=cat_id)
@@ -848,6 +853,10 @@ def admin_dashboard(request):
                     image_url=image_url or "https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=800&q=85",
                     subtitle=subtitle,
                     description=description,
+                    sunlight=sunlight,
+                    water_days=max(1, water_days),
+                    pot_type=pot_type,
+                    air_purifying=air_purifying,
                     active=True
                 )
                 messages.success(request, f"Plant '{name}' added successfully to Green Nest catalog!")
@@ -855,46 +864,53 @@ def admin_dashboard(request):
                 messages.error(request, "Please fill in plant name, category, and price.")
             return redirect(f"{reverse('store:admin_dashboard')}?tab=products")
 
-        elif action == "update_product_price_stock":
+        # 2. Edit Plant (Full CRUD Update)
+        elif action == "edit_product":
             product_id = request.POST.get("product_id")
             product = get_object_or_404(Product, pk=product_id)
-            new_stock = request.POST.get("stock")
-            new_price = request.POST.get("price")
-            if new_stock is not None and new_stock != "":
-                product.stock = max(0, int(new_stock))
-            if new_price:
-                product.price = Decimal(new_price)
+            name = request.POST.get("name", "").strip()
+            cat_id = request.POST.get("category_id")
+            price = request.POST.get("price", "").strip()
+            stock = request.POST.get("stock", "").strip()
+            tag = request.POST.get("tag", "").strip()
+            image_url = request.POST.get("image_url", "").strip()
+            subtitle = request.POST.get("subtitle", "").strip()
+            description = request.POST.get("description", "").strip()
+            sunlight = request.POST.get("sunlight", "").strip()
+            water_days = request.POST.get("water_days", "").strip()
+            pot_type = request.POST.get("pot_type", "").strip()
+            air_purifying = request.POST.get("air_purifying", "").strip()
+            is_active = request.POST.get("active") in ["1", "true", "on", True]
+
+            if name:
+                product.name = name
+            if cat_id:
+                product.category = get_object_or_404(Category, pk=cat_id)
+            if price:
+                product.price = Decimal(price)
+            if stock:
+                product.stock = max(0, int(stock))
+            product.tag = tag
+            if image_url:
+                product.image_url = image_url
+            product.subtitle = subtitle
+            if description:
+                product.description = description
+            if sunlight:
+                product.sunlight = sunlight
+            if water_days:
+                product.water_days = max(1, int(water_days))
+            if pot_type:
+                product.pot_type = pot_type
+            if air_purifying:
+                product.air_purifying = air_purifying
+            product.active = is_active
             product.save()
-            messages.success(request, f"Updated '{product.name}' (Price: ₹{product.price}, Stock: {product.stock}).")
+
+            messages.success(request, f"Plant '{product.name}' details updated successfully!")
             return redirect(f"{reverse('store:admin_dashboard')}?tab=products")
 
-        elif action == "delete_product":
-            product_id = request.POST.get("product_id")
-            product = get_object_or_404(Product, pk=product_id)
-            name = product.name
-            try:
-                product.delete()
-                messages.success(request, f"Plant '{name}' has been deleted from catalog.")
-            except Exception:
-                product.active = False
-                product.save()
-                messages.warning(request, f"Plant '{name}' has past orders attached, so it was archived (hidden) instead of deleted.")
-            return redirect(f"{reverse('store:admin_dashboard')}?tab=products")
-
-        # 2. Update Order Status
-        elif action == "update_order_status":
-            order_id = request.POST.get("order_id")
-            new_status = request.POST.get("status")
-            order = get_object_or_404(Order, pk=order_id)
-            if new_status in Order.Status.values:
-                order.status = new_status
-                if new_status == Order.Status.DELIVERED and order.payment_method == Order.PaymentMethod.COD:
-                    order.payment_status = Order.PaymentStatus.PAID
-                order.save()
-                messages.success(request, f"Order #{order.tracking_code} status updated to '{order.get_status_display()}'.")
-            return redirect(f"{reverse('store:admin_dashboard')}?tab=orders")
-
-        # 3. Update Inventory Stock
+        # 3. Update Inventory Stock Only
         elif action == "update_stock":
             product_id = request.POST.get("product_id")
             new_stock = int(request.POST.get("stock", 0))
@@ -902,32 +918,6 @@ def admin_dashboard(request):
             product.stock = max(0, new_stock)
             product.save()
             messages.success(request, f"Stock for '{product.name}' updated to {product.stock}.")
-            return redirect(f"{reverse('store:admin_dashboard')}?tab=products")
-
-        elif action == "update_product_price_stock":
-            product_id = request.POST.get("product_id")
-            product = get_object_or_404(Product, pk=product_id)
-            new_stock = request.POST.get("stock")
-            new_price = request.POST.get("price")
-            if new_stock is not None and new_stock != "":
-                product.stock = max(0, int(new_stock))
-            if new_price:
-                product.price = Decimal(new_price)
-            product.save()
-            messages.success(request, f"Updated '{product.name}' (Price: ₹{product.price}, Stock: {product.stock}).")
-            return redirect(f"{reverse('store:admin_dashboard')}?tab=products")
-
-        elif action == "delete_product":
-            product_id = request.POST.get("product_id")
-            product = get_object_or_404(Product, pk=product_id)
-            name = product.name
-            try:
-                product.delete()
-                messages.success(request, f"Plant '{name}' has been deleted from catalog.")
-            except Exception:
-                product.active = False
-                product.save()
-                messages.warning(request, f"Plant '{name}' has past orders attached, so it was archived (hidden) instead of deleted.")
             return redirect(f"{reverse('store:admin_dashboard')}?tab=products")
 
         # 4. Toggle Product Active Status
@@ -940,33 +930,56 @@ def admin_dashboard(request):
             messages.success(request, f"Plant '{product.name}' is now {status_text}.")
             return redirect(f"{reverse('store:admin_dashboard')}?tab=products")
 
-        elif action == "update_product_price_stock":
-            product_id = request.POST.get("product_id")
-            product = get_object_or_404(Product, pk=product_id)
-            new_stock = request.POST.get("stock")
-            new_price = request.POST.get("price")
-            if new_stock is not None and new_stock != "":
-                product.stock = max(0, int(new_stock))
-            if new_price:
-                product.price = Decimal(new_price)
-            product.save()
-            messages.success(request, f"Updated '{product.name}' (Price: ₹{product.price}, Stock: {product.stock}).")
-            return redirect(f"{reverse('store:admin_dashboard')}?tab=products")
-
+        # 5. Delete Plant (with Safe Archive if Referenced in Orders)
         elif action == "delete_product":
             product_id = request.POST.get("product_id")
             product = get_object_or_404(Product, pk=product_id)
             name = product.name
             try:
                 product.delete()
-                messages.success(request, f"Plant '{name}' has been deleted from catalog.")
+                messages.success(request, f"Plant '{name}' has been permanently deleted from catalog.")
             except Exception:
                 product.active = False
                 product.save()
-                messages.warning(request, f"Plant '{name}' has past orders attached, so it was archived (hidden) instead of deleted.")
+                messages.warning(request, f"Plant '{name}' has past orders attached, so it was safely archived (hidden) instead of permanently deleted.")
             return redirect(f"{reverse('store:admin_dashboard')}?tab=products")
 
-        # 5. Create Coupon
+        # 6. Update Order Status
+        elif action == "update_order_status":
+            order_id = request.POST.get("order_id")
+            new_status = request.POST.get("status")
+            order = get_object_or_404(Order, pk=order_id)
+            if new_status in Order.Status.values:
+                order.status = new_status
+                if new_status == Order.Status.DELIVERED and order.payment_method == Order.PaymentMethod.COD:
+                    order.payment_status = Order.PaymentStatus.PAID
+                order.save()
+                messages.success(request, f"Order #{order.tracking_code} status updated to '{order.get_status_display()}'.")
+            return redirect(f"{reverse('store:admin_dashboard')}?tab=orders")
+
+        # 7. Customer Inquiries Management
+        elif action == "update_inquiry_status":
+            inquiry_id = request.POST.get("inquiry_id")
+            new_status = request.POST.get("status")
+            admin_notes = request.POST.get("admin_notes", "").strip()
+            inquiry = get_object_or_404(ContactInquiry, pk=inquiry_id)
+            if new_status in ContactInquiry.Status.values:
+                inquiry.status = new_status
+            if admin_notes:
+                inquiry.admin_notes = admin_notes
+            inquiry.save()
+            messages.success(request, f"Inquiry from '{inquiry.name}' updated to {inquiry.get_status_display()}.")
+            return redirect(f"{reverse('store:admin_dashboard')}?tab=inquiries")
+
+        elif action == "delete_inquiry":
+            inquiry_id = request.POST.get("inquiry_id")
+            inquiry = get_object_or_404(ContactInquiry, pk=inquiry_id)
+            cust_name = inquiry.name
+            inquiry.delete()
+            messages.success(request, f"Requirement inquiry from '{cust_name}' removed.")
+            return redirect(f"{reverse('store:admin_dashboard')}?tab=inquiries")
+
+        # 8. Create Coupon
         elif action == "create_coupon":
             code = request.POST.get("code", "").strip().upper()
             discount_percent = int(request.POST.get("discount_percent", 10))
@@ -995,8 +1008,8 @@ def admin_dashboard(request):
             coupon = get_object_or_404(Coupon, pk=coupon_id)
             coupon.active = not coupon.active
             coupon.save()
-            status_txt = "activated" if coupon.active else "deactivated"
-            messages.success(request, f"Coupon '{coupon.code}' is now {status_txt}.")
+            status_text = "activated" if coupon.active else "paused"
+            messages.success(request, f"Coupon '{coupon.code}' is now {status_text}.")
             return redirect(f"{reverse('store:admin_dashboard')}?tab=coupons")
 
         elif action == "delete_coupon":
@@ -1090,7 +1103,9 @@ def admin_dashboard(request):
         "customers_count": User.objects.filter(is_staff=False).count(),
         "subscribers_count": NewsletterSubscriber.objects.count(),
         "recent_orders": orders_qs[:30],
-        "all_products": products_qs[:50],
+        "all_products": products_qs,
+        "inquiries": ContactInquiry.objects.all().order_by("-created_at"),
+        "new_inquiries_count": ContactInquiry.objects.filter(status=ContactInquiry.Status.NEW).count(),
         "categories": categories_all,
         "coupons": coupons_all,
         "pending_reviews": pending_reviews,
@@ -1194,3 +1209,29 @@ def inbox_view(request):
         "emails": emails,
         "selected_email": selected_email,
     })
+
+
+def contact_view(request):
+    """Customer Contact Us & Custom Plant Requirements page."""
+    if request.method == "POST":
+        name = request.POST.get("name", "").strip()
+        email = request.POST.get("email", "").strip()
+        phone = request.POST.get("phone", "").strip()
+        subject = request.POST.get("subject", "").strip() or "Plant Requirement / Inquiry"
+        message = request.POST.get("message", "").strip()
+
+        if not name or not email or not message:
+            messages.error(request, "Please provide your name, email address, and plant requirement message.")
+        else:
+            inquiry = ContactInquiry.objects.create(
+                name=name,
+                email=email,
+                phone=phone,
+                subject=subject,
+                message=message,
+                status=ContactInquiry.Status.NEW,
+            )
+            messages.success(request, f"Thank you, {name}! Your plant requirement inquiry has been submitted. Our nursery botanical expert will contact you shortly.")
+            return redirect("store:contact")
+
+    return render(request, "store/contact.html")
