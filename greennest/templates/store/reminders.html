@@ -1,0 +1,7 @@
+{% extends "store/base.html" %}
+{% block title %}Plant care reminders · GreenNest{% endblock %}
+{% block content %}
+<section class="page-section section-wrap"><div class="page-heading"><span class="section-kicker">A LITTLE NUDGE TO KEEP THINGS GROWING</span><h1>Plant care reminders</h1><p>Save a plant and a schedule. Due reminders are sent by the scheduled reminder command; configure SMTP for real email delivery.</p></div>
+  <div class="cart-layout"><form class="store-form" method="post">{% csrf_token %}{{ form.as_p }}<button class="button button-green" type="submit">SAVE REMINDER</button></form><div class="cart-lines">{% for reminder in reminders %}<article class="cart-line"><div><h2>{{ reminder.plant_name }}</h2><p>Every {{ reminder.interval_days }} day(s) · next reminder {{ reminder.next_reminder }}</p></div><form method="post" action="{% url 'store:delete_reminder' reminder.id %}">{% csrf_token %}<button class="text-button" type="submit">Remove</button></form></article>{% empty %}<p>No reminders saved yet. Add one for your plant.</p>{% endfor %}</div></div>
+</section>
+{% endblock %}

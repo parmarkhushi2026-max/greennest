@@ -1,0 +1,181 @@
+{% extends "store/base.html" %}
+{% load static %}
+{% block title %}Create Account · Green Nest Nursery{% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'storefront/css/auth.css' %}">
+{% endblock %}
+{% block content %}
+<div class="auth-page-wrap">
+  <div class="theme-container auth-container">
+    <div class="auth-split-card">
+      
+      <!-- Left Column: Brand & Benefits -->
+      <div class="auth-brand-column">
+        <div class="auth-brand-top">
+          <div class="auth-brand-logo">
+            <svg viewBox="0 0 36 36" width="36" height="36" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M30 6C17 6 7 11 7 21c0 5.5 4 9 9 9 10.5 0 14-11 14-24Z" fill="#a4f3d2" stroke="#a4f3d2"/>
+              <path d="M6 30c4-7.5 9.5-12 17-15.5" stroke="#014e37" stroke-width="2.4"/>
+            </svg>
+            <span class="auth-brand-title">Green Nest</span>
+          </div>
+          <span class="auth-brand-badge">JOIN THE COMMUNITY</span>
+        </div>
+
+        <div class="auth-brand-body">
+          <h2 class="auth-brand-heading">Begin Your Plant Journey Today</h2>
+          <p class="auth-brand-sub">Create your free Green Nest Nursery account to enjoy personalized gardening guides, care tracking, and member-only specials.</p>
+
+          <div class="auth-perks-list">
+            <div class="auth-perk-row">
+              <span class="auth-perk-icon">🎁</span>
+              <div>
+                <strong>Instant Welcome Coupon</strong>
+                <small>Get 10% off your entire order with code <strong>GREEN10</strong>.</small>
+              </div>
+            </div>
+            <div class="auth-perk-row">
+              <span class="auth-perk-icon">🌱</span>
+              <div>
+                <strong>Custom Plant Reminders</strong>
+                <small>Never miss a watering cycle with customized scheduled notes.</small>
+              </div>
+            </div>
+            <div class="auth-perk-row">
+              <span class="auth-perk-icon">🚚</span>
+              <div>
+                <strong>Fast & Secure Checkout</strong>
+                <small>Save your delivery addresses for seamless one-click ordering.</small>
+              </div>
+            </div>
+            <div class="auth-perk-row">
+              <span class="auth-perk-icon">💚</span>
+              <div>
+                <strong>Nursery Support & Advice</strong>
+                <small>Ask questions and get expert tips from botanists anytime.</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="auth-brand-footer">
+          <span>🌿 Free membership · Takes less than 1 minute</span>
+        </div>
+      </div>
+
+      <!-- Right Column: Register Form -->
+      <div class="auth-form-column">
+        <!-- Auth Switcher Tabs -->
+        <div class="auth-tabs-nav">
+          <a href="{% url 'store:login' %}" class="auth-tab-btn">Sign In</a>
+          <a href="{% url 'store:register' %}" class="auth-tab-btn active">Create Account</a>
+        </div>
+
+        <div class="auth-form-inner">
+          <div class="auth-form-header">
+            <h1 class="auth-form-title">Join Green Nest</h1>
+            <p class="auth-form-subtitle">Fill in your information below to register your customer profile.</p>
+          </div>
+
+          {% if form.non_field_errors %}
+          <div class="auth-alert-box error">
+            <span class="auth-alert-icon">⚠️</span>
+            <div>
+              {% for error in form.non_field_errors %}
+              <p>{{ error }}</p>
+              {% endfor %}
+            </div>
+          </div>
+          {% endif %}
+
+          <form class="auth-actual-form" method="post" action="{% url 'store:register' %}">
+            {% csrf_token %}
+            {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+
+            <!-- Full Name -->
+            <div class="auth-field-group {% if form.first_name.errors %}has-error{% endif %}">
+              <label for="{{ form.first_name.id_for_label }}">Full Name <span class="req">*</span></label>
+              <div class="auth-input-wrapper">
+                <span class="input-icon">👋</span>
+                {{ form.first_name }}
+              </div>
+              {% if form.first_name.errors %}
+              <span class="field-error-msg">{{ form.first_name.errors.0 }}</span>
+              {% endif %}
+            </div>
+
+            <!-- Username & Email Grid -->
+            <div class="auth-form-grid-2">
+              <div class="auth-field-group {% if form.username.errors %}has-error{% endif %}">
+                <label for="{{ form.username.id_for_label }}">Username <span class="req">*</span></label>
+                <div class="auth-input-wrapper">
+                  <span class="input-icon">👤</span>
+                  {{ form.username }}
+                </div>
+                {% if form.username.errors %}
+                <span class="field-error-msg">{{ form.username.errors.0 }}</span>
+                {% endif %}
+              </div>
+
+              <div class="auth-field-group {% if form.email.errors %}has-error{% endif %}">
+                <label for="{{ form.email.id_for_label }}">Email Address <span class="req">*</span></label>
+                <div class="auth-input-wrapper">
+                  <span class="input-icon">✉️</span>
+                  {{ form.email }}
+                </div>
+                {% if form.email.errors %}
+                <span class="field-error-msg">{{ form.email.errors.0 }}</span>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Password Fields Grid -->
+            <div class="auth-form-grid-2">
+              <div class="auth-field-group {% if form.password.errors %}has-error{% endif %}">
+                <label for="{{ form.password.id_for_label }}">Password <span class="req">*</span></label>
+                <div class="auth-input-wrapper">
+                  <span class="input-icon">🔒</span>
+                  {{ form.password }}
+                  <button type="button" class="password-toggle-trigger" aria-label="Toggle password view">
+                    <span class="eye-icon">👁️</span>
+                  </button>
+                </div>
+                {% if form.password.errors %}
+                <span class="field-error-msg">{{ form.password.errors.0 }}</span>
+                {% endif %}
+              </div>
+
+              <div class="auth-field-group {% if form.password_confirm.errors %}has-error{% endif %}">
+                <label for="{{ form.password_confirm.id_for_label }}">Confirm Password <span class="req">*</span></label>
+                <div class="auth-input-wrapper">
+                  <span class="input-icon">🔐</span>
+                  {{ form.password_confirm }}
+                </div>
+                {% if form.password_confirm.errors %}
+                <span class="field-error-msg">{{ form.password_confirm.errors.0 }}</span>
+                {% endif %}
+              </div>
+            </div>
+
+            <!-- Terms notice -->
+            <div class="auth-terms-note">
+              <span>By creating an account, you agree to Green Nest Nursery's safe plant delivery terms and care guarantee.</span>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn-auth-submit">
+              <span>CREATE MY ACCOUNT</span>
+              <span class="btn-arrow">→</span>
+            </button>
+          </form>
+
+          <div class="auth-switch-footer">
+            <p>Already have an account? <a href="{% url 'store:login' %}"><strong>Sign in here</strong></a>.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

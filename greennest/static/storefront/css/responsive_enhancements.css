@@ -1,0 +1,207 @@
+/* ==============================================================================
+   GREEN NEST NURSERY - COMPREHENSIVE RESPONSIVE ENHANCEMENT SUITE
+   Ensures flawless mobile, tablet & desktop layout across every single page
+   ============================================================================== */
+
+/* Prevent horizontal overflow globally */
+html, body {
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
+}
+
+/* Header & Search Bar Mobile Polish */
+@media (max-width: 991px) {
+  .header-main {
+    padding: 12px 0;
+  }
+  .header-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .header-logo {
+    gap: 8px;
+  }
+  .logo-leaf-icon {
+    width: 36px;
+    height: 36px;
+  }
+  .logo-title {
+    font-size: 20px;
+  }
+  .logo-subtitle {
+    font-size: 8px;
+  }
+  .header-search-wrap {
+    order: 3;
+    width: 100%;
+    margin-top: 10px;
+  }
+  .header-search-form {
+    border-radius: 24px;
+  }
+  .search-category-dropdown select {
+    font-size: 12px;
+    max-width: 110px;
+  }
+  .search-input-wrap input {
+    font-size: 12.5px;
+    padding: 8px 12px;
+  }
+  .search-submit-btn {
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+
+  /* Hamburger Menu Toggle Button */
+  .mobile-menu-toggle {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 8px;
+    background: #eaf4ee;
+    border: 1px solid #c2e2d0;
+    cursor: pointer;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0;
+  }
+  .mobile-menu-toggle span {
+    display: block;
+    width: 20px;
+    height: 2.2px;
+    background: #014e37;
+    border-radius: 2px;
+    transition: all 0.25s ease;
+  }
+  .mobile-menu-toggle.active span:nth-child(1) {
+    transform: translateY(6.2px) rotate(45deg);
+  }
+  .mobile-menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+  }
+  .mobile-menu-toggle.active span:nth-child(3) {
+    transform: translateY(-6.2px) rotate(-45deg);
+  }
+
+  /* Mobile Slide Down Menu */
+  .navigation-bar {
+    display: none;
+    background: #ffffff;
+    border-bottom: 2px solid #e2ebe5;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+  }
+  .navigation-bar.is-open {
+    display: block !important;
+    animation: mobileNavSlide 0.25s ease-out;
+  }
+  @keyframes mobileNavSlide {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .nav-container {
+    flex-direction: column;
+    padding: 14px 16px;
+    align-items: stretch;
+  }
+  .nav-list {
+    flex-direction: column;
+    width: 100%;
+    align-items: stretch;
+    gap: 2px;
+  }
+  .nav-item {
+    width: 100%;
+    border-bottom: 1px solid #f0f4f2;
+  }
+  .nav-link {
+    padding: 12px 8px;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .nav-submenu {
+    position: static !important;
+    display: none;
+    box-shadow: none !important;
+    border: none !important;
+    background: #f8faf9 !important;
+    border-radius: 8px !important;
+    margin: 4px 0 8px 8px !important;
+    padding: 6px 12px !important;
+  }
+  .nav-has-dropdown.open-submenu .nav-submenu {
+    display: block !important;
+  }
+  .nav-submenu a {
+    padding: 8px 4px !important;
+    font-size: 13px !important;
+  }
+  .nav-call-badge {
+    margin-top: 12px;
+    width: 100%;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 10px 16px !important;
+  }
+}
+
+/* Small Phone Screens (<= 540px) */
+@media (max-width: 540px) {
+  .header-actions-group {
+    gap: 10px;
+  }
+  .action-icon-circle {
+    width: 36px;
+    height: 36px;
+  }
+  .action-icon-circle svg {
+    width: 18px;
+    height: 18px;
+  }
+  .account-labels, .cart-labels {
+    display: none !important;
+  }
+  .search-category-dropdown {
+    display: none !important; /* Hide category dropdown in tiny search inputs for maximum typing area */
+  }
+  
+  /* Tables horizontally scrollable without breaking phone viewport */
+  .table-responsive-wrapper,
+  .cart-table-wrap,
+  .orders-table-wrap,
+  .admin-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  
+  /* Grid conversions on mobile */
+  .cart-grid-layout,
+  .checkout-grid-layout,
+  .admin-two-col-layout,
+  .cust-layout-grid,
+  .inbox-layout {
+    grid-template-columns: 1fr !important;
+  }
+  
+  /* Buttons expand full width for easy thumb taps */
+  .btn-submit-order,
+  .btn-add-bag,
+  .btn-buy-instant {
+    width: 100% !important;
+    padding: 13px !important;
+  }
+
+  /* Product detail specs grid */
+  .botanical-specs-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+}
+

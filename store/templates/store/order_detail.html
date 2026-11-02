@@ -1,0 +1,8 @@
+{% extends "store/base.html" %}
+{% block title %}Track {{ order.tracking_code }} · GreenNest{% endblock %}
+{% block content %}
+<section class="page-section section-wrap">
+  <div class="page-heading"><span class="section-kicker">ORDER PLACED {{ order.created_at|date:"M j, Y" }}</span><h1>Order {{ order.tracking_code }}</h1><p>Delivery status: <strong>{{ order.get_status_display }}</strong></p></div>
+  <div class="cart-layout"><div class="cart-lines">{% for item in order.items.all %}<article class="cart-line"><div><h2>{{ item.product_name }}</h2><p>{{ item.quantity }} × ₹{{ item.unit_price }}</p></div><strong>₹{{ item.line_total }}</strong></article>{% endfor %}<div class="delivery-card"><h2>Delivering to</h2><p>{{ order.customer_name }} · {{ order.phone }}</p><p>{{ order.address|linebreaksbr }}</p><p>Delivery status updates are managed by the GreenNest team.</p></div></div><aside class="summary-card"><h2>Payment summary</h2><p><span>Subtotal</span><strong>₹{{ order.subtotal }}</strong></p>{% if order.discount %}<p><span>Discount</span><strong>−₹{{ order.discount }}</strong></p>{% endif %}<p class="summary-total"><span>Total</span><strong>₹{{ order.total }}</strong></p><p><span>{{ order.get_payment_method_display }}</span><strong>{{ order.get_payment_status_display }}</strong></p></aside></div>
+</section>
+{% endblock %}

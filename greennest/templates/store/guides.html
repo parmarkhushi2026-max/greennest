@@ -1,0 +1,146 @@
+{% extends "store/base.html" %}
+{% load static %}
+
+{% block title %}Botanical Care Guides · Green Nest Nursery{% endblock %}
+
+{% block extra_css %}
+<style>
+  .guides-page-wrap {
+    background: #f8faf9;
+    padding: 36px 0 64px;
+    min-height: calc(100vh - 280px);
+    font-family: 'Outfit', 'Work Sans', sans-serif;
+  }
+
+  .guides-hero-header {
+    text-align: center;
+    max-width: 680px;
+    margin: 0 auto 40px;
+  }
+
+  .guides-hero-header h1 {
+    font-size: 32px;
+    font-weight: 800;
+    color: #111827;
+    margin: 6px 0 12px;
+  }
+
+  .guides-hero-header p {
+    font-size: 15px;
+    color: #4b5563;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .guides-grid-layout {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+
+  @media (max-width: 768px) {
+    .guides-grid-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .guide-card-modern {
+    background: #ffffff;
+    border-radius: 18px;
+    border: 1px solid #eef2ef;
+    padding: 28px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.25s ease;
+  }
+
+  .guide-card-modern:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 24px rgba(1, 78, 55, 0.08);
+    border-color: #a7f3d0;
+  }
+
+  .guide-card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #ecfdf5;
+    color: #059669;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin-bottom: 16px;
+  }
+
+  .guide-card-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: #014e37;
+    margin: 0 0 10px;
+    text-decoration: none;
+    line-height: 1.3;
+  }
+
+  .guide-card-title:hover {
+    color: #10b981;
+  }
+
+  .guide-card-summary {
+    font-size: 14px;
+    color: #4b5563;
+    line-height: 1.6;
+    margin-bottom: 20px;
+    flex: 1;
+  }
+
+  .guide-card-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #014e37;
+    text-decoration: none;
+    transition: gap 0.2s ease;
+  }
+
+  .guide-card-cta:hover {
+    gap: 10px;
+    color: #10b981;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="guides-page-wrap">
+  <div class="theme-container">
+
+    <div class="guides-hero-header">
+      <span style="font-size:12px; text-transform:uppercase; font-weight:700; color:#059669; letter-spacing:0.06em;">🌿 GREENNEST BOTANICAL LIBRARY</span>
+      <h1>Plant Care Guides & Nursery Advice</h1>
+      <p>Practical, easy-to-follow cultivation tips written by our Chennai nursery horticulturalists to keep your indoor & outdoor houseplants thriving.</p>
+    </div>
+
+    <div class="guides-grid-layout">
+      {% for guide in guides %}
+      <article class="guide-card-modern">
+        <div>
+          <div class="guide-card-icon">🌱</div>
+          <h2 style="margin:0;"><a href="{% url 'store:guide_detail' guide.slug %}" class="guide-card-title">{{ guide.title }}</a></h2>
+          <p class="guide-card-summary">{{ guide.summary }}</p>
+        </div>
+        <a href="{% url 'store:guide_detail' guide.slug %}" class="guide-card-cta">
+          READ COMPLETE GUIDE <span>→</span>
+        </a>
+      </article>
+      {% empty %}
+      <p style="grid-column: 1 / -1; text-align: center; color: #6b7280;">Care guides will be published soon.</p>
+      {% endfor %}
+    </div>
+
+  </div>
+</div>
+{% endblock %}

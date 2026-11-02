@@ -1,0 +1,1114 @@
+{% extends "store/base.html" %}
+{% load static %}
+{% block title %}Green Nest Store Operations & Admin Dashboard{% endblock %}
+{% block extra_css %}
+  <link rel="stylesheet" href="{% static 'storefront/css/admin.css' %}">
+  <!-- Chart.js for Executive Nursery Analytics -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    .admin-two-col-layout {
+      display: grid;
+      grid-template-columns: 270px 1fr;
+      gap: 28px;
+      align-items: start;
+    }
+    @media (max-width: 992px) {
+      .admin-two-col-layout {
+        grid-template-columns: 1fr;
+      }
+    }
+    .admin-sidebar-box {
+      background: #ffffff;
+      border-radius: 18px;
+      border: 1px solid #e2ebe5;
+      padding: 22px 18px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.03);
+      position: sticky;
+      top: 24px;
+    }
+    .admin-side-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid #f0f4f2;
+      margin-bottom: 18px;
+    }
+    .admin-avatar-circ {
+      width: 48px;
+      height: 48px;
+      background: #014e37;
+      color: #ffffff;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      font-weight: 800;
+    }
+    .admin-side-nav-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .admin-side-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 11px 14px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 600;
+      color: #4b5563;
+      text-decoration: none;
+      transition: all 0.2s ease;
+    }
+    .admin-side-link:hover {
+      background: #f0fdf4;
+      color: #014e37;
+    }
+    .admin-side-link.active {
+      background: #014e37;
+      color: #ffffff;
+      box-shadow: 0 3px 10px rgba(1, 78, 55, 0.2);
+    }
+    .admin-side-link.active .tab-badge-pill {
+      background: rgba(255,255,255,0.25);
+      color: #ffffff;
+    }
+    .admin-charts-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 20px;
+      margin-bottom: 28px;
+    }
+    @media (max-width: 900px) {
+      .admin-charts-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    .admin-chart-card {
+      background: #ffffff;
+      border-radius: 16px;
+      border: 1px solid #eef2ef;
+      padding: 22px;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.03);
+    }
+    .chart-head-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: #014e37;
+      margin: 0 0 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .chart-canvas-box {
+      position: relative;
+      height: 230px;
+      width: 100%;
+    }
+  </style>
+{% endblock %}
+{% block site_header %}
+<header style="background: #013827; border-bottom: 1px solid rgba(255,255,255,0.12); padding: 12px 0; color: #ffffff; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+  <div class="theme-container" style="display: flex; justify-content: space-between; align-items: center;">
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <a href="{% url 'store:admin_dashboard' %}" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #ffffff;">
+        
+        <div>
+          <div style="font-family: var(--font-heading, sans-serif); font-weight: 800; font-size: 19px; letter-spacing: -0.02em; color: #ffffff; line-height: 1.1;">GreenNest Admin</div>
+          <div style="font-size: 10px; color: #a7f3d0; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;">Store Management Portal</div>
+        </div>
+      </a>
+      <span style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; border: 1px solid rgba(16, 185, 129, 0.4);">
+        Active Manager
+      </span>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <a href="{% url 'store:sales_report' %}" style="display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.1); color: #ffffff; text-decoration: none; padding: 7px 14px; border-radius: 8px; font-size: 12.5px; font-weight: 600; border: 1px solid rgba(255,255,255,0.18); transition: background 0.15s ease;">
+        <span>Sales Report</span>
+      </a>
+      <a href="{% url 'store:home' %}" style="display: inline-flex; align-items: center; gap: 6px; background: #10b981; color: #ffffff; text-decoration: none; padding: 7px 16px; border-radius: 8px; font-size: 12.5px; font-weight: 700; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3); transition: transform 0.15s ease;">
+        <span>View Storefront</span>
+        <span>→</span>
+      </a>
+      <form method="post" action="{% url 'store:logout' %}" style="margin: 0;">
+        {% csrf_token %}
+        <button type="submit" style="background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.35); padding: 7px 14px; border-radius: 8px; font-size: 12.5px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
+          <span>Logout</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</header>
+{% endblock site_header %}
+
+{% block content %}
+<div class="admin-panel-page">
+  <div class="theme-container">
+
+    <div class="admin-two-col-layout">
+      <!-- ============================================================
+           LEFT SIDEBAR: EXECUTIVE NURSERY NAVIGATOR
+           ============================================================ -->
+      <aside class="admin-sidebar-box">
+        <div class="admin-side-brand">
+          <div class="admin-avatar-circ">GN</div>
+          <div>
+            <strong style="display:block; font-size:15px; color:#111827;">GreenNest Operations</strong>
+            <span style="font-size:11px; color:#059669; font-weight:700;">Store Manager Active</span>
+          </div>
+        </div>
+
+        <nav class="admin-side-nav-list" aria-label="Admin Sections">
+          <a class="admin-side-link {% if active_tab == 'overview' %}active{% endif %}" href="?tab=overview">
+            <span>Overview & Charts</span>
+            <span class="tab-badge-pill">Live</span>
+          </a>
+          <a class="admin-side-link {% if active_tab == 'orders' %}active{% endif %}" href="?tab=orders">
+            <span>Orders Dispatch</span>
+            {% if pending_orders %}<span class="tab-badge-pill warning">{{ pending_orders }}</span>{% else %}<span class="tab-badge-pill">{{ orders_count }}</span>{% endif %}
+          </a>
+          <a class="admin-side-link {% if active_tab == 'products' %}active{% endif %}" href="?tab=products">
+            <span>Plant Inventory</span>
+            {% if low_stock %}<span class="tab-badge-pill danger">{{ low_stock }} Low</span>{% else %}<span class="tab-badge-pill">{{ products_count }}</span>{% endif %}
+          </a>
+          <a class="admin-side-link {% if active_tab == 'coupons' %}active{% endif %}" href="?tab=coupons">
+            <span>Promo Coupons</span>
+            <span class="tab-badge-pill">{{ coupons|length }}</span>
+          </a>
+          <a class="admin-side-link {% if active_tab == 'reviews' %}active{% endif %}" href="?tab=reviews">
+            <span>Reviews</span>
+            {% if pending_reviews %}<span class="tab-badge-pill warning">{{ pending_reviews|length }}</span>{% endif %}
+          </a>
+          <a class="admin-side-link {% if active_tab == 'customers' %}active{% endif %}" href="?tab=customers">
+            <span>Customers</span>
+            <span class="tab-badge-pill">{{ customers_count }}</span>
+          </a>
+        </nav>
+
+        <div style="margin-top:20px; padding-top:16px; border-top:1px solid #f0f4f2; display:flex; flex-direction:column; gap:6px;">
+          <a class="admin-side-link" href="{% url 'store:sales_report' %}">
+            <span>Sales Report</span>
+            <span>↗</span>
+          </a>
+          <a class="admin-side-link" href="{{ admin_url }}" target="_blank">
+            <span>Django SuperAdmin</span>
+            <span>↗</span>
+          </a>
+          <a class="admin-side-link" href="{% url 'store:home' %}">
+            <span>Storefront</span>
+            <span>↗</span>
+          </a>
+        </div>
+      </aside>
+
+      <!-- ============================================================
+           RIGHT MAIN CONTENT STAGE
+           ============================================================ -->
+      <main class="admin-main-stage" style="min-width:0;">
+
+    <!-- Top Admin Header Banner -->
+    <div class="admin-top-banner">
+      <div class="admin-title-group">
+        <span class="admin-kicker">EXECUTIVE NURSERY PORTAL</span>
+        <h1 class="admin-page-title">Store Management Dashboard</h1>
+        <p class="admin-subtitle">Live operations hub for Green Nest Nursery Chennai. Monitor revenue, dispatch orders, and manage catalog.</p>
+      </div>
+      <div class="admin-quick-actions">
+        <a class="btn-primary-admin" href="{{ admin_url }}" target="_blank">
+          <span>Django Super Admin</span>
+          <span>↗</span>
+        </a>
+        <a class="btn-secondary-admin" href="{% url 'store:sales_report' %}">
+          <span>Sales Analytics</span>
+        </a>
+        <a class="btn-secondary-admin" href="{% url 'store:home' %}">
+          <span>Live Storefront</span>
+        </a>
+      </div>
+    </div>
+
+
+
+    <!-- =========================================================================
+         TAB 1: OVERVIEW
+         ========================================================================= -->
+    {% if active_tab == 'overview' %}
+    <!-- 6 Executive KPI Metric Cards -->
+    <div class="admin-kpi-grid">
+      <div class="admin-kpi-card revenue-card">
+        <div class="kpi-icon-circle">💰</div>
+        <div class="kpi-details">
+          <span class="kpi-label">Delivered Revenue</span>
+          <strong class="kpi-value">₹{{ sales }}</strong>
+          <span class="kpi-hint">Completed sales revenue</span>
+        </div>
+      </div>
+
+      <div class="admin-kpi-card orders-card">
+        <div class="kpi-icon-circle">📦</div>
+        <div class="kpi-details">
+          <span class="kpi-label">Active Orders</span>
+          <strong class="kpi-value">{{ orders_count }}</strong>
+          <span class="kpi-hint">
+            {% if pending_orders %}
+            <span class="kpi-alert-pill">{{ pending_orders }} Pending</span>
+            {% else %}
+            All orders processed
+            {% endif %}
+          </span>
+        </div>
+      </div>
+
+      <div class="admin-kpi-card pending-rev-card">
+        <div class="kpi-icon-circle">⏳</div>
+        <div class="kpi-details">
+          <span class="kpi-label">Pending Order Value</span>
+          <strong class="kpi-value">₹{{ pending_sales }}</strong>
+          <span class="kpi-hint">In transit &amp; processing</span>
+        </div>
+      </div>
+
+      <div class="admin-kpi-card products-card">
+        <div class="kpi-icon-circle">🌿</div>
+        <div class="kpi-details">
+          <span class="kpi-label">Catalog Plants</span>
+          <strong class="kpi-value">{{ products_count }}</strong>
+          <span class="kpi-hint">Across {{ categories_count }} plant categories</span>
+        </div>
+      </div>
+
+      <div class="admin-kpi-card stock-card {% if low_stock %}has-warning{% endif %}">
+        <div class="kpi-icon-circle">⚠️</div>
+        <div class="kpi-details">
+          <span class="kpi-label">Low Stock Alerts</span>
+          <strong class="kpi-value">{{ low_stock }}</strong>
+          <span class="kpi-hint">5 or fewer pots remaining</span>
+        </div>
+      </div>
+
+      <div class="admin-kpi-card customers-card">
+        <div class="kpi-icon-circle">👥</div>
+        <div class="kpi-details">
+          <span class="kpi-label">Customer Base</span>
+          <strong class="kpi-value">{{ customers_count }}</strong>
+          <span class="kpi-hint">+ {{ subscribers_count }} newsletter members</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Action Launchpad -->
+    <div class="admin-launchpad-banner">
+      <div class="launchpad-left">
+        <strong>Quick Actions:</strong>
+        <span>Manage common operations in one click</span>
+      </div>
+      <div class="launchpad-buttons">
+        <a class="btn-launch" href="?tab=products#add-plant-card">+ Add New Plant</a>
+        <a class="btn-launch" href="?tab=coupons#add-coupon-card">+ Create Coupon</a>
+        <a class="btn-launch" href="?tab=orders&status=pending">View Pending Orders ({{ pending_orders }})</a>
+        <a class="btn-launch outline" href="{% url 'store:sales_report' %}">Monthly Sales Report →</a>
+      </div>
+    </div>
+
+    <!-- ============================================================
+         ADMIN GRAPHS: REVENUE GROWTH & ORDER STATUS FULFILLMENT
+         ============================================================ -->
+    <div class="admin-charts-grid">
+      <!-- Graph 1: Revenue Growth Curve -->
+      <div class="admin-chart-card">
+        <div class="chart-head-title">
+          <span>Nursery Sales Revenue Trend (₹)</span>
+          <small style="color:#059669; font-weight:normal;">Month-on-Month Growth</small>
+        </div>
+        <div class="chart-canvas-box">
+          <canvas id="adminRevenueChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Graph 2: Order Status Distribution -->
+      <div class="admin-chart-card">
+        <div class="chart-head-title">
+          <span>Order Fulfillment Status</span>
+          <small style="color:#6b7280; font-weight:normal;">All Orders</small>
+        </div>
+        <div class="chart-canvas-box">
+          <canvas id="adminOrderStatusChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Overview Content Split: Recent Orders & Inventory -->
+    <div class="admin-content-grid">
+      <!-- Left: Recent Orders -->
+      <div class="admin-card-section">
+        <div class="section-card-header">
+          <div>
+            <h2 class="card-section-title">Recent Customer Orders</h2>
+            <p class="card-section-sub">Latest nursery plant purchases.</p>
+          </div>
+          <a class="btn-text-link" href="?tab=orders">View All ({{ orders_count }}) →</a>
+        </div>
+
+        <div class="admin-table-responsive">
+          <table class="admin-data-table">
+            <thead>
+              <tr>
+                <th>Order #</th>
+                <th>Customer</th>
+                <th>Total</th>
+                <th>Status</th>
+                <th>Update Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for order in recent_orders|slice:":7" %}
+              <tr>
+                <td>
+                  <a class="order-code-link" href="{% url 'store:order_detail' order.tracking_code %}">
+                    #{{ order.tracking_code }}
+                  </a>
+                  <span class="table-sub-date">{{ order.created_at|date:"M d, H:i" }}</span>
+                </td>
+                <td>
+                  <span class="customer-name-text">{{ order.customer_name }}</span>
+                  <span class="customer-phone-text">Phone: {{ order.phone }}</span>
+                </td>
+                <td>
+                  <strong class="order-price-bold">₹{{ order.total }}</strong>
+                  <span class="table-sub-items">{{ order.items.count }} item(s)</span>
+                </td>
+                <td>
+                  <span class="badge-order-status status-{{ order.status }}">
+                    {{ order.get_status_display }}
+                  </span>
+                </td>
+                <td>
+                  <form method="post" class="quick-status-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="update_order_status">
+                    <input type="hidden" name="order_id" value="{{ order.id }}">
+                    <select name="status" onchange="this.form.submit()" class="admin-status-select">
+                      {% for val, label in status_choices %}
+                      <option value="{{ val }}" {% if order.status == val %}selected{% endif %}>{{ label }}</option>
+                      {% endfor %}
+                    </select>
+                  </form>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="5" class="table-empty-row">No orders placed yet.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Right: Inventory Alert & Review Widget -->
+      <div class="admin-side-col">
+        <!-- Stock Watchlist -->
+        <div class="admin-card-section">
+          <div class="section-card-header">
+            <div>
+              <h2 class="card-section-title">Stock Health Watchlist</h2>
+              <p class="card-section-sub">Quick adjust quantity.</p>
+            </div>
+            <a class="btn-text-link" href="?tab=products">Manage All →</a>
+          </div>
+
+          <div class="admin-inventory-list">
+            {% for prod in all_products|slice:":6" %}
+            <div class="inventory-item-row">
+              <img class="inv-thumb" src="{{ prod.image_url }}" alt="{{ prod.name }}">
+              <div class="inv-info">
+                <a class="inv-name" href="{% url 'store:product_detail' prod.id %}">{{ prod.name }}</a>
+                <span class="inv-meta">{{ prod.category.name }} · ₹{{ prod.price }}</span>
+              </div>
+              <form method="post" class="inv-stock-form">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="update_stock">
+                <input type="hidden" name="product_id" value="{{ prod.id }}">
+                <input type="number" name="stock" value="{{ prod.stock }}" min="0" max="999" class="inv-stock-input">
+                <button type="submit" class="inv-stock-save" title="Save stock">✓</button>
+              </form>
+              <span class="stock-status-pill {% if prod.stock == 0 %}out{% elif prod.stock <= 5 %}low{% else %}ok{% endif %}">
+                {{ prod.stock }} left
+              </span>
+            </div>
+            {% endfor %}
+          </div>
+        </div>
+
+        <!-- Pending Reviews Alert -->
+        {% if pending_reviews %}
+        <div class="admin-card-section">
+          <div class="section-card-header">
+            <div>
+              <h2 class="card-section-title">Pending Reviews ({{ pending_reviews|length }})</h2>
+              <p class="card-section-sub">Moderate customer reviews.</p>
+            </div>
+            <a class="btn-text-link" href="?tab=reviews">Queue →</a>
+          </div>
+          {% for rev in pending_reviews|slice:":2" %}
+          <div class="pending-review-card">
+            <div class="rev-header">
+              <strong>{{ rev.user.username }}</strong>
+              <span class="rev-stars">★★★★★ ({{ rev.rating }}/5)</span>
+            </div>
+            <span class="rev-plant">Plant: {{ rev.product.name }}</span>
+            <p class="rev-comment">"{{ rev.comment }}"</p>
+            <form method="post">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="approve_review">
+              <input type="hidden" name="review_id" value="{{ rev.id }}">
+              <button type="submit" class="btn-approve-review">✓ Approve Review</button>
+            </form>
+          </div>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+
+
+    <!-- =========================================================================
+         TAB 2: ORDERS MANAGEMENT
+         ========================================================================= -->
+    {% if active_tab == 'orders' %}
+    <div class="admin-card-section">
+      <div class="section-card-header">
+        <div>
+          <h2 class="card-section-title">Customer Orders Management</h2>
+          <p class="card-section-sub">Total Orders: {{ recent_orders|length }}</p>
+        </div>
+        <!-- Status Filter Pills -->
+        <div class="order-filter-pills">
+          <a class="filter-pill {% if not order_filter %}active{% endif %}" href="?tab=orders">All</a>
+          <a class="filter-pill {% if order_filter == 'pending' %}active{% endif %}" href="?tab=orders&status=pending">Pending</a>
+          <a class="filter-pill {% if order_filter == 'confirmed' %}active{% endif %}" href="?tab=orders&status=confirmed">Confirmed</a>
+          <a class="filter-pill {% if order_filter == 'packed' %}active{% endif %}" href="?tab=orders&status=packed">Packed</a>
+          <a class="filter-pill {% if order_filter == 'shipped' %}active{% endif %}" href="?tab=orders&status=shipped">Shipped</a>
+          <a class="filter-pill {% if order_filter == 'delivered' %}active{% endif %}" href="?tab=orders&status=delivered">Delivered</a>
+          <a class="filter-pill {% if order_filter == 'cancelled' %}active{% endif %}" href="?tab=orders&status=cancelled">Cancelled</a>
+        </div>
+      </div>
+
+      <div class="admin-table-responsive">
+        <table class="admin-data-table full-orders-table">
+          <thead>
+            <tr>
+              <th>Tracking Code</th>
+              <th>Customer Details</th>
+              <th>Delivery Address</th>
+              <th>Items Ordered</th>
+              <th>Total &amp; Payment</th>
+              <th>Current Status</th>
+              <th>Change Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for order in recent_orders %}
+            <tr>
+              <td>
+                <a class="order-code-link" href="{% url 'store:order_detail' order.tracking_code %}">
+                  #{{ order.tracking_code }}
+                </a>
+                <span class="table-sub-date">{{ order.created_at|date:"M d, Y · H:i" }}</span>
+              </td>
+              <td>
+                <span class="customer-name-text">{{ order.customer_name }}</span>
+                <span class="customer-phone-text">Phone: {{ order.phone }}</span>
+                {% if order.user %}<small class="customer-account-text">Account: {{ order.user.username }}</small>{% endif %}
+              </td>
+              <td>
+                <span class="address-preview-text">{{ order.address|truncatechars:50 }}</span>
+              </td>
+              <td>
+                <div class="order-items-snippet">
+                  {% for item in order.items.all %}
+                  <span class="item-tag">{{ item.quantity }}x {{ item.product_name }}</span>
+                  {% empty %}
+                  <span>1x Nursery Plant</span>
+                  {% endfor %}
+                </div>
+              </td>
+              <td>
+                <strong class="order-price-bold">₹{{ order.total }}</strong>
+                <span class="badge-payment {{ order.payment_status }}">
+                  {{ order.get_payment_method_display }} · {{ order.payment_status|upper }}
+                </span>
+              </td>
+              <td>
+                <span class="badge-order-status status-{{ order.status }}">
+                  {{ order.get_status_display }}
+                </span>
+              </td>
+              <td>
+                <form method="post" class="quick-status-form">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="update_order_status">
+                  <input type="hidden" name="order_id" value="{{ order.id }}">
+                  <select name="status" onchange="this.form.submit()" class="admin-status-select">
+                    {% for val, label in status_choices %}
+                    <option value="{{ val }}" {% if order.status == val %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                  </select>
+                </form>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="7" class="table-empty-row">
+                No orders found for this filter.
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    {% endif %}
+
+
+    <!-- =========================================================================
+         TAB 3: PLANT INVENTORY & ADD PLANT
+         ========================================================================= -->
+    {% if active_tab == 'products' %}
+    <div class="admin-inventory-wrapper">
+      
+      <!-- Add New Plant Form Card -->
+      <div class="admin-card-section add-product-card" id="add-plant-card">
+        <div class="section-card-header">
+          <div>
+            <h2 class="card-section-title">Add New Plant to Green Nest Catalog</h2>
+            <p class="card-section-sub">Publish a new indoor, outdoor, succulent, or planter item to the live storefront.</p>
+          </div>
+        </div>
+
+        <form method="post" class="admin-add-product-form">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="add_product">
+          
+          <div class="form-row-grid-3">
+            <div class="admin-form-group">
+              <label>Plant Name <span class="req">*</span></label>
+              <input type="text" name="name" placeholder="e.g. Fiddle Leaf Fig" required class="admin-text-input">
+            </div>
+            <div class="admin-form-group">
+              <label>Category <span class="req">*</span></label>
+              <select name="category_id" required class="admin-text-input">
+                {% for cat in categories %}
+                <option value="{{ cat.id }}">{{ cat.name }}</option>
+                {% endfor %}
+              </select>
+            </div>
+            <div class="admin-form-group">
+              <label>Price (₹) <span class="req">*</span></label>
+              <input type="number" step="0.01" name="price" placeholder="180.00" required class="admin-text-input">
+            </div>
+          </div>
+
+          <div class="form-row-grid-3">
+            <div class="admin-form-group">
+              <label>Initial Stock (Quantity)</label>
+              <input type="number" name="stock" value="20" min="0" class="admin-text-input">
+            </div>
+            <div class="admin-form-group">
+              <label>Badge Tag (Optional)</label>
+              <input type="text" name="tag" placeholder="e.g. BESTSELLER, 10% OFF, NEW ARRIVAL" class="admin-text-input">
+            </div>
+            <div class="admin-form-group">
+              <label>Image URL (High Quality)</label>
+              <input type="url" name="image_url" placeholder="https://images.unsplash.com/photo-..." class="admin-text-input">
+            </div>
+          </div>
+
+          <div class="admin-form-group">
+            <label>Subtitle / Short Features</label>
+            <input type="text" name="subtitle" placeholder="e.g. Air purifying glossy houseplant · easy maintenance" class="admin-text-input">
+          </div>
+
+          <div class="admin-form-group">
+            <label>Detailed Botanical Description</label>
+            <textarea name="description" rows="2" placeholder="Full plant description, sunlight, watering needs, and nursery care..." class="admin-text-input"></textarea>
+          </div>
+
+          <button type="submit" class="btn-primary-admin submit-add-btn">
+            <span>+ ADD PLANT TO CATALOG</span>
+          </button>
+        </form>
+      </div>
+
+      <!-- Current Catalog Inventory Table -->
+      <div class="admin-card-section">
+        <div class="section-card-header">
+          <div>
+            <h2 class="card-section-title">Current Plant Catalog ({{ all_products|length }})</h2>
+            <p class="card-section-sub">Update stock levels and manage live visibility.</p>
+          </div>
+          <!-- Search box -->
+          <form method="get" class="admin-inline-search">
+            <input type="hidden" name="tab" value="products">
+            <input type="search" name="prod_q" value="{{ product_search }}" placeholder="Search plants or category..." class="admin-search-input">
+            <button type="submit" class="btn-search-icon">🔍</button>
+          </form>
+        </div>
+
+        <div class="admin-table-responsive">
+          <table class="admin-data-table">
+            <thead>
+              <tr>
+                <th>Plant</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Stock Level</th>
+                <th>Status</th>
+                <th>Visibility</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for prod in all_products %}
+              <tr>
+                <td>
+                  <div class="prod-thumb-title">
+                    <img class="inv-thumb" src="{{ prod.image_url }}" alt="{{ prod.name }}">
+                    <div>
+                      <a class="order-code-link" href="{% url 'store:product_detail' prod.id %}" target="_blank">
+                        {{ prod.name }} ↗
+                      </a>
+                      <span class="table-sub-date">{{ prod.subtitle|truncatechars:40 }}</span>
+                    </div>
+                  </div>
+                </td>
+                <td>{{ prod.category.name }}</td>
+                <td><strong>₹{{ prod.price }}</strong></td>
+                <td>
+                  <form method="post" class="inv-stock-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="update_stock">
+                    <input type="hidden" name="product_id" value="{{ prod.id }}">
+                    <input type="number" name="stock" value="{{ prod.stock }}" min="0" max="999" class="inv-stock-input">
+                    <button type="submit" class="inv-stock-save" title="Save stock">Save</button>
+                  </form>
+                </td>
+                <td>
+                  <span class="stock-status-pill {% if prod.stock == 0 %}out{% elif prod.stock <= 5 %}low{% else %}ok{% endif %}">
+                    {% if prod.stock == 0 %}OUT OF STOCK{% elif prod.stock <= 5 %}LOW STOCK ({{ prod.stock }}){% else %}IN STOCK ({{ prod.stock }}){% endif %}
+                  </span>
+                </td>
+                <td>
+                  <form method="post">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="toggle_product">
+                    <input type="hidden" name="product_id" value="{{ prod.id }}">
+                    <button type="submit" class="toggle-active-btn {% if prod.active %}is-active{% endif %}">
+                      {% if prod.active %}Active (Visible){% else %}Hidden{% endif %}
+                    </button>
+                  </form>
+                </td>
+                <td>
+                  <a class="btn-text-link" href="{{ admin_url }}store/product/{{ prod.id }}/change/" target="_blank">Edit in Admin ↗</a>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="7" class="table-empty-row">No plants found matching "{{ product_search }}".</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+    {% endif %}
+
+
+    <!-- =========================================================================
+         TAB 4: COUPONS & DISCOUNTS
+         ========================================================================= -->
+    {% if active_tab == 'coupons' %}
+    <div class="admin-content-grid">
+      <!-- Left: Active Coupons -->
+      <div class="admin-card-section">
+        <div class="section-card-header">
+          <div>
+            <h2 class="card-section-title">Active Discount Coupons</h2>
+            <p class="card-section-sub">Coupons applicable by customers at checkout.</p>
+          </div>
+        </div>
+
+        <div class="admin-table-responsive">
+          <table class="admin-data-table">
+            <thead>
+              <tr>
+                <th>Coupon Code</th>
+                <th>Discount</th>
+                <th>Min Order</th>
+                <th>Valid Until</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for c in coupons %}
+              <tr>
+                <td><strong class="coupon-code-badge">{{ c.code }}</strong></td>
+                <td><strong class="color-primary">{{ c.discount_percent }}% OFF</strong></td>
+                <td>₹{{ c.minimum_order }}</td>
+                <td>{{ c.ends_at|date:"M d, Y" }}</td>
+                <td>
+                  <span class="stock-status-pill {% if c.active %}ok{% else %}out{% endif %}">
+                    {% if c.active %}ACTIVE{% else %}EXPIRED{% endif %}
+                  </span>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="5" class="table-empty-row">No coupons configured yet.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Right: Create Coupon -->
+      <div class="admin-card-section" id="add-coupon-card">
+        <div class="section-card-header">
+          <div>
+            <h2 class="card-section-title">Create New Coupon</h2>
+            <p class="card-section-sub">Add a promotional discount code.</p>
+          </div>
+        </div>
+
+        <form method="post" class="admin-quick-form">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="create_coupon">
+          
+          <div class="admin-form-group">
+            <label>Coupon Code (e.g. MONSOON20)</label>
+            <input type="text" name="code" placeholder="e.g. SUMMER15" required class="admin-text-input">
+          </div>
+
+          <div class="admin-form-group">
+            <label>Discount Percentage (1 - 90%)</label>
+            <input type="number" name="discount_percent" min="1" max="90" value="15" required class="admin-text-input">
+          </div>
+
+          <div class="admin-form-group">
+            <label>Minimum Order Value (₹)</label>
+            <input type="number" step="0.01" name="minimum_order" value="0.00" class="admin-text-input">
+          </div>
+
+          <div class="admin-form-group">
+            <label>Duration (Days Valid)</label>
+            <input type="number" name="duration_days" value="90" class="admin-text-input">
+          </div>
+
+          <button type="submit" class="btn-primary-admin full-width-btn">
+            <span>+ ACTIVATE COUPON CODE</span>
+          </button>
+        </form>
+      </div>
+    </div>
+    {% endif %}
+
+
+    <!-- =========================================================================
+         TAB 5: REVIEWS MODERATION
+         ========================================================================= -->
+    {% if active_tab == 'reviews' %}
+    <div class="admin-content-grid">
+      <!-- Left: Pending Moderation -->
+      <div class="admin-card-section">
+        <div class="section-card-header">
+          <div>
+            <h2 class="card-section-title">Pending Review Queue ({{ pending_reviews|length }})</h2>
+            <p class="card-section-sub">Customer reviews waiting for staff approval.</p>
+          </div>
+        </div>
+
+        {% for rev in pending_reviews %}
+        <div class="pending-review-card wide-card">
+          <div class="rev-header">
+            <div>
+              <strong>{{ rev.user.first_name|default:rev.user.username }}</strong>
+              <span class="user-sub-tag">({{ rev.user.email }})</span>
+            </div>
+            <span class="rev-stars">★★★★★ ({{ rev.rating }} / 5)</span>
+          </div>
+          <span class="rev-plant">Plant: <strong>{{ rev.product.name }}</strong></span>
+          <p class="rev-comment">"{{ rev.comment }}"</p>
+          <div class="rev-action-row">
+            <form method="post" style="display:inline;">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="approve_review">
+              <input type="hidden" name="review_id" value="{{ rev.id }}">
+              <button type="submit" class="btn-approve-review">✓ Approve &amp; Publish</button>
+            </form>
+            <form method="post" style="display:inline;">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="delete_review">
+              <input type="hidden" name="review_id" value="{{ rev.id }}">
+              <button type="submit" class="btn-reject-review">Delete Review</button>
+            </form>
+          </div>
+        </div>
+        {% empty %}
+        <div class="empty-box-card">
+          <span>✓ All customer reviews have been moderated. Zero pending reviews!</span>
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- Right: Approved Reviews History -->
+      <div class="admin-card-section">
+        <div class="section-card-header">
+          <div>
+            <h2 class="card-section-title">Approved Customer Reviews</h2>
+            <p class="card-section-sub">Publicly visible reviews on product pages.</p>
+          </div>
+        </div>
+
+        {% for rev in approved_reviews %}
+        <div class="approved-review-card">
+          <div class="rev-header">
+            <strong>{{ rev.user.username }}</strong>
+            <span class="rev-stars">★ {{ rev.rating }}/5</span>
+          </div>
+          <small class="rev-plant">{{ rev.product.name }} · {{ rev.created_at|date:"M d, Y" }}</small>
+          <p class="rev-comment">"{{ rev.comment }}"</p>
+        </div>
+        {% empty %}
+        <p class="table-empty-row">No approved reviews yet.</p>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+
+    <!-- =========================================================================
+         TAB 6: CUSTOMERS & SUBSCRIBERS
+         ========================================================================= -->
+    {% if active_tab == 'customers' %}
+    <div class="admin-content-grid">
+      <!-- Registered Customer Accounts -->
+      <div class="admin-card-section">
+        <div class="section-card-header">
+          <div>
+            <h2 class="card-section-title">Registered Customer Profiles ({{ customers_count }})</h2>
+            <p class="card-section-sub">Users with active Green Nest accounts.</p>
+          </div>
+          <a class="btn-text-link" href="{{ admin_url }}auth/user/">User Permissions ↗</a>
+        </div>
+
+        <div class="admin-table-responsive">
+          <table class="admin-data-table">
+            <thead>
+              <tr>
+                <th>Customer</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Joined Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for cust in customers %}
+              <tr>
+                <td><strong>{{ cust.first_name|default:cust.username }}</strong></td>
+                <td>{{ cust.username }}</td>
+                <td>{{ cust.email|default:"No email recorded" }}</td>
+                <td>{{ cust.date_joined|date:"M d, Y" }}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="4" class="table-empty-row">No customers registered yet.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Newsletter Subscribers -->
+      <div class="admin-card-section">
+        <div class="section-card-header">
+          <div>
+            <h2 class="card-section-title">Plant Notes Subscribers ({{ subscribers_count }})</h2>
+            <p class="card-section-sub">Email recipients for weekly care guides.</p>
+          </div>
+          <a class="btn-text-link" href="{{ admin_url }}store/newslettersubscriber/">Export List ↗</a>
+        </div>
+
+        <div class="admin-table-responsive">
+          <table class="admin-data-table">
+            <thead>
+              <tr>
+                <th>Subscriber Email</th>
+                <th>Subscribed Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for sub in subscribers %}
+              <tr>
+                <td><strong>{{ sub.email }}</strong></td>
+                <td>{{ sub.subscribed_at|date:"M d, Y · H:i" }}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="2" class="table-empty-row">No newsletter subscribers yet.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+
+    <!-- Bottom Nursery Operations Shortcuts -->
+    <div class="admin-operations-shortcuts">
+      <h3 class="shortcuts-heading">Nursery Direct Administrative Portals</h3>
+      <div class="shortcuts-grid">
+        <a class="shortcut-tile" href="{{ admin_url }}store/product/add/" target="_blank">
+          <span class="tile-icon">➕</span>
+          <strong>Add New Plant</strong>
+          <small>Create product listing</small>
+        </a>
+        <a class="shortcut-tile" href="{{ admin_url }}store/category/" target="_blank">
+          <span class="tile-icon">🌿</span>
+          <strong>Plant Categories</strong>
+          <small>Organize catalog</small>
+        </a>
+        <a class="shortcut-tile" href="{{ admin_url }}store/coupon/" target="_blank">
+          <span class="tile-icon">🏷️</span>
+          <strong>Discount Coupons</strong>
+          <small>Manage GREEN10 &amp; offers</small>
+        </a>
+        <a class="shortcut-tile" href="{{ admin_url }}store/order/" target="_blank">
+          <span class="tile-icon">📦</span>
+          <strong>Order Deliveries</strong>
+          <small>Update shipment logs</small>
+        </a>
+        <a class="shortcut-tile" href="{{ admin_url }}store/careguide/" target="_blank">
+          <span class="tile-icon">📖</span>
+          <strong>Care Guides</strong>
+          <small>Publish plant tips</small>
+        </a>
+        <a class="shortcut-tile" href="{{ admin_url }}store/carereminder/" target="_blank">
+          <span class="tile-icon">⏰</span>
+          <strong>Care Reminders</strong>
+          <small>Customer schedules</small>
+        </a>
+        <a class="shortcut-tile" href="{{ admin_url }}store/newslettersubscriber/" target="_blank">
+          <span class="tile-icon">📬</span>
+          <strong>Newsletter List</strong>
+          <small>View subscribers</small>
+        </a>
+        <a class="shortcut-tile" href="{{ admin_url }}auth/user/" target="_blank">
+          <span class="tile-icon">👥</span>
+          <strong>Staff &amp; Users</strong>
+          <small>Permissions &amp; profiles</small>
+        </a>
+      </div>
+    </div>
+
+      </main>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // ==========================================
+    // INITIALIZE ADMIN CHARTS VIA CHART.JS
+    // ==========================================
+    const adminMonths = {{ admin_months_json|default:"[]"|safe }};
+    const adminRevenue = {{ admin_rev_trend_json|default:"[]"|safe }};
+    const statusLabels = {{ status_labels_json|default:"[]"|safe }};
+    const statusData = {{ status_data_json|default:"[]"|safe }};
+
+    // 1. Line/Area Chart: Monthly Revenue
+    const ctxRev = document.getElementById('adminRevenueChart');
+    if (ctxRev && adminMonths.length > 0) {
+      new Chart(ctxRev, {
+        type: 'line',
+        data: {
+          labels: adminMonths,
+          datasets: [{
+            label: 'Delivered Revenue (₹)',
+            data: adminRevenue,
+            borderColor: '#014e37',
+            backgroundColor: 'rgba(1, 78, 55, 0.12)',
+            fill: true,
+            tension: 0.35,
+            borderWidth: 2.5,
+            pointBackgroundColor: '#10b981',
+            pointRadius: 4,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: { color: '#f1f5f9' },
+              ticks: { callback: val => '₹' + val }
+            },
+            x: {
+              grid: { display: false }
+            }
+          }
+        }
+      });
+    }
+
+    // 2. Doughnut Chart: Order Status Distribution
+    const ctxStatus = document.getElementById('adminOrderStatusChart');
+    if (ctxStatus && statusLabels.length > 0) {
+      new Chart(ctxStatus, {
+        type: 'doughnut',
+        data: {
+          labels: statusLabels,
+          datasets: [{
+            data: statusData,
+            backgroundColor: [
+              '#10b981', // Delivered (Green)
+              '#3b82f6', // Shipped (Blue)
+              '#a855f7', // Packed (Purple)
+              '#0284c7', // Confirmed (Sky)
+              '#f59e0b'  // Pending (Amber)
+            ],
+            borderWidth: 2,
+            borderColor: '#ffffff'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { boxWidth: 11, font: { size: 11 } }
+            }
+          },
+          cutout: '62%'
+        }
+      });
+    }
+  });
+</script>
+{% endblock %}

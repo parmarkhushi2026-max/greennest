@@ -1,0 +1,751 @@
+{% extends "store/base.html" %}
+{% load static %}
+
+{% block title %}{{ product.name }} · Buy Plants Online · Green Nest Nursery{% endblock %}
+
+{% block extra_css %}
+<style>
+  .product-page-wrapper {
+    background: #f8faf9;
+    padding: 24px 0 60px;
+    min-height: calc(100vh - 280px);
+    font-family: 'Outfit', 'Work Sans', sans-serif;
+    color: #1f2937;
+  }
+
+  /* Breadcrumb */
+  .p-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+  }
+
+  .p-breadcrumb a {
+    color: #014e37;
+    text-decoration: none;
+    font-weight: 500;
+  }
+
+  .p-breadcrumb a:hover {
+    text-decoration: underline;
+  }
+
+  /* Main Product Card Grid */
+  .product-main-card {
+    background: #ffffff;
+    border-radius: 20px;
+    border: 1px solid #eef2ef;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+    padding: 36px;
+    display: grid;
+    grid-template-columns: 1fr 1.15fr;
+    gap: 40px;
+    margin-bottom: 40px;
+  }
+
+  @media (max-width: 900px) {
+    .product-main-card {
+      grid-template-columns: 1fr;
+      padding: 24px;
+      gap: 28px;
+    }
+  }
+
+  /* Left Photo Column */
+  .product-gallery-col {
+    position: relative;
+  }
+
+  .product-hero-image-wrap {
+    width: 100%;
+    aspect-ratio: 1/1;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #edf3ef;
+    position: relative;
+    border: 1px solid #e2ebe5;
+  }
+
+  .product-hero-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+  }
+
+  .product-hero-image-wrap:hover img {
+    transform: scale(1.05);
+  }
+
+  .plant-badge-overlay {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    background: #014e37;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 12px;
+    border-radius: 999px;
+    letter-spacing: 0.02em;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+
+  .plant-badge-greenhouse {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(4px);
+    color: #065f46;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 5px 12px;
+    border-radius: 999px;
+    border: 1px solid #a7f3d0;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* Right Information Column */
+  .product-info-col {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .product-cat-kicker {
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: #10b981;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+
+  .product-page-title {
+    font-size: 30px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 8px 0;
+    line-height: 1.2;
+  }
+
+  .product-page-subtitle {
+    font-size: 15px;
+    color: #4b5563;
+    margin: 0 0 16px 0;
+    line-height: 1.4;
+  }
+
+  .product-rating-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+  }
+
+  .product-rating-stars {
+    color: #f59e0b;
+    font-size: 16px;
+    letter-spacing: 1px;
+  }
+
+  /* Pricing block */
+  .product-pricing-box {
+    background: #fbfdfc;
+    border: 1px solid #eef2ef;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 22px;
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .current-price-val {
+    font-size: 32px;
+    font-weight: 800;
+    color: #014e37;
+  }
+
+  .mrp-crossed-val {
+    font-size: 18px;
+    color: #9ca3af;
+    text-decoration: line-through;
+  }
+
+  .save-discount-badge {
+    background: #ecfdf5;
+    color: #047857;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid #a7f3d0;
+  }
+
+  .stock-status-pill {
+    margin-left: auto;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  .in-stock { color: #059669; }
+  .out-stock { color: #ef4444; }
+
+  /* Botanical Care Spec Grid */
+  .botanical-specs-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  @media (max-width: 600px) {
+    .botanical-specs-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  .botanical-spec-item {
+    background: #ffffff;
+    border: 1px solid #eef2ef;
+    border-radius: 12px;
+    padding: 12px 10px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+  }
+
+  .spec-icon {
+    font-size: 20px;
+    margin-bottom: 4px;
+  }
+
+  .spec-label {
+    font-size: 11px;
+    color: #6b7280;
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .spec-val {
+    font-size: 12px;
+    color: #111827;
+    font-weight: 700;
+    margin-top: 2px;
+  }
+
+  /* Purchase Actions Area */
+  .purchase-controls-box {
+    border-top: 1px solid #f0f4f2;
+    padding-top: 22px;
+    margin-top: 10px;
+  }
+
+  .quantity-adjuster-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+  }
+
+  .qty-label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  .qty-stepper {
+    display: inline-flex;
+    align-items: center;
+    border: 1.5px solid #d1d5db;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #ffffff;
+  }
+
+  .qty-btn {
+    background: #f9fafb;
+    border: none;
+    width: 38px;
+    height: 38px;
+    font-size: 18px;
+    font-weight: 700;
+    color: #374151;
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+
+  .qty-btn:hover {
+    background: #ecfdf5;
+    color: #014e37;
+  }
+
+  .qty-input-box {
+    width: 50px;
+    height: 38px;
+    border: none;
+    text-align: center;
+    font-size: 15px;
+    font-weight: 700;
+    color: #111827;
+    background: #ffffff;
+    -moz-appearance: textfield;
+  }
+
+  .qty-input-box::-webkit-outer-spin-button,
+  .qty-input-box::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  .action-buttons-group {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 22px;
+  }
+
+  @media (max-width: 500px) {
+    .action-buttons-group {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .btn-add-bag {
+    background: #ffffff;
+    color: #014e37;
+    border: 2px solid #014e37;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 14px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+  }
+
+  .btn-add-bag:hover {
+    background: #f0fdf4;
+    border-color: #059669;
+    color: #059669;
+  }
+
+  .btn-buy-now {
+    background: linear-gradient(135deg, #014e37 0%, #059669 100%);
+    color: #ffffff;
+    border: none;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 14px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 4px 14px rgba(1, 78, 55, 0.25);
+    transition: all 0.2s ease;
+  }
+
+  .btn-buy-now:hover {
+    background: linear-gradient(135deg, #059669 0%, #10b981 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(1, 78, 55, 0.35);
+  }
+
+  /* Trust perks */
+  .plant-trust-perks {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    padding: 14px 0 0;
+    border-top: 1px dashed #e5e7eb;
+  }
+
+  @media (max-width: 600px) {
+    .plant-trust-perks {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .trust-perk-item {
+    font-size: 12px;
+    color: #4b5563;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .trust-perk-item span {
+    color: #059669;
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  /* Description and reviews tab */
+  .details-tab-section {
+    background: #ffffff;
+    border-radius: 20px;
+    border: 1px solid #eef2ef;
+    padding: 32px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+    margin-bottom: 40px;
+  }
+
+  .details-tab-section h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #014e37;
+    margin: 0 0 16px 0;
+  }
+
+  .plant-description-text {
+    font-size: 15px;
+    line-height: 1.7;
+    color: #374151;
+  }
+
+  /* Related Plants Grid */
+  .related-plants-section h3 {
+    font-size: 22px;
+    font-weight: 700;
+    color: #014e37;
+    margin: 0 0 20px 0;
+  }
+
+  .related-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+  }
+
+  @media (max-width: 900px) {
+    .related-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 500px) {
+    .related-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .related-card {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #eef2ef;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+    transition: all 0.2s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .related-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+    border-color: #a7f3d0;
+  }
+
+  .related-card-img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    object-fit: cover;
+  }
+
+  .related-card-body {
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+  }
+
+  .related-card-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 6px 0;
+  }
+
+  .related-card-price {
+    font-size: 16px;
+    font-weight: 700;
+    color: #014e37;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="product-page-wrapper">
+  <div class="theme-container">
+
+    <!-- Breadcrumb -->
+    <nav class="p-breadcrumb" aria-label="Breadcrumb">
+      <a href="{% url 'store:home' %}">Home</a>
+      <span>/</span>
+      <a href="{% url 'store:home' %}#shop">Plants</a>
+      <span>/</span>
+      <a href="{% url 'store:home' %}?category={{ product.category.slug }}#shop">{{ product.category.name }}</a>
+      <span>/</span>
+      <span style="color:#111827; font-weight:600;">{{ product.name }}</span>
+    </nav>
+
+    <!-- Main Product Purchase Card -->
+    <div class="product-main-card">
+      <!-- Left Photo -->
+      <div class="product-gallery-col">
+        <div class="product-hero-image-wrap">
+          <img src="{{ product.image_url|default:'https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=800&q=85' }}"
+               alt="{{ product.alt_text|default:product.name }}"
+               onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=800&q=85';">
+          <span class="plant-badge-overlay">
+            {% if product.tag %}{{ product.tag }}{% else %}Fresh Nursery Batch{% endif %}
+          </span>
+          <span class="plant-badge-greenhouse">
+            🌱 Chennai Greenhouse Acclimatized
+          </span>
+        </div>
+      </div>
+
+      <!-- Right Details & Buy Actions -->
+      <div class="product-info-col">
+        <div>
+          <span class="product-cat-kicker">{{ product.category.name }}</span>
+          <h1 class="product-page-title">{{ product.name }}</h1>
+          <p class="product-page-subtitle">{{ product.subtitle|default:"Lush, healthy greenhouse plant ready to brighten your living space." }}</p>
+
+          <!-- Rating -->
+          <div class="product-rating-row">
+            <span class="product-rating-stars">★★★★★</span>
+            <span style="font-weight:600; color:#111827;">
+              {% if product.review_count %}{{ product.average_rating|floatformat:1 }} ({{ product.review_count }} Customer Reviews){% else %}5.0 (Nursery Certified){% endif %}
+            </span>
+          </div>
+
+          <!-- Price Box -->
+          <div class="product-pricing-box">
+            <span class="current-price-val">₹{{ product.price }}</span>
+            <span class="mrp-crossed-val">₹{{ product.price|add:"50" }}</span>
+            <span class="save-discount-badge">SAVE ₹50</span>
+            <div class="stock-status-pill">
+              {% if product.stock > 0 %}
+                <span class="in-stock">● In Stock ({{ product.stock }} units left)</span>
+              {% else %}
+                <span class="out-stock">✕ Out of Stock</span>
+              {% endif %}
+            </div>
+          </div>
+
+          <!-- Botanical Care Specs (Live Working from Database) -->
+          <div class="botanical-specs-grid">
+            <div class="botanical-spec-item" title="Recommended sunlight exposure for this plant">
+              <div class="spec-icon">☀️</div>
+              <div class="spec-label">Sunlight</div>
+              <div class="spec-val">{{ product.sunlight|default:"Bright Indirect" }}</div>
+            </div>
+            <div class="botanical-spec-item" title="Recommended watering frequency schedule">
+              <div class="spec-icon">💧</div>
+              <div class="spec-label">Watering</div>
+              <div class="spec-val">Every {{ product.water_days|default:"5" }} Days</div>
+            </div>
+            <div class="botanical-spec-item" title="Included container and pot material">
+              <div class="spec-icon">🪴</div>
+              <div class="spec-label">Pot Type</div>
+              <div class="spec-val">{{ product.pot_type|default:"Nursery Pot Inc." }}</div>
+            </div>
+            <div class="botanical-spec-item" title="Air purification capability">
+              <div class="spec-icon">🍃</div>
+              <div class="spec-label">Air Purifying</div>
+              <div class="spec-val">{{ product.air_purifying|default:"High Oxygen" }}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add to Cart & Buy Now Form -->
+        <div class="purchase-controls-box">
+          <form method="post" action="{% url 'store:add_to_cart' product.id %}" id="purchasePlantForm">
+            {% csrf_token %}
+            <input type="hidden" name="action" id="cartActionInput" value="add_cart">
+            <input type="hidden" name="next" value="{% url 'store:cart' %}">
+
+            <!-- Quantity Counter -->
+            <div class="quantity-adjuster-row">
+              <span class="qty-label">Quantity:</span>
+              <div class="qty-stepper">
+                <button type="button" class="qty-btn" onclick="adjustQty(-1)">−</button>
+                <input type="number" name="quantity" id="quantityInput" class="qty-input-box" value="1" min="1" max="{{ product.stock|default:10 }}">
+                <button type="button" class="qty-btn" onclick="adjustQty(1)">+</button>
+              </div>
+              <span style="font-size:13px; color:#6b7280;">Subtotal: <strong id="liveSubtotalText" style="color:#014e37;">₹{{ product.price }}</strong></span>
+            </div>
+
+            <!-- Two Buy Buttons -->
+            <div class="action-buttons-group">
+              <button type="button" class="btn-add-bag" onclick="submitPlantForm('add_cart')" {% if not product.stock %}disabled{% endif %}>
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                <span>ADD TO CART</span>
+              </button>
+
+              <button type="button" class="btn-buy-now" onclick="submitPlantForm('buy_now')" {% if not product.stock %}disabled{% endif %}>
+                <span>⚡ BUY NOW (Instant)</span>
+              </button>
+            </div>
+          </form>
+
+          <!-- GreenNest Guarantee Perks -->
+          <div class="plant-trust-perks">
+            <div class="trust-perk-item">
+              <span>✓</span> 7-Day Live Plant Guarantee
+            </div>
+            <div class="trust-perk-item">
+              <span>✓</span> Safe Transit Box Packaging
+            </div>
+            <div class="trust-perk-item">
+              <span>✓</span> COD & Razorpay Available
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Description & Plant Care Notes -->
+    <div class="details-tab-section">
+      <h3>About {{ product.name }}</h3>
+      <div class="plant-description-text">
+        <p>{{ product.description|default:product.subtitle|linebreaks }}</p>
+        <p><strong>Nursery Care Tip:</strong> Keep in a brightly lit room away from direct scorching afternoon sun. Allow top 1 inch of soil to dry out between waterings. Fertilize every 4 weeks during active growing months for lush green foliage.</p>
+      </div>
+    </div>
+
+    <!-- Plant Reviews Section -->
+    <div class="details-tab-section" style="margin-top: 28px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eef2ef; padding-bottom: 14px; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
+        <div>
+          <h3 style="margin: 0 0 4px; font-size: 1.28rem; color: #014e37;">⭐ Customer Reviews & Ratings</h3>
+          <span style="font-size: 0.84rem; color: #64748b;">Feedback from verified plant buyers</span>
+        </div>
+        <a href="{% url 'store:review' product.id %}" style="display: inline-flex; align-items: center; gap: 6px; background: #014e37; color: #ffffff; padding: 9px 18px; border-radius: 8px; font-weight: 700; font-size: 0.88rem; text-decoration: none; transition: background 0.2s;">
+          ✍️ Write a Review
+        </a>
+      </div>
+
+      {% if reviews %}
+      <div style="display: grid; gap: 16px;">
+        {% for r in reviews %}
+        <div style="background: #fbfdfc; border: 1px solid #eef2ef; border-radius: 12px; padding: 18px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="width: 34px; height: 34px; border-radius: 50%; background: #eaf4ee; color: #014e37; display: flex; align-items: center; justify-content: center; font-weight: 700;">
+                {{ r.user.username|slice:":1"|upper }}
+              </span>
+              <div>
+                <strong style="color: #0f172a; font-size: 0.95rem;">{{ r.user.first_name|default:r.user.username }}</strong>
+                <span style="font-size: 0.78rem; color: #059669; font-weight: 600; margin-left: 6px;">✓ Verified Plant Parent</span>
+              </div>
+            </div>
+            <span style="font-size: 0.82rem; color: #94a3b8;">{{ r.created_at|date:"M j, Y" }}</span>
+          </div>
+          <div style="color: #f59e0b; font-size: 0.95rem; margin-bottom: 6px;">
+            {% if r.rating == 5 %}★★★★★
+            {% elif r.rating == 4 %}★★★★☆
+            {% elif r.rating == 3 %}★★★☆☆
+            {% elif r.rating == 2 %}★★☆☆☆
+            {% else %}★☆☆☆☆{% endif %}
+            <span style="font-size: 0.84rem; color: #64748b; margin-left: 6px; font-weight: 600;">{{ r.rating }}.0 / 5.0</span>
+          </div>
+          <p style="margin: 0; color: #334155; font-size: 0.92rem; line-height: 1.5;">{{ r.comment }}</p>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div style="text-align: center; padding: 32px 20px; background: #fbfdfc; border-radius: 12px; border: 1px dashed #cbd5e1;">
+        <p style="font-size: 1rem; color: #64748b; margin-bottom: 14px;">No reviews yet for {{ product.name }}. Be the first plant parent to share your experience!</p>
+        <a href="{% url 'store:review' product.id %}" style="display: inline-block; background: #014e37; color: #ffffff; padding: 9px 20px; border-radius: 8px; font-weight: 700; font-size: 0.88rem; text-decoration: none;">
+          ✍️ Write First Review
+        </a>
+      </div>
+      {% endif %}
+    </div>
+
+    <!-- Related Nursery Plants -->
+    {% if related_products %}
+    <div class="related-plants-section">
+      <h3>You May Also Love</h3>
+      <div class="related-grid">
+        {% for rel in related_products %}
+        <a class="related-card" href="{% url 'store:product_detail' rel.id %}">
+          <img class="related-card-img" src="{{ rel.image_url|default:'https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=500&q=85' }}" alt="{{ rel.name }}" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=500&q=85';">
+          <div class="related-card-body">
+            <div>
+              <span style="font-size:11px; text-transform:uppercase; color:#10b981; font-weight:700;">{{ rel.category.name }}</span>
+              <h4 class="related-card-title">{{ rel.name }}</h4>
+            </div>
+            <div class="related-card-price">₹{{ rel.price }}</div>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+
+<script>
+  const unitPrice = parseFloat("{{ product.price }}") || 0;
+  const maxStock = parseInt("{{ product.stock|default:10 }}") || 10;
+  const qtyInput = document.getElementById('quantityInput');
+  const subtotalEl = document.getElementById('liveSubtotalText');
+
+  function adjustQty(delta) {
+    let current = parseInt(qtyInput.value) || 1;
+    let next = current + delta;
+    if (next < 1) next = 1;
+    if (next > maxStock) next = maxStock;
+    qtyInput.value = next;
+    updateSubtotal(next);
+  }
+
+  function updateSubtotal(qty) {
+    const total = (unitPrice * qty).toFixed(2);
+    if (subtotalEl) {
+      subtotalEl.innerText = '₹' + total;
+    }
+  }
+
+  if (qtyInput) {
+    qtyInput.addEventListener('change', function () {
+      let val = parseInt(this.value) || 1;
+      if (val < 1) val = 1;
+      if (val > maxStock) val = maxStock;
+      this.value = val;
+      updateSubtotal(val);
+    });
+  }
+
+  function submitPlantForm(actionType) {
+    const form = document.getElementById('purchasePlantForm');
+    const actionInput = document.getElementById('cartActionInput');
+    actionInput.value = actionType;
+    form.submit();
+  }
+</script>
+{% endblock %}

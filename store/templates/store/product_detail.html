@@ -1,0 +1,12 @@
+{% extends "store/base.html" %}
+{% block title %}{{ product.name }} · GreenNest{% endblock %}
+{% block content %}
+<section class="page-section section-wrap">
+  <p class="form-help"><a href="{% url 'store:home' %}#shop">← Browse plants</a> / {{ product.category.name }}</p>
+  <div class="product-detail">
+    <div class="detail-image"><img src="{{ product.image_url }}" alt="{ product.alt_text|default:product.name }" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=700&q=85';"></div>
+    <div class="detail-copy"><span class="section-kicker">{{ product.category.name }} · {% if product.stock %}{{ product.stock }} IN STOCK{% else %}SOLD OUT{% endif %}</span><h1>{{ product.name }}</h1><p class="detail-subtitle">{{ product.subtitle }}</p><strong class="detail-price">₹{{ product.price }}</strong>{% if product.review_count %}<p class="product-rating">★ {{ product.average_rating|floatformat:1 }} · {{ product.review_count }} customer review(s)</p>{% endif %}<p class="detail-description">{{ product.description|default:product.subtitle }}</p><form method="post" action="{% url 'store:add_to_cart' product.id %}">{% csrf_token %}<input type="hidden" name="next" value="{% url 'store:product_detail' product.id %}"><button class="button button-green" type="submit" {% if not product.stock %}disabled{% endif %}>{% if product.stock %}ADD TO BAG{% else %}SOLD OUT{% endif %} <span>→</span></button></form>{% if user.is_authenticated %}<a class="text-link detail-review-link" href="{% url 'store:review' product.id %}">WRITE A REVIEW <span>→</span></a>{% else %}<p class="form-help"><a href="{% url 'store:login' %}">Log in</a> to write a review.</p>{% endif %}</div>
+  </div>
+  <section class="reviews-section"><h2>Customer reviews</h2>{% for review in reviews %}<article class="review-card"><strong>{{ review.user.first_name|default:review.user.username }}</strong><span class="product-rating">★ {{ review.rating }} / 5</span><p>{{ review.comment }}</p></article>{% empty %}<p class="form-help">No approved reviews yet. Be the first to share how your plant is growing.</p>{% endfor %}</section>
+</section>
+{% endblock %}

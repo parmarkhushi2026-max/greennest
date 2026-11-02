@@ -1,0 +1,12 @@
+{% extends "store/base.html" %}
+{% block title %}Your bag · GreenNest{% endblock %}
+{% block content %}
+<section class="page-section section-wrap">
+  <div class="page-heading"><span class="section-kicker">GOOD THINGS GROW HERE</span><h1>Your plant bag</h1></div>
+  {% if lines %}
+  <div class="cart-layout"><div class="cart-lines">
+    {% for line in lines %}<article class="cart-line"><div><h2>{{ line.product.name }}</h2><p>{{ line.product.subtitle }} · ₹{{ line.product.price }} each · {{ line.product.stock }} in stock</p></div><form class="quantity-form" method="post">{% csrf_token %}<input type="hidden" name="action" value="update"><input type="hidden" name="product_id" value="{{ line.product.id }}"><label>Qty <input type="number" name="quantity" value="{{ line.quantity }}" min="1" max="{{ line.product.stock }}"></label><button class="small-button" type="submit">Update</button></form><strong>₹{{ line.line_total }}</strong><form method="post">{% csrf_token %}<input type="hidden" name="action" value="remove"><input type="hidden" name="product_id" value="{{ line.product.id }}"><button class="text-button" type="submit">Remove</button></form></article>{% endfor %}
+  </div><aside class="summary-card"><h2>Order summary</h2><p><span>Subtotal</span><strong>₹{{ subtotal }}</strong></p>{% if coupon %}<p><span>{{ coupon.code }} · {{ coupon.discount_percent }}% off</span><strong>−₹{{ discount }}</strong></p>{% endif %}<p class="summary-total"><span>Total</span><strong>₹{{ total }}</strong></p><form class="coupon-form" method="post">{% csrf_token %}<input type="hidden" name="action" value="apply_coupon">{{ coupon_form.code }}<button class="small-button" type="submit">Apply coupon</button></form><a class="button button-green checkout-button" href="{% url 'store:checkout' %}">CONTINUE TO CHECKOUT <span>→</span></a><p class="form-help">Secure checkout · delivery details collected next</p></aside></div>
+  {% else %}<div class="empty-cart"><p>Your bag is waiting for a little green.</p><a class="button button-green" href="{% url 'store:home' %}#shop">BROWSE PLANTS <span>→</span></a></div>{% endif %}
+</section>
+{% endblock %}

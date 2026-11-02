@@ -1,0 +1,7 @@
+{% extends "store/base.html" %}
+{% block title %}Plant care guides · GreenNest{% endblock %}
+{% block content %}
+<section class="page-section section-wrap"><div class="page-heading"><span class="section-kicker">VISITOR PLANT LIBRARY</span><h1>Plant care guides</h1><p>Helpful, friendly advice for growing happy plants.</p></div>
+  <div class="guide-list">{% for guide in guides %}<article class="guide-card"><span class="service-icon" aria-hidden="true">✿</span><div><h2><a href="{% url 'store:guide_detail' guide.slug %}">{{ guide.title }}</a></h2><p>{{ guide.summary }}</p><a class="text-link" href="{% url 'store:guide_detail' guide.slug %}">READ GUIDE <span>→</span></a></div></article>{% empty %}<p>Care guides will be available soon.</p>{% endfor %}</div>
+</section>
+{% endblock %}

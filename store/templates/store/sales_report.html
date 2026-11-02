@@ -1,0 +1,43 @@
+{% extends "store/base.html" %}
+{% block title %}Sales report · GreenNest{% endblock %}
+{% block site_header %}
+<header style="background: #013827; border-bottom: 1px solid rgba(255,255,255,0.12); padding: 12px 0; color: #ffffff; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 20px rgba(0,0,0,0.15);">
+  <div class="theme-container" style="display: flex; justify-content: space-between; align-items: center;">
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <a href="{% url 'store:admin_dashboard' %}" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #ffffff;">
+        
+        <div>
+          <div style="font-family: var(--font-heading, sans-serif); font-weight: 800; font-size: 19px; letter-spacing: -0.02em; color: #ffffff; line-height: 1.1;">GreenNest Admin</div>
+          <div style="font-size: 10px; color: #a7f3d0; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;">Store Management Portal</div>
+        </div>
+      </a>
+      <span style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; border: 1px solid rgba(16, 185, 129, 0.4);">
+        Sales Analytics
+      </span>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <a href="{% url 'store:admin_dashboard' %}" style="display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.1); color: #ffffff; text-decoration: none; padding: 7px 14px; border-radius: 8px; font-size: 12.5px; font-weight: 600; border: 1px solid rgba(255,255,255,0.18); transition: background 0.15s ease;">
+        <span>← Store Management</span>
+      </a>
+      <a href="{% url 'store:home' %}" style="display: inline-flex; align-items: center; gap: 6px; background: #10b981; color: #ffffff; text-decoration: none; padding: 7px 16px; border-radius: 8px; font-size: 12.5px; font-weight: 700; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3); transition: transform 0.15s ease;">
+        <span>Storefront</span>
+        <span>→</span>
+      </a>
+      <form method="post" action="{% url 'store:logout' %}" style="margin: 0;">
+        {% csrf_token %}
+        <button type="submit" style="background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.35); padding: 7px 14px; border-radius: 8px; font-size: 12.5px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
+          <span>Logout</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</header>
+{% endblock site_header %}
+
+{% block content %}
+<section class="page-section section-wrap"><div class="page-heading"><span class="section-kicker">STAFF REPORT</span><h1>Sales report</h1><p>Revenue includes delivered orders only.</p></div>
+  <div class="admin-metrics"><article><span>Delivered revenue</span><strong>₹{{ total_sales }}</strong></article><article><span>Non-cancelled orders</span><strong>{{ orders }}</strong></article></div>
+  <div class="report-table"><div class="report-row report-head"><span>Month</span><span>Delivered orders</span><span>Revenue</span></div>{% for row in monthly_sales %}<div class="report-row"><span>{{ row.month|date:"F Y" }}</span><span>{{ row.order_count }}</span><strong>₹{{ row.revenue|default:"0.00" }}</strong></div>{% empty %}<p>No delivered orders yet; sales will appear here.</p>{% endfor %}</div><a class="text-link" href="{% url 'store:admin_dashboard' %}">← STORE MANAGEMENT</a>
+</section>
+{% endblock %}

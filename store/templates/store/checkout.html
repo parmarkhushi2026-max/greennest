@@ -1,0 +1,8 @@
+{% extends "store/base.html" %}
+{% block title %}Checkout · GreenNest{% endblock %}
+{% block content %}
+<section class="page-section section-wrap">
+  <div class="page-heading"><span class="section-kicker">ALMOST HOME</span><h1>Delivery &amp; payment</h1></div>
+  <div class="cart-layout"><form class="store-form checkout-form" method="post">{% csrf_token %}{% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors }}</div>{% endif %}{{ form.as_p }}<p class="payment-note">Online payment is in demo mode: this order will be recorded as payment pending. No card is charged. Configure a payment gateway before accepting real payments.</p><button class="button button-green" type="submit">PLACE MY ORDER <span>→</span></button></form><aside class="summary-card"><h2>Your order</h2>{% for line in lines %}<p><span>{{ line.quantity }} × {{ line.product.name }}</span><strong>₹{{ line.line_total }}</strong></p>{% endfor %}<p><span>Subtotal</span><strong>₹{{ subtotal }}</strong></p>{% if discount %}<p><span>Coupon savings</span><strong>−₹{{ discount }}</strong></p>{% endif %}<p class="summary-total"><span>Total</span><strong>₹{{ total }}</strong></p></aside></div>
+</section>
+{% endblock %}

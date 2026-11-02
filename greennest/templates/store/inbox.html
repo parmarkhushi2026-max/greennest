@@ -1,0 +1,176 @@
+{% extends "store/base.html" %}
+{% load static %}
+
+{% block title %}My Email Inbox · Green Nest Nursery{% endblock %}
+
+{% block extra_css %}
+<style>
+  .inbox-page-wrapper {
+    background-color: #f8faf9;
+    padding: 36px 0 70px;
+    font-family: 'Outfit', 'Work Sans', -apple-system, sans-serif;
+    min-height: calc(100vh - 280px);
+  }
+  .inbox-card {
+    background: #ffffff;
+    border-radius: 18px;
+    border: 1px solid #eef2ef;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+    overflow: hidden;
+  }
+  .inbox-top-bar {
+    background: linear-gradient(135deg, #013827 0%, #014e37 100%);
+    color: #ffffff;
+    padding: 22px 28px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+  .inbox-title-group h1 {
+    font-size: 22px;
+    font-weight: 800;
+    margin: 0 0 4px;
+    color: #ffffff;
+  }
+  .inbox-title-group p {
+    font-size: 13px;
+    color: #a7f3d0;
+    margin: 0;
+  }
+  .inbox-layout {
+    display: grid;
+    grid-template-columns: 340px 1fr;
+    min-height: 520px;
+  }
+  @media (max-width: 860px) {
+    .inbox-layout {
+      grid-template-columns: 1fr;
+    }
+  }
+  .email-list-panel {
+    border-right: 1px solid #eef2ef;
+    background: #fafcfb;
+    overflow-y: auto;
+    max-height: 650px;
+  }
+  .email-item-card {
+    padding: 16px 20px;
+    border-bottom: 1px solid #f0f4f2;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: block;
+    text-decoration: none;
+    color: inherit;
+  }
+  .email-item-card:hover {
+    background: #f0fdf4;
+  }
+  .email-item-card.is-active {
+    background: #eaf6ef;
+    border-left: 4px solid #014e37;
+  }
+  .email-item-subject {
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 4px;
+  }
+  .email-item-meta {
+    font-size: 11.5px;
+    color: #64748b;
+    display: flex;
+    justify-content: space-between;
+  }
+  .email-preview-panel {
+    padding: 24px;
+    background: #ffffff;
+    overflow-y: auto;
+  }
+  .empty-inbox-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #64748b;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="inbox-page-wrapper">
+  <div class="theme-container">
+    <div class="inbox-card">
+      <div class="inbox-top-bar">
+        <div class="inbox-title-group">
+          <h1>Green Nest Customer Email Mailbox</h1>
+          <p>Real-time delivery of your plant order invoices, receipts and dispatch updates</p>
+        </div>
+        <div style="display: flex; gap: 10px; align-items: center;">
+          <span style="background: rgba(255,255,255,0.2); padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;">
+            {{ emails|length }} Received Messages
+          </span>
+          <a href="{% url 'store:customer_dashboard' %}" style="background: #ffffff; color: #014e37; padding: 7px 14px; border-radius: 8px; text-decoration: none; font-size: 12.5px; font-weight: 700;">
+            ← My Account
+          </a>
+        </div>
+      </div>
+
+      <div class="inbox-layout">
+        <!-- Left: Email List -->
+        <div class="email-list-panel">
+          {% if emails %}
+            {% for em in emails %}
+            <a href="?msg={{ em.id }}" class="email-item-card {% if selected_email.id == em.id %}is-active{% endif %}">
+              <div class="email-item-subject">
+                {{ em.subject }}
+              </div>
+              <div class="email-item-meta">
+                <span>To: {{ em.recipient_email }}</span>
+                <span>{{ em.created_at|date:"d M, H:i" }}</span>
+              </div>
+            </a>
+            {% endfor %}
+          {% else %}
+            <div class="empty-inbox-state">
+              <div style="font-size: 32px; margin-bottom: 8px;">📬</div>
+              <p style="margin: 0; font-weight: 600;">No emails received yet.</p>
+              <small>Place an order or click "Email Receipt" to receive your first invoice here!</small>
+            </div>
+          {% endif %}
+        </div>
+
+        <!-- Right: Active Email Viewer -->
+        <div class="email-preview-panel">
+          {% if selected_email %}
+            <div style="padding-bottom: 16px; margin-bottom: 16px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
+              <div>
+                <h2 style="font-size: 18px; margin: 0 0 6px; color: #014e37; font-weight: 800;">{{ selected_email.subject }}</h2>
+                <div style="font-size: 12px; color: #64748b;">
+                  From: <strong>Green Nest Nursery &lt;hello@greennest.local&gt;</strong> · To: <strong>{{ selected_email.recipient_email }}</strong> · Date: <strong>{{ selected_email.created_at|date:"d M Y, h:i A" }}</strong>
+                </div>
+              </div>
+              {% if selected_email.order %}
+              <a href="{% url 'store:order_detail' selected_email.order.tracking_code %}" style="background: #eaf4ee; color: #014e37; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; text-decoration: none;">
+                Track Order #{{ selected_email.order.tracking_code }} →
+              </a>
+              {% endif %}
+            </div>
+
+            <!-- Email HTML Content rendered live -->
+            <div style="border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; background: #ffffff;">
+              {{ selected_email.body_html|safe }}
+            </div>
+          {% else %}
+            <div class="empty-inbox-state" style="padding-top: 140px;">
+              <div style="font-size: 40px; margin-bottom: 10px;">✉️</div>
+              <h3 style="margin: 0 0 6px; color: #1e293b;">Select an email to read</h3>
+              <p style="margin: 0; font-size: 13px;">Choose any message from the left list to view the full order receipt and invoice.</p>
+            </div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

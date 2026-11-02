@@ -1,0 +1,16 @@
+{% extends "store/base.html" %}
+{% block title %}{{ title }} · GreenNest{% endblock %}
+{% block content %}
+<section class="page-section section-wrap">
+  <div class="page-heading"><span class="section-kicker">GREENNEST · PLANT NURSERY STORE</span><h1>{{ title }}</h1></div>
+  <form class="store-form" method="post">
+    {% csrf_token %}
+    {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+    {% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors }}</div>{% endif %}
+    {{ form.as_p }}
+    {% if title == "Welcome back" %}<p class="form-help">New to GreenNest? <a href="{% url 'store:register' %}">Create an account</a>.</p>{% endif %}
+    {% if title == "Create your account" %}<p class="form-help">Already have an account? <a href="{% url 'store:login' %}">Log in</a>.</p>{% endif %}
+    <button class="button button-green" type="submit">{{ submit_label|default:"Continue" }}</button>
+  </form>
+</section>
+{% endblock %}

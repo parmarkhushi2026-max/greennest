@@ -1,0 +1,5 @@
+{% extends "store/base.html" %}
+{% block title %}{{ guide.title }} · GreenNest{% endblock %}
+{% block content %}
+<article class="page-section section-wrap guide-article"><div class="page-heading"><span class="section-kicker">GREENNEST CARE GUIDE</span><h1>{{ guide.title }}</h1><p>{{ guide.summary }}</p></div><div class="guide-body">{{ guide.body|linebreaks }}</div><a class="text-link" href="{% url 'store:guides' %}">← ALL CARE GUIDES</a></article>
+{% endblock %}

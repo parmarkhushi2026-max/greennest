@@ -1,0 +1,833 @@
+{% extends "store/base.html" %}
+{% load static %}
+{% block title %}{% if current_category %}{{ current_category.name }} – Plant Shop{% elif query %}Search: {{ query }} – Plant Shop{% else %}All Plants & Nursery Catalog – Green Nest Nursery Chennai{% endif %}{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* Dedicated Shop Catalog Page Styling */
+  .shop-page-wrapper {
+    background-color: #f8faf8;
+    padding-bottom: 70px;
+  }
+
+  /* Catalog Hero Banner */
+  .shop-hero-banner {
+    background: linear-gradient(135deg, #013827 0%, #014e37 60%, #0d694b 100%);
+    color: #ffffff;
+    padding: 42px 0 36px;
+    margin-bottom: 35px;
+    position: relative;
+    overflow: hidden;
+  }
+  .shop-hero-banner::after {
+    content: "";
+    position: absolute;
+    right: -60px;
+    bottom: -60px;
+    width: 280px;
+    height: 280px;
+    background: radial-gradient(circle, rgba(52, 211, 153, 0.15) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  .shop-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.75);
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+  }
+  .shop-breadcrumb a {
+    color: rgba(255, 255, 255, 0.85);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+  .shop-breadcrumb a:hover {
+    color: #34d399;
+  }
+  .shop-breadcrumb span.sep {
+    opacity: 0.5;
+  }
+  .shop-breadcrumb span.active {
+    color: #34d399;
+    font-weight: 600;
+  }
+
+  .shop-hero-title {
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin: 0 0 10px;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+  }
+  .shop-hero-subtitle {
+    font-size: 1.02rem;
+    color: rgba(255, 255, 255, 0.85);
+    max-width: 720px;
+    margin: 0 0 22px;
+    line-height: 1.55;
+  }
+
+  .shop-perks-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: 10px;
+  }
+  .shop-perk-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    background: rgba(255, 255, 255, 0.12);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    backdrop-filter: blur(4px);
+    padding: 6px 14px;
+    border-radius: 999px;
+    font-size: 0.84rem;
+    font-weight: 500;
+    color: #e6f4ea;
+  }
+
+  /* Catalog Layout */
+  .shop-layout-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 32px;
+    align-items: start;
+  }
+
+  /* Left Sidebar Filters */
+  .shop-sidebar {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    position: sticky;
+    top: 90px;
+  }
+  .sidebar-section-title {
+    font-size: 0.96rem;
+    font-weight: 700;
+    color: #014e37;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin: 0 0 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid #eef3ef;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .sidebar-widget {
+    margin-bottom: 28px;
+  }
+  .sidebar-widget:last-child {
+    margin-bottom: 0;
+  }
+
+  /* Category List */
+  .shop-cat-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  .shop-cat-item {
+    margin-bottom: 6px;
+  }
+  .shop-cat-link {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 12px;
+    border-radius: 8px;
+    color: #334155;
+    text-decoration: none;
+    font-size: 0.93rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  .shop-cat-link:hover {
+    background: #eaf4ee;
+    color: #014e37;
+    transform: translateX(3px);
+  }
+  .shop-cat-link.is-active {
+    background: #014e37;
+    color: #ffffff;
+    font-weight: 600;
+  }
+  .shop-cat-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 12px;
+    background: #f1f5f9;
+    color: #64748b;
+    font-size: 0.78rem;
+    font-weight: 600;
+  }
+  .shop-cat-link.is-active .shop-cat-badge {
+    background: rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+  }
+
+  /* Price Filter Pills */
+  .price-filter-list {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .price-filter-btn {
+    display: block;
+    padding: 8px 12px;
+    border-radius: 8px;
+    color: #475569;
+    text-decoration: none;
+    font-size: 0.88rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    transition: all 0.2s ease;
+  }
+  .price-filter-btn:hover {
+    background: #eaf4ee;
+    border-color: #34d399;
+    color: #014e37;
+  }
+  .price-filter-btn.is-active {
+    background: #014e37;
+    border-color: #014e37;
+    color: #ffffff;
+    font-weight: 600;
+  }
+
+  /* Promo Coupon Card */
+  .shop-promo-card {
+    background: linear-gradient(135deg, #eefbf4 0%, #d8f3e5 100%);
+    border: 1px dashed #059669;
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+  }
+  .promo-badge-text {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #047857;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .promo-discount-num {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: #014e37;
+    margin: 4px 0 6px;
+  }
+  .promo-code-pill {
+    background: #ffffff;
+    border: 1px solid #10b981;
+    color: #014e37;
+    font-family: monospace;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 5px 12px;
+    border-radius: 6px;
+    display: inline-block;
+    cursor: pointer;
+    margin-top: 4px;
+    user-select: all;
+  }
+  .promo-code-hint {
+    display: block;
+    font-size: 0.76rem;
+    color: #059669;
+    margin-top: 6px;
+  }
+
+  /* Main Shop Content */
+  .shop-main-content {
+    min-width: 0;
+  }
+
+  /* Shop Toolbar */
+  .shop-toolbar {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px;
+    margin-bottom: 22px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+  }
+  .shop-results-count {
+    font-size: 0.94rem;
+    color: #475569;
+    font-weight: 500;
+  }
+  .shop-results-count strong {
+    color: #0f172a;
+    font-weight: 700;
+  }
+  .shop-sort-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .shop-sort-label {
+    font-size: 0.88rem;
+    color: #64748b;
+    font-weight: 500;
+  }
+  .shop-sort-select {
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    padding: 7px 12px;
+    font-size: 0.88rem;
+    color: #1e293b;
+    background: #ffffff;
+    cursor: pointer;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .shop-sort-select:focus {
+    border-color: #014e37;
+    box-shadow: 0 0 0 2px rgba(1, 78, 55, 0.15);
+  }
+
+  /* Active Filters Bar */
+  .shop-active-filters {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 20px;
+    padding: 10px 14px;
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    border-radius: 8px;
+  }
+  .active-filter-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #ffffff;
+    border: 1px solid #6ee7b7;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 0.82rem;
+    color: #065f46;
+    font-weight: 500;
+  }
+  .active-filter-tag a {
+    color: #047857;
+    text-decoration: none;
+    font-weight: 700;
+    margin-left: 2px;
+  }
+  .active-filter-clear-all {
+    font-size: 0.82rem;
+    color: #dc2626;
+    text-decoration: underline;
+    font-weight: 600;
+    margin-left: auto;
+  }
+
+  /* Shop Product Cards Grid */
+  .shop-products-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+
+  /* Card Action Row with Cart & Instant Buy */
+  .shop-card-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+    margin-top: 14px;
+  }
+  .shop-btn-cart {
+    width: 100%;
+    background: #014e37;
+    color: #ffffff;
+    border: none;
+    padding: 9px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.88rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .shop-btn-cart:hover:not(:disabled) {
+    background: #023827;
+    transform: translateY(-1px);
+  }
+  .shop-btn-cart:disabled {
+    background: #cbd5e1;
+    color: #64748b;
+    cursor: not-allowed;
+  }
+
+  .shop-btn-buy-now {
+    width: 100%;
+    background: #f59e0b;
+    color: #ffffff;
+    border: none;
+    padding: 9px 12px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 0.88rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .shop-btn-buy-now:hover:not(:disabled) {
+    background: #d97706;
+    transform: translateY(-1px);
+  }
+  .shop-btn-buy-now:disabled {
+    background: #e2e8f0;
+    color: #94a3b8;
+    cursor: not-allowed;
+  }
+
+  /* Empty State */
+  .shop-empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    background: #ffffff;
+    border: 1px dashed #cbd5e1;
+    border-radius: 12px;
+  }
+  .shop-empty-icon {
+    font-size: 3.5rem;
+    margin-bottom: 12px;
+  }
+  .shop-empty-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #1e293b;
+    margin: 0 0 8px;
+  }
+  .shop-empty-desc {
+    color: #64748b;
+    max-width: 440px;
+    margin: 0 auto 20px;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 1024px) {
+    .shop-layout-grid {
+      grid-template-columns: 240px 1fr;
+      gap: 20px;
+    }
+    .shop-products-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .shop-layout-grid {
+      grid-template-columns: 1fr;
+    }
+    .shop-sidebar {
+      position: static;
+      margin-bottom: 20px;
+    }
+    .shop-products-grid {
+      grid-template-columns: repeat(2, 1fr);
+      gap: 14px;
+    }
+    .shop-hero-title {
+      font-size: 1.7rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .shop-products-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* Category Pills Quick Filter Bar */
+  .shop-category-pills-bar {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+    margin-bottom: 22px;
+    scrollbar-width: thin;
+    -webkit-overflow-scrolling: touch;
+  }
+  .shop-category-pills-bar::-webkit-scrollbar {
+    height: 4px;
+  }
+  .shop-category-pills-bar::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+  .cat-pill-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 15px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #334155;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+  }
+  .cat-pill-item:hover {
+    background: #eaf4ee;
+    border-color: #34d399;
+    color: #014e37;
+    transform: translateY(-1px);
+  }
+  .cat-pill-item.is-active {
+    background: #014e37;
+    border-color: #014e37;
+    color: #ffffff;
+    font-weight: 600;
+    box-shadow: 0 2px 6px rgba(1, 78, 55, 0.22);
+  }
+  .cat-pill-count {
+    display: inline-block;
+    padding: 1px 7px;
+    font-size: 0.74rem;
+    font-weight: 700;
+    border-radius: 10px;
+    background: #f1f5f9;
+    color: #64748b;
+  }
+  .cat-pill-item.is-active .cat-pill-count {
+    background: rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+  }
+
+  /* Enhanced Promo Card Styling */
+  .shop-promo-card {
+    cursor: pointer;
+    transition: all 0.25s ease;
+    user-select: none;
+  }
+  .shop-promo-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(5, 150, 105, 0.18);
+  }
+  .shop-promo-card.coupon-activated {
+    background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%) !important;
+    border-color: #059669 !important;
+    box-shadow: 0 6px 20px rgba(5, 150, 105, 0.28) !important;
+  }
+  .promo-code-pill.is-copied {
+    background: #014e37 !important;
+    color: #ffffff !important;
+    border-color: #014e37 !important;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="shop-page-wrapper">
+  <!-- Shop Hero Banner -->
+  <header class="shop-hero-banner">
+    <div class="theme-container">
+      <nav class="shop-breadcrumb" aria-label="Breadcrumb">
+        <a href="{% url 'store:home' %}">Home</a>
+        <span class="sep">/</span>
+        <a href="{% url 'store:shop' %}">Plant Shop</a>
+        {% if current_category %}
+        <span class="sep">/</span>
+        <span class="active">{{ current_category.name }}</span>
+        {% elif query %}
+        <span class="sep">/</span>
+        <span class="active">Search results</span>
+        {% endif %}
+      </nav>
+
+      <h1 class="shop-hero-title">
+        {% if current_category %}
+          {{ current_category.name }} Collection
+        {% elif query %}
+          Search: "{{ query }}"
+        {% else %}
+          Green Nest Plant Shop & Nursery Catalog
+        {% endif %}
+      </h1>
+
+      <p class="shop-hero-subtitle">
+        {% if current_category %}
+          {{ current_category.description|default:"Explore our healthy, nursery-grown collection potted with nutrient-rich organic soil and sunlight." }}
+        {% elif query %}
+          Showing all nursery plants and accessories matching your search query.
+        {% else %}
+          Discover over 95+ varieties of hand-nurtured indoor air purifiers, flowering outdoor plants, hardy succulents, ceramic planters, and organic fertilizers.
+        {% endif %}
+      </p>
+
+      <div class="shop-perks-row">
+        <span class="shop-perk-pill">🌿 100% Healthy Nursery Grown</span>
+        <span class="shop-perk-pill">📦 Transit-Safe Bamboo Crates</span>
+        <span class="shop-perk-pill">🚚 Free Delivery on ₹499+</span>
+        <span class="shop-perk-pill" onclick="copyAndApplyCoupon('GREEN10', this)" style="cursor:pointer;" title="Click to copy & activate 10% coupon">🏷️ Coupon: <strong>GREEN10</strong> (10% Off)</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="theme-container">
+    <div class="shop-layout-grid">
+      <!-- Left Sidebar Filters -->
+      <aside class="shop-sidebar" aria-label="Catalog Filters">
+        <!-- Search Filter -->
+        <div class="sidebar-widget">
+          <h3 class="sidebar-section-title">Search Plants</h3>
+          <form method="get" action="{% url 'store:shop' %}">
+            {% if category_slug %}<input type="hidden" name="category" value="{{ category_slug }}">{% endif %}
+            {% if sort %}<input type="hidden" name="sort" value="{{ sort }}">{% endif %}
+            {% if price_range %}<input type="hidden" name="price" value="{{ price_range }}">{% endif %}
+            <div style="display: flex; gap: 6px;">
+              <input type="text" name="q" value="{{ query }}" placeholder="Search name or type..." style="flex:1; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.88rem; outline: none;">
+              <button type="submit" style="background: #014e37; color: white; border: none; border-radius: 6px; padding: 0 12px; cursor: pointer; font-size: 0.88rem;">🔍</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Categories Widget -->
+        <div class="sidebar-widget">
+          <h3 class="sidebar-section-title">Plant Categories</h3>
+          <ul class="shop-cat-list">
+            <li class="shop-cat-item">
+              <a class="shop-cat-link {% if not category_slug %}is-active{% endif %}" href="{% url 'store:shop' %}{% if query %}?q={{ query }}{% endif %}">
+                <span>🪴 All Plants</span>
+                <span class="shop-cat-badge">{{ total_count }}</span>
+              </a>
+            </li>
+            {% for cat in categories %}
+            <li class="shop-cat-item">
+              <a class="shop-cat-link {% if category_slug == cat.slug %}is-active{% endif %}" href="{% url 'store:shop' %}?category={{ cat.slug }}{% if query %}&q={{ query }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}">
+                <span>{{ cat.name }}</span>
+                <span class="shop-cat-badge">{{ cat.product_count }}</span>
+              </a>
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+
+        <!-- Price Range Filter Widget -->
+        <div class="sidebar-widget">
+          <h3 class="sidebar-section-title">Price Range</h3>
+          <div class="price-filter-list">
+            <a class="price-filter-btn {% if not price_range %}is-active{% endif %}" href="{% url 'store:shop' %}?{% if category_slug %}category={{ category_slug }}&{% endif %}{% if query %}q={{ query }}&{% endif %}{% if sort %}sort={{ sort }}{% endif %}">
+              All Prices
+            </a>
+            <a class="price-filter-btn {% if price_range == 'under-200' %}is-active{% endif %}" href="{% url 'store:shop' %}?price=under-200{% if category_slug %}&category={{ category_slug }}{% endif %}{% if query %}&q={{ query }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}">
+              Under ₹200
+            </a>
+            <a class="price-filter-btn {% if price_range == '200-500' %}is-active{% endif %}" href="{% url 'store:shop' %}?price=200-500{% if category_slug %}&category={{ category_slug }}{% endif %}{% if query %}&q={{ query }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}">
+              ₹200 – ₹500
+            </a>
+            <a class="price-filter-btn {% if price_range == '500-1000' %}is-active{% endif %}" href="{% url 'store:shop' %}?price=500-1000{% if category_slug %}&category={{ category_slug }}{% endif %}{% if query %}&q={{ query }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}">
+              ₹500 – ₹1,000
+            </a>
+            <a class="price-filter-btn {% if price_range == 'above-1000' %}is-active{% endif %}" href="{% url 'store:shop' %}?price=above-1000{% if category_slug %}&category={{ category_slug }}{% endif %}{% if query %}&q={{ query }}{% endif %}{% if sort %}&sort={{ sort }}{% endif %}">
+              Above ₹1,000
+            </a>
+          </div>
+        </div>
+
+        <!-- Promo Banner -->
+        <div class="sidebar-widget">
+          <div class="shop-promo-card" id="shopPromoCard" onclick="copyAndApplyCoupon('GREEN10', this)" style="cursor:pointer;" title="Click to copy GREEN10 and activate 10% discount!">
+            <span class="promo-badge-text">⚡ Special Offer</span>
+            <div class="promo-discount-num">GET 10% OFF</div>
+            <p style="font-size: 0.8rem; color: #047857; margin: 0 0 6px;">On all live plants and planters order!</p>
+            <span class="promo-code-pill" id="promoCodePill" title="Click code to copy">GREEN10</span>
+            <span class="promo-code-hint" id="promoCodeHint">Click code to copy</span>
+          </div>
+        </div>
+
+        <!-- Plant Care Guides Helper -->
+        <div class="sidebar-widget" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px;">
+          <h4 style="font-size: 0.88rem; font-weight: 700; color: #0f172a; margin: 0 0 6px;">📖 Need Plant Help?</h4>
+          <p style="font-size: 0.8rem; color: #64748b; margin: 0 0 10px; line-height: 1.4;">Read our expert botanist watering and sunlight care articles.</p>
+          <a href="{% url 'store:guides' %}" style="display: inline-block; font-size: 0.82rem; font-weight: 600; color: #014e37; text-decoration: none;">Explore Guides →</a>
+        </div>
+      </aside>
+
+      <!-- Main Shop Products Section -->
+      <section class="shop-main-content">
+        <!-- Quick Category Selection Pills -->
+        <div class="shop-category-pills-bar">
+          <a href="{% url 'store:shop' %}{% if query %}?q={{ query }}{% endif %}" class="cat-pill-item {% if not category_slug %}is-active{% endif %}">
+            <span>🪴 All Plants</span>
+            <span class="cat-pill-count">{{ all_products_count|default:"95" }}</span>
+          </a>
+          {% for cat in categories %}
+          <a href="{% url 'store:shop' %}?category={{ cat.slug }}{% if query %}&q={{ query }}{% endif %}" class="cat-pill-item {% if category_slug == cat.slug %}is-active{% endif %}">
+            <span>{{ cat.name }}</span>
+            <span class="cat-pill-count">{{ cat.product_count }}</span>
+          </a>
+          {% endfor %}
+        </div>
+
+        <!-- Toolbar Bar -->
+        <div class="shop-toolbar">
+          <div class="shop-results-count">
+            Showing <strong>{{ products|length }}</strong> plant{{ products|length|pluralize }} available
+          </div>
+
+          <div class="shop-sort-wrap">
+            <label class="shop-sort-label" for="shopSortSelect">Sort by:</label>
+            <form id="sortForm" method="get" action="{% url 'store:shop' %}" style="display: inline;">
+              {% if category_slug %}<input type="hidden" name="category" value="{{ category_slug }}">{% endif %}
+              {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+              {% if price_range %}<input type="hidden" name="price" value="{{ price_range }}">{% endif %}
+              {% if tag %}<input type="hidden" name="tag" value="{{ tag }}">{% endif %}
+              <select id="shopSortSelect" name="sort" class="shop-sort-select" onchange="document.getElementById('sortForm').submit();">
+                <option value="featured" {% if sort == 'featured' %}selected{% endif %}>Featured / Popular</option>
+                <option value="price_asc" {% if sort == 'price_asc' %}selected{% endif %}>Price: Low to High</option>
+                <option value="price_desc" {% if sort == 'price_desc' %}selected{% endif %}>Price: High to Low</option>
+                <option value="rating" {% if sort == 'rating' %}selected{% endif %}>Highest Rated</option>
+                <option value="newest" {% if sort == 'newest' %}selected{% endif %}>New Arrivals</option>
+              </select>
+            </form>
+          </div>
+        </div>
+
+        <!-- Active Filter Chips -->
+        {% if category_slug or query or price_range or tag %}
+        <div class="shop-active-filters">
+          <span style="font-size: 0.82rem; color: #047857; font-weight: 600;">Active Filters:</span>
+          {% if current_category %}
+          <span class="active-filter-tag">
+            Category: {{ current_category.name }}
+            <a href="{% url 'store:shop' %}?{% if query %}q={{ query }}&{% endif %}{% if price_range %}price={{ price_range }}&{% endif %}{% if sort %}sort={{ sort }}{% endif %}" title="Remove filter">✕</a>
+          </span>
+          {% endif %}
+          {% if query %}
+          <span class="active-filter-tag">
+            Keyword: "{{ query }}"
+            <a href="{% url 'store:shop' %}?{% if category_slug %}category={{ category_slug }}&{% endif %}{% if price_range %}price={{ price_range }}&{% endif %}{% if sort %}sort={{ sort }}{% endif %}" title="Remove filter">✕</a>
+          </span>
+          {% endif %}
+          {% if price_range %}
+          <span class="active-filter-tag">
+            Price: {{ price_range }}
+            <a href="{% url 'store:shop' %}?{% if category_slug %}category={{ category_slug }}&{% endif %}{% if query %}q={{ query }}&{% endif %}{% if sort %}sort={{ sort }}{% endif %}" title="Remove filter">✕</a>
+          </span>
+          {% endif %}
+          {% if tag %}
+          <span class="active-filter-tag">
+            Tag: {{ tag }}
+            <a href="{% url 'store:shop' %}?{% if category_slug %}category={{ category_slug }}&{% endif %}{% if query %}q={{ query }}&{% endif %}{% if price_range %}price={{ price_range }}&{% endif %}{% if sort %}sort={{ sort }}{% endif %}" title="Remove filter">✕</a>
+          </span>
+          {% endif %}
+          <a class="active-filter-clear-all" href="{% url 'store:shop' %}">Clear All Filters</a>
+        </div>
+        {% endif %}
+
+        <!-- Products Grid -->
+        {% if products %}
+        <div class="shop-products-grid">
+          {% for product in products %}
+          <article class="plant-product-card">
+            <!-- Card Top / Image Block -->
+            <div class="card-image-wrapper">
+              <a class="card-image-link" href="{% url 'store:product_detail' product.id %}">
+                <img class="primary-thumb" src="{{ product.image_url|default:'https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=700&q=85' }}" alt="{{ product.alt_text|default:product.name }}" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=700&q=85';">
+              </a>
+              <!-- Badges -->
+              <div class="card-badge-container">
+                {% if product.tag %}
+                <span class="badge-sale">{{ product.tag }}</span>
+                {% else %}
+                <span class="badge-sale">Sale!</span>
+                {% endif %}
+              </div>
+              {% if not product.stock %}
+              <div class="card-soldout-overlay">
+                <span>SOLD OUT</span>
+              </div>
+              {% endif %}
+              <!-- Hover quick actions -->
+              <div class="card-hover-actions">
+                <a class="quick-view-btn" href="{% url 'store:product_detail' product.id %}" title="View details">👁 Quick View</a>
+                <a class="quick-review-btn" href="{% url 'store:review' product.id %}" title="Write review">✍ Review</a>
+              </div>
+            </div>
+
+            <!-- Card Body -->
+            <div class="card-body-wrapper">
+              <span class="card-category-label">{{ product.category.name }}</span>
+              <h3 class="card-product-title">
+                <a href="{% url 'store:product_detail' product.id %}">{{ product.name }}</a>
+              </h3>
+              <div class="card-star-rating">
+                <span class="stars-gold">★★★★★</span>
+                <span class="rating-text">{% if product.review_count %}{{ product.average_rating|floatformat:1 }} ({{ product.review_count }}){% else %}5.0 (Nursery){% endif %}</span>
+              </div>
+              <div class="card-price-row">
+                <span class="card-original-price"><del>₹{{ product.price|add:"50" }}</del></span>
+                <span class="card-current-price">₹{{ product.price }}</span>
+                <span class="card-stock-hint">({{ product.stock }} in stock)</span>
+              </div>
+
+              <!-- Action Buttons: Add to Cart & Buy Now -->
+              <div class="shop-card-actions">
+                <!-- Add to Bag -->
+                <form method="post" action="{% url 'store:add_to_cart' product.id %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                  <button class="shop-btn-cart" type="submit" {% if not product.stock %}disabled{% endif %}>
+                    <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                    <span>{% if product.stock %}ADD TO BAG{% else %}OUT OF STOCK{% endif %}</span>
+                  </button>
+                </form>
+
+                <!-- Instant Buy Now -->
+                {% if product.stock %}
+                <form method="post" action="{% url 'store:add_to_cart' product.id %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="buy_now">
+                  <button class="shop-btn-buy-now" type="submit">
+                    <span>⚡ BUY NOW</span>
+                  </button>
+                </form>
+                {% endif %}
+              </div>
+            </div>
+          </article>
+          {% endfor %}
+        </div>
+        {% else %}
+        <!-- Empty State -->
+        <div class="shop-empty-state">
+          <div class="shop-empty-icon">🪴</div>
+          <h2 class="shop-empty-title">No plants found</h2>
+          <p class="shop-empty-desc">We couldn't find any botanical products matching your current filters. Try selecting a different category or clearing search filters.</p>
+          <a class="btn-green-main" href="{% url 'store:shop' %}" style="display: inline-block;">Browse All Nursery Plants <span>→</span></a>
+        </div>
+        {% endif %}
+      </section>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

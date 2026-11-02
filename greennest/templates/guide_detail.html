@@ -1,0 +1,109 @@
+{% extends "store/base.html" %}
+{% load static %}
+
+{% block title %}{{ guide.title }} · Green Nest Nursery Guide{% endblock %}
+
+{% block extra_css %}
+<style>
+  .guide-detail-wrap {
+    background: #f8faf9;
+    padding: 36px 0 64px;
+    min-height: calc(100vh - 280px);
+    font-family: 'Outfit', 'Work Sans', sans-serif;
+  }
+
+  .guide-container-box {
+    max-width: 800px;
+    margin: 0 auto;
+    background: #ffffff;
+    border-radius: 20px;
+    border: 1px solid #eef2ef;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  }
+
+  @media (max-width: 600px) {
+    .guide-container-box {
+      padding: 24px;
+    }
+  }
+
+  .btn-back-guides {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #014e37;
+    text-decoration: none;
+    margin-bottom: 24px;
+  }
+
+  .btn-back-guides:hover {
+    text-decoration: underline;
+  }
+
+  .guide-headline-box {
+    border-bottom: 1px solid #f0f4f2;
+    padding-bottom: 20px;
+    margin-bottom: 24px;
+  }
+
+  .guide-headline-box h1 {
+    font-size: 30px;
+    font-weight: 800;
+    color: #111827;
+    margin: 8px 0;
+    line-height: 1.25;
+  }
+
+  .guide-headline-box p {
+    font-size: 16px;
+    color: #4b5563;
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  .guide-article-body {
+    font-size: 15px;
+    line-height: 1.8;
+    color: #374151;
+  }
+
+  .guide-article-body p {
+    margin-bottom: 16px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="guide-detail-wrap">
+  <div class="theme-container">
+
+    <div class="guide-container-box">
+      <a href="{% url 'store:guides' %}" class="btn-back-guides">← All Plant Care Guides</a>
+
+      <header class="guide-headline-box">
+        <span
+          style="font-size:12px; text-transform:uppercase; font-weight:700; color:#10b981; letter-spacing:0.05em;">NURSERY
+          GROWING MANUAL</span>
+        <h1>{{ guide.title }}</h1>
+        <p>{{ guide.summary }}</p>
+      </header>
+
+      <div class="guide-article-body">
+        {{ guide.body|linebreaks }}
+      </div>
+
+      <div
+        style="margin-top:36px; padding-top:20px; border-top:1px dashed #e5e7eb; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+        <span style="font-size:13px; color:#6b7280;">Have questions about your plant? Contact our nursery team
+          anytime.</span>
+        <a href="{% url 'store:home' %}#shop" class="btn-green-main" style="padding:10px 20px; font-size:13px;">Shop
+          Thriving Plants →</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

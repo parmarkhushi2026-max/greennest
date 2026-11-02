@@ -1,0 +1,397 @@
+{% extends "store/base.html" %}
+{% load static %}
+
+{% block title %}Track Live Order Shipment · Green Nest Nursery Chennai{% endblock %}
+
+{% block extra_css %}
+<style>
+  .track-hub-wrapper {
+    background-color: #f7faf8;
+    padding: 40px 0 80px;
+    font-family: 'Outfit', 'Work Sans', -apple-system, sans-serif;
+  }
+
+  .track-hub-hero {
+    background: linear-gradient(135deg, #013827 0%, #014e37 70%, #066649 100%);
+    color: #ffffff;
+    border-radius: 18px;
+    padding: 46px 36px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 36px;
+    box-shadow: 0 10px 30px rgba(1, 78, 55, 0.15);
+  }
+  .track-hub-hero::after {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 200px;
+    height: 200px;
+    background: radial-gradient(circle, rgba(52, 211, 153, 0.2) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+
+  .track-hub-kicker {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #34d399;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-bottom: 8px;
+  }
+  .track-hub-title {
+    font-size: 2.3rem;
+    font-weight: 800;
+    margin: 0 0 12px;
+    letter-spacing: -0.02em;
+  }
+  .track-hub-subtitle {
+    font-size: 1.05rem;
+    color: rgba(255, 255, 255, 0.85);
+    max-width: 620px;
+    margin: 0 auto 28px;
+    line-height: 1.55;
+  }
+
+  /* Search Box Form */
+  .track-search-form-wrap {
+    max-width: 580px;
+    margin: 0 auto;
+  }
+  .track-input-group {
+    display: flex;
+    background: #ffffff;
+    border-radius: 999px;
+    padding: 6px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  }
+  .track-input-field {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 12px 20px;
+    font-size: 1rem;
+    font-family: inherit;
+    border-radius: 999px 0 0 999px;
+    color: #1e293b;
+  }
+  .track-submit-btn {
+    background: #014e37;
+    color: #ffffff;
+    border: none;
+    padding: 12px 28px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .track-submit-btn:hover {
+    background: #0d694b;
+    transform: scale(1.02);
+  }
+
+  /* Demo Live Status Testing Cards */
+  .demo-strip-section {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 24px 28px;
+    margin-bottom: 36px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+  }
+  .demo-strip-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #014e37;
+    margin: 0 0 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .demo-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 14px;
+  }
+  .demo-card {
+    display: block;
+    padding: 14px 16px;
+    border-radius: 10px;
+    text-decoration: none;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+    transition: all 0.2s ease;
+  }
+  .demo-card:hover {
+    border-color: #014e37;
+    background: #ecfdf5;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(1, 78, 55, 0.08);
+  }
+  .demo-step-num {
+    font-size: 0.72rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #059669;
+    display: block;
+    margin-bottom: 4px;
+  }
+  .demo-step-name {
+    font-size: 0.94rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 4px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .demo-step-code {
+    font-family: monospace;
+    font-size: 0.8rem;
+    color: #64748b;
+  }
+
+  /* User Orders List Section */
+  .user-orders-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 28px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+  }
+  .user-orders-header {
+    font-size: 1.2rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin: 0 0 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .order-track-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 20px;
+    border: 1px solid #eef2ef;
+    border-radius: 10px;
+    margin-bottom: 12px;
+    background: #fcfdfd;
+    transition: all 0.2s ease;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+  .order-track-row:hover {
+    border-color: #34d399;
+    background: #ffffff;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.03);
+  }
+  .order-main-info {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .order-icon-badge {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: #eaf4ee;
+    color: #014e37;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+  }
+  .order-code-title {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #0f172a;
+    font-family: monospace;
+  }
+  .order-sub-meta {
+    font-size: 0.82rem;
+    color: #64748b;
+    margin-top: 2px;
+  }
+  .btn-track-now {
+    background: #014e37;
+    color: #ffffff;
+    padding: 8px 18px;
+    border-radius: 8px;
+    font-size: 0.88rem;
+    font-weight: 700;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: background 0.2s;
+  }
+  .btn-track-now:hover {
+    background: #0d694b;
+  }
+
+  /* Empty State */
+  .empty-orders-view {
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  @media (max-width: 860px) {
+    .demo-cards-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+  @media (max-width: 480px) {
+    .demo-cards-grid {
+      grid-template-columns: 1fr;
+    }
+    .track-hub-title {
+      font-size: 1.8rem;
+    }
+    .track-input-group {
+      flex-direction: column;
+      border-radius: 12px;
+      padding: 10px;
+    }
+    .track-input-field {
+      border-radius: 8px;
+      padding: 10px;
+    }
+    .track-submit-btn {
+      border-radius: 8px;
+      justify-content: center;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="track-hub-wrapper">
+  <div class="theme-container">
+
+    <!-- Hero Search Section -->
+    <div class="track-hub-hero">
+      <span class="track-hub-kicker">🌱 100% TRANSIT SAFE BOTANICAL LOGISTICS</span>
+      <h1 class="track-hub-title">Track Your Green Nest Shipment</h1>
+      <p class="track-hub-subtitle">
+        Enter your order tracking code to check real-time nursery packaging, BlueDart transit status, and estimated doorstep delivery.
+      </p>
+
+      <form method="get" action="{% url 'store:orders' %}" class="track-search-form-wrap">
+        <div class="track-input-group">
+          <input type="text" name="tracking_code" value="{{ searched_code|default:'' }}" class="track-input-field" placeholder="Enter Order Code (e.g. GN-2025-9843 or 10852DC09B)..." required autocomplete="off">
+          <button type="submit" class="track-submit-btn">
+            <span>Track Live</span>
+            <span>🔍</span>
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <!-- 4-Step Quick Demo Clickable Testing Strip -->
+    <div class="demo-strip-section">
+      <div class="demo-strip-title">
+        <span>⚡ Quick Test Live Tracking (1-Click Demonstration):</span>
+      </div>
+      <div class="demo-cards-grid">
+        <!-- Confirmed -->
+        {% if demo_orders.confirmed %}
+        <a href="{% url 'store:order_detail' demo_orders.confirmed.tracking_code %}" class="demo-card">
+          <span class="demo-step-num">Step 1</span>
+          <div class="demo-step-name">📋 Confirmed</div>
+          <div class="demo-step-code">Code: {{ demo_orders.confirmed.tracking_code }}</div>
+        </a>
+        {% endif %}
+
+        <!-- Nursery Packed -->
+        {% if demo_orders.packed %}
+        <a href="{% url 'store:order_detail' demo_orders.packed.tracking_code %}" class="demo-card">
+          <span class="demo-step-num">Step 2</span>
+          <div class="demo-step-name">🪴 Nursery Packed</div>
+          <div class="demo-step-code">Code: {{ demo_orders.packed.tracking_code }}</div>
+        </a>
+        {% endif %}
+
+        <!-- In-Transit -->
+        {% if demo_orders.shipped %}
+        <a href="{% url 'store:order_detail' demo_orders.shipped.tracking_code %}" class="demo-card">
+          <span class="demo-step-num">Step 3</span>
+          <div class="demo-step-name">🚚 In-Transit</div>
+          <div class="demo-step-code">Code: {{ demo_orders.shipped.tracking_code }}</div>
+        </a>
+        {% endif %}
+
+        <!-- Delivered -->
+        {% if demo_orders.delivered %}
+        <a href="{% url 'store:order_detail' demo_orders.delivered.tracking_code %}" class="demo-card">
+          <span class="demo-step-num">Step 4</span>
+          <div class="demo-step-name">🏡 Delivered</div>
+          <div class="demo-step-code">Code: {{ demo_orders.delivered.tracking_code }}</div>
+        </a>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- User Recent Orders Section -->
+    <div class="user-orders-card">
+      <div class="user-orders-header">
+        <span>📦 Your Recent Orders</span>
+        {% if user.is_authenticated %}
+        <span style="font-size:0.88rem; font-weight:600; color:#014e37;">Logged in as: {{ user.username }}</span>
+        {% else %}
+        <a href="{% url 'store:login' %}" style="font-size:0.88rem; font-weight:600; color:#014e37; text-decoration:none;">Sign In to View All Your Orders →</a>
+        {% endif %}
+      </div>
+
+      {% if user_orders %}
+      <div>
+        {% for order in user_orders %}
+        <div class="order-track-row">
+          <div class="order-main-info">
+            <div class="order-icon-badge">🪴</div>
+            <div>
+              <div class="order-code-title">Order {{ order.tracking_code }}</div>
+              <div class="order-sub-meta">
+                {{ order.created_at|date:"M j, Y · h:i A" }} · {{ order.items.count }} plant{{ order.items.count|pluralize }} · Total: <strong style="color:#014e37;">₹{{ order.total }}</strong>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex; align-items:center; gap:16px;">
+            <span class="status-badge status-{{ order.status }}">● {{ order.get_status_display }}</span>
+            <a href="{% url 'store:order_detail' order.tracking_code %}" class="btn-track-now">
+              <span>Track Live</span>
+              <span>→</span>
+            </a>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <div class="empty-orders-view">
+        <p style="font-size:1.05rem; color:#64748b; margin-bottom:16px;">
+          {% if user.is_authenticated %}
+            You haven't placed an order yet. Select from our fresh nursery plants and place an order to track it live!
+          {% else %}
+            Enter your tracking code above, or click any of the live demo steps to see the real-time tracker in action.
+          {% endif %}
+        </p>
+        <a href="{% url 'store:shop' %}" class="btn-green-main" style="display:inline-block;">
+          BROWSE PLANT CATALOG <span>→</span>
+        </a>
+      </div>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+{% endblock %}

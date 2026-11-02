@@ -1,0 +1,8 @@
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+sent_emails/
+.env
+.DS_Store
+*.log

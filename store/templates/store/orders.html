@@ -1,0 +1,7 @@
+{% extends "store/base.html" %}
+{% block title %}My orders · GreenNest{% endblock %}
+{% block content %}
+<section class="page-section section-wrap"><div class="page-heading"><span class="section-kicker">YOUR GREENNEST ACCOUNT</span><h1>Order tracking</h1></div>
+  {% for order in orders %}<a class="order-row" href="{% url 'store:order_detail' order.tracking_code %}"><span><strong>{{ order.tracking_code }}</strong><small>{{ order.created_at|date:"M j, Y" }} · {{ order.items.count }} item(s)</small></span><span>{{ order.get_status_display }}</span><strong>₹{{ order.total }}</strong></a>{% empty %}<div class="empty-cart"><p>You haven’t placed an order yet.</p><a class="button button-green" href="{% url 'store:home' %}#shop">FIND A PLANT <span>→</span></a></div>{% endfor %}
+</section>
+{% endblock %}

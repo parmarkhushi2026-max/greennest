@@ -1,0 +1,1205 @@
+{% extends "store/base.html" %}
+{% load static %}
+
+{% block title %}My Account & Dashboard · Green Nest Nursery{% endblock %}
+
+{% block extra_css %}
+<!-- Chart.js CDN for interactive graphs -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --gn-forest: #014e37;
+    --gn-leaf: #10b981;
+    --gn-light-leaf: #ecfdf5;
+    --gn-dark: #111827;
+    --gn-muted: #6b7280;
+    --gn-border: #eef2ef;
+    --gn-card-bg: #ffffff;
+    --gn-bg: #f8faf9;
+  }
+
+  .cust-page-container {
+    background: #f8faf9;
+    padding: 30px 0 60px;
+    min-height: calc(100vh - 280px);
+    font-family: 'Outfit', 'Work Sans', sans-serif;
+  }
+
+  /* Two Column Master Layout */
+  .cust-layout-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr;
+    gap: 28px;
+    align-items: start;
+  }
+
+  @media (max-width: 960px) {
+    .cust-layout-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ============================================================
+     LEFT SIDEBAR STYLING
+     ============================================================ */
+  .cust-sidebar-panel {
+    background: #ffffff;
+    border-radius: 20px;
+    border: 1px solid #eef2ef;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.03);
+    padding: 24px 20px;
+    position: sticky;
+    top: 24px;
+  }
+
+  /* Sidebar Profile Header */
+  .cust-side-profile {
+    text-align: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #f0f4f2;
+    margin-bottom: 20px;
+  }
+
+  .cust-side-avatar {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #014e37 0%, #10b981 100%);
+    color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    font-weight: 800;
+    margin: 0 auto 12px;
+    box-shadow: 0 4px 14px rgba(1, 78, 55, 0.25);
+  }
+
+  .cust-side-name {
+    font-size: 18px;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 4px;
+  }
+
+  .cust-side-email {
+    font-size: 12px;
+    color: #6b7280;
+    word-break: break-all;
+    margin-bottom: 8px;
+  }
+
+  .cust-side-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #ecfdf5;
+    color: #047857;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 999px;
+    border: 1px solid #a7f3d0;
+  }
+
+  /* Sidebar Navigation Menu */
+  .cust-nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .cust-menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 14px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #4b5563;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .cust-menu-btn-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .cust-menu-icon {
+    font-size: 18px;
+    width: 22px;
+    text-align: center;
+  }
+
+  .cust-menu-btn:hover {
+    background: #f0fdf4;
+    color: #014e37;
+  }
+
+  .cust-menu-btn.active {
+    background: #014e37;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(1, 78, 55, 0.2);
+  }
+
+  .cust-menu-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.08);
+  }
+
+  .cust-menu-btn.active .cust-menu-badge {
+    background: rgba(255, 255, 255, 0.25);
+    color: #ffffff;
+  }
+
+  /* Sidebar Footer Actions */
+  .cust-sidebar-footer {
+    margin-top: 24px;
+    padding-top: 18px;
+    border-top: 1px solid #f0f4f2;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .cust-foot-link {
+    font-size: 13px;
+    font-weight: 600;
+    color: #014e37;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: background 0.15s ease;
+  }
+
+  .cust-foot-link:hover {
+    background: #f0fdf4;
+  }
+
+  .cust-logout-btn {
+    background: transparent;
+    border: none;
+    font-size: 13px;
+    font-weight: 600;
+    color: #ef4444;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    width: 100%;
+    transition: background 0.15s ease;
+  }
+
+  .cust-logout-btn:hover {
+    background: #fef2f2;
+  }
+
+  /* ============================================================
+     RIGHT MAIN CONTENT AREA
+     ============================================================ */
+  .cust-main-content {
+    min-width: 0;
+  }
+
+  /* Top Hero Welcome Card */
+  .cust-top-banner {
+    background: linear-gradient(135deg, #014e37 0%, #065f46 60%, #047857 100%);
+    border-radius: 20px;
+    padding: 26px 30px;
+    color: #ffffff;
+    box-shadow: 0 8px 24px -4px rgba(1, 78, 55, 0.22);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 18px;
+    margin-bottom: 24px;
+  }
+
+  .cust-banner-text h1 {
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0 0 4px;
+    color: #ffffff;
+  }
+
+  .cust-banner-text p {
+    font-size: 14px;
+    opacity: 0.9;
+    margin: 0;
+  }
+
+  .cust-banner-action-btn {
+    background: #10b981;
+    color: #ffffff !important;
+    font-weight: 700;
+    padding: 10px 18px;
+    border-radius: 10px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    box-shadow: 0 3px 8px rgba(16, 185, 129, 0.3);
+    transition: all 0.2s ease;
+  }
+
+  .cust-banner-action-btn:hover {
+    background: #059669;
+    transform: translateY(-1px);
+  }
+
+  /* 4 KPI Metric Cards */
+  .cust-kpi-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 26px;
+  }
+
+  @media (max-width: 1100px) {
+    .cust-kpi-row {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .cust-kpi-row {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .cust-kpi-box {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #eef2ef;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .cust-kpi-icon-circ {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+
+  .circ-green { background: #ecfdf5; color: #059669; }
+  .circ-blue { background: #eff6ff; color: #2563eb; }
+  .circ-emerald { background: #d1fae5; color: #047857; }
+  .circ-amber { background: #fef3c7; color: #d97706; }
+
+  .cust-kpi-num {
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 1.1;
+    color: #111827;
+  }
+
+  .cust-kpi-title {
+    font-size: 12px;
+    color: #6b7280;
+    font-weight: 600;
+    margin-top: 3px;
+  }
+
+  /* ============================================================
+     GRAPHS & ANALYTICS SECTION (NEW!)
+     ============================================================ */
+  .graphs-grid-2 {
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 20px;
+    margin-bottom: 26px;
+  }
+
+  @media (max-width: 900px) {
+    .graphs-grid-2 {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .chart-card-box {
+    background: #ffffff;
+    border-radius: 18px;
+    border: 1px solid #eef2ef;
+    padding: 24px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.03);
+  }
+
+  .chart-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  .chart-title-h3 {
+    font-size: 16px;
+    font-weight: 700;
+    color: #014e37;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .chart-subtitle-span {
+    font-size: 12px;
+    color: #6b7280;
+  }
+
+  .chart-canvas-wrap {
+    position: relative;
+    height: 220px;
+    width: 100%;
+  }
+
+  /* Tab Panes */
+  .cust-pane {
+    display: none;
+  }
+
+  .cust-pane.active {
+    display: block;
+    animation: paneFadeIn 0.25s ease-out;
+  }
+
+  @keyframes paneFadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ORDER CARD & STEPPER */
+  .cust-order-card {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #eef2ef;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+
+  .cust-order-header {
+    background: #fbfdfc;
+    border-bottom: 1px solid #f0f4f2;
+    padding: 16px 22px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .order-code-badge {
+    font-family: monospace;
+    font-weight: 700;
+    font-size: 15px;
+    color: #014e37;
+    background: #ecfdf5;
+    padding: 4px 10px;
+    border-radius: 8px;
+    border: 1px solid #a7f3d0;
+  }
+
+  .order-stepper-wrap {
+    padding: 22px 22px 16px;
+    background: #ffffff;
+    border-bottom: 1px solid #f4f6f5;
+  }
+
+  .order-stepper {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    max-width: 640px;
+    margin: 0 auto;
+  }
+
+  .order-stepper::before {
+    content: '';
+    position: absolute;
+    top: 14px;
+    left: 20px;
+    right: 20px;
+    height: 3px;
+    background: #e5e7eb;
+    z-index: 1;
+  }
+
+  .step-progress-fill {
+    position: absolute;
+    top: 14px;
+    left: 20px;
+    height: 3px;
+    background: #10b981;
+    z-index: 2;
+    transition: width 0.3s ease;
+  }
+
+  .step-item {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    flex: 1;
+  }
+
+  .step-circle {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #ffffff;
+    border: 2px solid #d1d5db;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: #6b7280;
+  }
+
+  .step-item.completed .step-circle {
+    background: #10b981;
+    border-color: #10b981;
+    color: #ffffff;
+  }
+
+  .step-item.active .step-circle {
+    background: #ffffff;
+    border-color: #014e37;
+    color: #014e37;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+  }
+
+  .step-label {
+    font-size: 11px;
+    font-weight: 600;
+    margin-top: 6px;
+    color: #6b7280;
+  }
+
+  .step-item.completed .step-label,
+  .step-item.active .step-label {
+    color: #014e37;
+  }
+
+  .status-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .status-pending { background: #fef3c7; color: #92400e; }
+  .status-confirmed { background: #e0f2fe; color: #0369a1; }
+  .status-packed { background: #f3e8ff; color: #6b21a8; }
+  .status-shipped { background: #e0e7ff; color: #3730a3; }
+  .status-delivered { background: #d1fae5; color: #065f46; }
+
+  /* Reminders Grid */
+  .reminder-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+
+  @media (max-width: 900px) {
+    .reminder-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 600px) {
+    .reminder-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .reminder-card {
+    background: #ffffff;
+    border-radius: 16px;
+    border: 1px solid #eef2ef;
+    padding: 18px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .btn-watered {
+    background: #ecfdf5;
+    color: #047857;
+    border: 1px solid #a7f3d0;
+    padding: 7px 12px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 12px;
+    cursor: pointer;
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+  }
+
+  .btn-watered:hover {
+    background: #10b981;
+    color: #ffffff;
+  }
+
+  /* Forms */
+  .form-card-cust {
+    background: #ffffff;
+    border-radius: 18px;
+    border: 1px solid #eef2ef;
+    padding: 24px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+    margin-bottom: 24px;
+  }
+
+  .form-input-cust {
+    width: 100%;
+    padding: 9px 12px;
+    border-radius: 8px;
+    border: 1.5px solid #d1d5db;
+    font-size: 14px;
+    font-family: inherit;
+    box-sizing: border-box;
+  }
+
+  .form-input-cust:focus {
+    outline: none;
+    border-color: #10b981;
+  }
+</style>
+{% endblock %}
+
+{% block site_header %}
+<header style="background: #014e37; border-bottom: 1px solid rgba(255,255,255,0.12); padding: 12px 0; color: #ffffff; position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 18px rgba(0,0,0,0.12);">
+  <div class="theme-container" style="display: flex; justify-content: space-between; align-items: center;">
+    <div style="display: flex; align-items: center; gap: 14px;">
+      <a href="{% url 'store:customer_dashboard' %}" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: #ffffff;">
+        
+        <div>
+          <div style="font-family: var(--font-heading, sans-serif); font-weight: 800; font-size: 18px; letter-spacing: -0.02em; color: #ffffff; line-height: 1.1;">My Account Hub</div>
+          <div style="font-size: 10px; color: #a7f3d0; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;">GreenNest Member Portal</div>
+        </div>
+      </a>
+      <span style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-size: 11px; font-weight: 700; padding: 3px 10px; border-radius: 20px; border: 1px solid rgba(16, 185, 129, 0.4);">
+        {{ customer.username }}
+      </span>
+    </div>
+
+    <div style="display: flex; align-items: center; gap: 12px;">
+      <a href="{% url 'store:orders' %}" style="display: inline-flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.1); color: #ffffff; text-decoration: none; padding: 7px 14px; border-radius: 8px; font-size: 12.5px; font-weight: 600; border: 1px solid rgba(255,255,255,0.18); transition: background 0.15s ease;">
+        <span>Track Order Live</span>
+      </a>
+      <a href="{% url 'store:shop' %}" style="display: inline-flex; align-items: center; gap: 6px; background: #10b981; color: #ffffff; text-decoration: none; padding: 7px 16px; border-radius: 8px; font-size: 12.5px; font-weight: 700; box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3); transition: transform 0.15s ease;">
+        <span>Browse Nursery</span>
+        <span>→</span>
+      </a>
+      <form method="post" action="{% url 'store:logout' %}" style="margin: 0;">
+        {% csrf_token %}
+        <button type="submit" style="background: rgba(239, 68, 68, 0.15); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.35); padding: 7px 14px; border-radius: 8px; font-size: 12.5px; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 5px;">
+          <span>Logout</span>
+        </button>
+      </form>
+    </div>
+  </div>
+</header>
+{% endblock site_header %}
+
+{% block content %}
+<div class="cust-page-container">
+  <div class="theme-container">
+    
+    <div class="cust-layout-grid">
+      <!-- ============================================================
+           LEFT SIDEBAR: CUSTOMER HUB
+           ============================================================ -->
+      <aside class="cust-sidebar-panel">
+        <div class="cust-side-profile">
+          <div class="cust-side-avatar">
+            {{ customer.first_name|default:customer.username|slice:":1"|upper }}
+          </div>
+          <h2 class="cust-side-name">{{ customer.first_name|default:customer.username }}</h2>
+          <div class="cust-side-email">{{ customer.email|default:customer.username }}</div>
+          <span class="cust-side-badge">{% if customer.username == "visitor" %}Guest Visitor · Read-Only{% else %}GreenNest Club Member{% endif %}</span>
+        </div>
+
+        <nav class="cust-nav-menu" aria-label="Customer Navigation">
+          <button type="button" class="cust-menu-btn {% if active_tab == 'orders' or active_tab == 'overview' %}active{% endif %}" onclick="switchCustTab('overview', this)">
+            <span class="cust-menu-btn-left">
+              
+              <span>Overview & Charts</span>
+            </span>
+            <span class="cust-menu-badge">Live</span>
+          </button>
+
+          <button type="button" class="cust-menu-btn" onclick="switchCustTab('orders', this)">
+            <span class="cust-menu-btn-left">
+              
+              <span>My Orders</span>
+            </span>
+            <span class="cust-menu-badge">{{ total_orders }}</span>
+          </button>
+
+          <button type="button" class="cust-menu-btn {% if active_tab == 'reminders' %}active{% endif %}" onclick="switchCustTab('reminders', this)">
+            <span class="cust-menu-btn-left">
+              
+              <span>Care Reminders</span>
+            </span>
+            <span class="cust-menu-badge">{{ active_reminders_count }}</span>
+          </button>
+
+          <button type="button" class="cust-menu-btn {% if active_tab == 'profile' %}active{% endif %}" onclick="switchCustTab('profile', this)">
+            <span class="cust-menu-btn-left">
+              
+              <span>Profile & Address</span>
+            </span>
+          </button>
+
+          <button type="button" class="cust-menu-btn {% if active_tab == 'guides' %}active{% endif %}" onclick="switchCustTab('guides', this)">
+            <span class="cust-menu-btn-left">
+              
+              <span>Care Guides</span>
+            </span>
+          </button>
+        </nav>
+
+        <div class="cust-sidebar-footer">
+          <a href="{% url 'store:home' %}#shop" class="cust-foot-link">
+            Browse Plant Store
+          </a>
+          <form method="post" action="{% url 'store:logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="cust-logout-btn">
+              Sign Out
+            </button>
+          </form>
+        </div>
+      </aside>
+
+      <!-- ============================================================
+           RIGHT MAIN CONTENT
+           ============================================================ -->
+      <main class="cust-main-content">
+        <!-- Top Banner -->
+                {% if customer.username == 'visitor' %}
+        <div style="background:linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border:1.5px solid #a7f3d0; border-radius:16px; padding:18px 22px; margin-bottom:22px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px;">
+          <div>
+            <span style="font-size:11px; text-transform:uppercase; font-weight:800; color:#047857; letter-spacing:0.06em;">👀 VISITOR EXPLORATION MODE (PUBLIC READ-ONLY)</span>
+            <h3 style="margin:4px 0 2px; font-size:17px; color:#014e37;">Logged in as Guest Visitor</h3>
+            <p style="margin:0; font-size:13px; color:#4b5563;">Browse plant categories, search & filter nursery plants, explore botanical care specs, and read plant-care guides freely.</p>
+          </div>
+          <div style="display:flex; gap:10px;">
+            <a href="{% url 'store:home' %}#shop" class="cust-banner-action-btn" style="padding:8px 14px; font-size:12.5px;">
+              Browse Plants
+            </a>
+            <a href="{% url 'store:guides' %}" class="cust-banner-action-btn" style="background:#014e37; padding:8px 14px; font-size:12.5px;">
+              Read Care Guides
+            </a>
+          </div>
+        </div>
+        {% endif %}
+
+        <div class="cust-top-banner">
+          <div class="cust-banner-text">
+            <h1>Welcome back, {{ customer.first_name|default:customer.username }}!</h1>
+            <p>Member since {{ customer.date_joined|date:"F Y" }} · {{ total_orders }} Plant Order{{ total_orders|pluralize }} Placed</p>
+          </div>
+          <a href="{% url 'store:home' %}#shop" class="cust-banner-action-btn">
+            <span>+</span> Shop More Plants
+          </a>
+        </div>
+
+        <!-- 4 KPI Metrics -->
+        <div class="cust-kpi-row">
+          <div class="cust-kpi-box">
+            <div class="cust-kpi-icon-circ circ-green">📦</div>
+            <div>
+              <div class="cust-kpi-num">{{ total_orders }}</div>
+              <div class="cust-kpi-title">Total Orders</div>
+            </div>
+          </div>
+
+          <div class="cust-kpi-box">
+            <div class="cust-kpi-icon-circ circ-blue">🚚</div>
+            <div>
+              <div class="cust-kpi-num">{{ active_orders }}</div>
+              <div class="cust-kpi-title">Active Deliveries</div>
+            </div>
+          </div>
+
+          <div class="cust-kpi-box">
+            <div class="cust-kpi-icon-circ circ-emerald">₹</div>
+            <div>
+              <div class="cust-kpi-num">₹{{ total_spent }}</div>
+              <div class="cust-kpi-title">Green Investment</div>
+            </div>
+          </div>
+
+          <div class="cust-kpi-box">
+            <div class="cust-kpi-icon-circ circ-amber">💧</div>
+            <div>
+              <div class="cust-kpi-num">{{ active_reminders_count }}</div>
+              <div class="cust-kpi-title">Care Schedules</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ============================================================
+             TAB 1: OVERVIEW & INTERACTIVE CHARTS (NEW!)
+             ============================================================ -->
+        <section class="cust-pane {% if active_tab == 'orders' or active_tab == 'overview' %}active{% endif %}" id="pane-overview">
+          <!-- 2 Live Charts -->
+          <div class="graphs-grid-2">
+            <!-- Chart 1: Monthly Spending Trend -->
+            <div class="chart-card-box">
+              <div class="chart-header-row">
+                <h3 class="chart-title-h3">Monthly Greenery Spending (₹)</h3>
+                <span class="chart-subtitle-span">Recent 6 Months</span>
+              </div>
+              <div class="chart-canvas-wrap">
+                <canvas id="custSpendingChart"></canvas>
+              </div>
+            </div>
+
+            <!-- Chart 2: Plant Varieties Breakdown -->
+            <div class="chart-card-box">
+              <div class="chart-header-row">
+                <h3 class="chart-title-h3">My Plant Varieties</h3>
+                <span class="chart-subtitle-span">Categories Share</span>
+              </div>
+              <div class="chart-canvas-wrap">
+                <canvas id="custCategoryChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Orders Table Preview -->
+          <div class="form-card-cust">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+              <h3 style="font-size:17px; font-weight:700; color:#014e37; margin:0;">Recent Orders & Live Tracking</h3>
+              <button type="button" class="cust-foot-link" onclick="switchCustTab('orders', document.querySelectorAll('.cust-menu-btn')[1])">
+                View All ({{ total_orders }}) →
+              </button>
+            </div>
+
+            {% for order in orders|slice:":2" %}
+              <div class="cust-order-card">
+                <div class="cust-order-header">
+                  <div>
+                    <span class="order-code-badge">{{ order.tracking_code }}</span>
+                    <span style="font-size:13px; color:#6b7280; margin-left:8px;">{{ order.created_at|date:"d M Y · h:i A" }}</span>
+                  </div>
+                  <span class="status-badge status-{{ order.status }}">● {{ order.get_status_display }}</span>
+                </div>
+
+                {% if order.status != 'cancelled' %}
+                <div class="order-stepper-wrap">
+                  <div class="order-stepper">
+                    {% if order.status == 'pending' %}<div class="step-progress-fill" style="width: 15%;"></div>
+                    {% elif order.status == 'confirmed' %}<div class="step-progress-fill" style="width: 38%;"></div>
+                    {% elif order.status == 'packed' %}<div class="step-progress-fill" style="width: 68%;"></div>
+                    {% elif order.status == 'shipped' %}<div class="step-progress-fill" style="width: 85%;"></div>
+                    {% elif order.status == 'delivered' %}<div class="step-progress-fill" style="width: 100%;"></div>
+                    {% endif %}
+
+                    <div class="step-item {% if order.status != 'pending' %}completed{% else %}active{% endif %}">
+                      <div class="step-circle">1</div>
+                      <div class="step-label">Confirmed</div>
+                    </div>
+                    <div class="step-item {% if order.status in 'packed,shipped,delivered' %}completed{% elif order.status == 'confirmed' %}active{% endif %}">
+                      <div class="step-circle">2</div>
+                      <div class="step-label">Nursery Packed</div>
+                    </div>
+                    <div class="step-item {% if order.status in 'shipped,delivered' %}completed{% elif order.status == 'packed' %}active{% endif %}">
+                      <div class="step-circle">3</div>
+                      <div class="step-label">In-Transit</div>
+                    </div>
+                    <div class="step-item {% if order.status == 'delivered' %}completed{% elif order.status == 'shipped' %}active{% endif %}">
+                      <div class="step-circle">4</div>
+                      <div class="step-label">Delivered</div>
+                    </div>
+                  </div>
+                </div>
+                {% endif %}
+
+                <div style="padding:14px 22px; display:flex; justify-content:space-between; align-items:center;">
+                  <span style="font-size:13px; color:#4b5563;">{{ order.items.count }} plant{{ order.items.count|pluralize }} · Total: <strong style="color:#014e37;">₹{{ order.total }}</strong></span>
+                  <a href="{% url 'store:order_detail' order.tracking_code %}" class="cust-foot-link" style="color:#014e37;">Track Delivery / Receipt →</a>
+                </div>
+              </div>
+            {% empty %}
+              <p style="color:#6b7280; text-align:center; padding:20px 0;">No orders yet. <a href="{% url 'store:home' %}#shop">Browse plants now!</a></p>
+            {% endfor %}
+          </div>
+        </section>
+
+        <!-- ============================================================
+             TAB 2: ALL ORDERS & TRACKING
+             ============================================================ -->
+        <section class="cust-pane" id="pane-orders">
+          <h2 style="font-size:20px; font-weight:700; color:#014e37; margin:0 0 16px;">📦 My Orders ({{ total_orders }})</h2>
+          {% for order in orders %}
+            <div class="cust-order-card">
+              <div class="cust-order-header">
+                <div>
+                  <span class="order-code-badge">{{ order.tracking_code }}</span>
+                  <span style="font-size:13px; color:#6b7280; margin-left:8px;">{{ order.created_at|date:"d M Y · h:i A" }}</span>
+                </div>
+                <span class="status-badge status-{{ order.status }}">● {{ order.get_status_display }}</span>
+              </div>
+
+              {% if order.status != 'cancelled' %}
+              <div class="order-stepper-wrap">
+                <div class="order-stepper">
+                  {% if order.status == 'pending' %}<div class="step-progress-fill" style="width: 15%;"></div>
+                  {% elif order.status == 'confirmed' %}<div class="step-progress-fill" style="width: 38%;"></div>
+                  {% elif order.status == 'packed' %}<div class="step-progress-fill" style="width: 68%;"></div>
+                  {% elif order.status == 'shipped' %}<div class="step-progress-fill" style="width: 85%;"></div>
+                  {% elif order.status == 'delivered' %}<div class="step-progress-fill" style="width: 100%;"></div>
+                  {% endif %}
+
+                  <div class="step-item {% if order.status != 'pending' %}completed{% else %}active{% endif %}">
+                    <div class="step-circle">1</div>
+                    <div class="step-label">Confirmed</div>
+                  </div>
+                  <div class="step-item {% if order.status in 'packed,shipped,delivered' %}completed{% elif order.status == 'confirmed' %}active{% endif %}">
+                    <div class="step-circle">2</div>
+                    <div class="step-label">Nursery Packed</div>
+                  </div>
+                  <div class="step-item {% if order.status in 'shipped,delivered' %}completed{% elif order.status == 'packed' %}active{% endif %}">
+                    <div class="step-circle">3</div>
+                    <div class="step-label">In-Transit</div>
+                  </div>
+                  <div class="step-item {% if order.status == 'delivered' %}completed{% elif order.status == 'shipped' %}active{% endif %}">
+                    <div class="step-circle">4</div>
+                    <div class="step-label">Delivered</div>
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+
+              <div style="padding:14px 22px;">
+                {% for item in order.items.all %}
+                  <div style="display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px dashed #eef2ef; font-size:14px;">
+                    <span>🌱 {{ item.product_name }} <small style="color:#6b7280;">× {{ item.quantity }}</small></span>
+                    <strong>₹{{ item.line_total }}</strong>
+                  </div>
+                {% endfor %}
+              </div>
+
+              <div style="padding:12px 22px; background:#fbfdfc; border-top:1px solid #f0f4f2; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                <span style="font-size:13px; color:#4b5563;">Shipping to: <strong>{{ order.customer_name }}</strong> · {{ order.get_payment_method_display }}</span>
+                <div style="display:flex; align-items:center; gap:12px;">
+                  <strong style="color:#014e37; font-size:16px;">Total: ₹{{ order.total }}</strong>
+                  <a href="{% url 'store:order_detail' order.tracking_code %}" class="cust-foot-link" style="border:1px solid #cbd5e1; border-radius:8px;">View Receipt →</a>
+                </div>
+              </div>
+            </div>
+          {% empty %}
+            <div class="form-card-cust" style="text-align:center; padding:40px;">
+              <div style="font-size:42px; margin-bottom:10px;">🪴</div>
+              <h3 style="color:#014e37; margin:0 0 6px;">No Orders Placed Yet</h3>
+              <p style="color:#6b7280; margin:0 0 16px;">Explore our Chennai greenhouse collection of lush indoor & outdoor plants.</p>
+              <a href="{% url 'store:home' %}#shop" class="cust-banner-action-btn">Shop Plants Now</a>
+            </div>
+          {% endfor %}
+        </section>
+
+        <!-- ============================================================
+             TAB 3: PLANT CARE REMINDERS
+             ============================================================ -->
+        <section class="cust-pane {% if active_tab == 'reminders' %}active{% endif %}" id="pane-reminders">
+          <div class="form-card-cust">
+            <h3 style="font-size:17px; font-weight:700; color:#014e37; margin:0 0 14px;">🌱 Add a Plant Watering Schedule</h3>
+            <form method="post" action="{% url 'store:customer_dashboard' %}">
+              {% csrf_token %}
+              <input type="hidden" name="action" value="add_reminder">
+              <div style="display:grid; grid-template-columns:2fr 1.2fr 1fr auto; gap:12px; align-items:flex-end;">
+                <div>
+                  <label style="display:block; font-size:12px; font-weight:600; color:#4b5563; margin-bottom:4px;">Plant Name</label>
+                  <input type="text" name="plant_name" list="cat_plants" class="form-input-cust" placeholder="e.g. Monstera Deliciosa..." required>
+                  <datalist id="cat_plants">
+                    {% for p in catalog_products %}<option value="{{ p.name }}"></option>{% endfor %}
+                  </datalist>
+                </div>
+                <div>
+                  <label style="display:block; font-size:12px; font-weight:600; color:#4b5563; margin-bottom:4px;">Water Every</label>
+                  <select name="interval_days" class="form-input-cust">
+                    <option value="2">Every 2 days</option>
+                    <option value="3">Every 3 days</option>
+                    <option value="5">Every 5 days</option>
+                    <option value="7" selected>Every 7 days (Weekly)</option>
+                    <option value="14">Every 14 days (Succulents)</option>
+                  </select>
+                </div>
+                <div>
+                  <label style="display:block; font-size:12px; font-weight:600; color:#4b5563; margin-bottom:4px;">First Due Date</label>
+                  <input type="date" name="next_reminder" value="{{ today|date:'Y-m-d' }}" class="form-input-cust">
+                </div>
+                <div>
+                  <button type="submit" class="cust-banner-action-btn" style="height:40px; border:none; cursor:pointer;">+ Save</button>
+                </div>
+              </div>
+            </form>
+          </div>
+
+          <div class="reminder-grid">
+            {% for r in care_reminders %}
+              <div class="reminder-card">
+                <div>
+                  <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:8px;">
+                    <h4 style="margin:0; font-size:15px; color:#111827;">{{ r.reminder.plant_name }}</h4>
+                    <span class="{{ r.badge_class }}">{{ r.status_label }}</span>
+                  </div>
+                  <div style="font-size:13px; color:#6b7280; margin-bottom:12px;">
+                    Every {{ r.reminder.interval_days }} days · Next: <strong style="color:#014e37;">{{ r.reminder.next_reminder|date:"l, M j" }}</strong>
+                  </div>
+                </div>
+
+                <div style="display:flex; gap:8px;">
+                  <form method="post" action="{% url 'store:customer_dashboard' %}" style="flex:1;">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="mark_watered">
+                    <input type="hidden" name="reminder_id" value="{{ r.reminder.id }}">
+                    <button type="submit" class="btn-watered" title="Reset interval countdown from today">
+                      Watered Today
+                    </button>
+                  </form>
+                  <form method="post" action="{% url 'store:delete_reminder' r.reminder.id %}">
+                    {% csrf_token %}
+                    <button type="submit" style="background:#fee2e2; border:none; color:#dc2626; padding:7px 10px; border-radius:8px; cursor:pointer;" title="Remove schedule" onclick="return confirm('Remove reminder?');">
+                      Delete
+                    </button>
+                  </form>
+                </div>
+              </div>
+            {% empty %}
+              <p style="grid-column:1/-1; text-align:center; color:#6b7280; padding:20px;">No reminders set yet. Add your houseplants above to receive watering nudges!</p>
+            {% endfor %}
+          </div>
+        </section>
+
+        <!-- ============================================================
+             TAB 4: PROFILE & DELIVERY ADDRESS
+             ============================================================ -->
+        <section class="cust-pane {% if active_tab == 'profile' %}active{% endif %}" id="pane-profile">
+          <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:20px;">
+            <!-- Profile Form -->
+            <div class="form-card-cust">
+              <h3 style="font-size:17px; font-weight:700; color:#014e37; margin:0 0 16px;">👤 Personal Account Info</h3>
+              <form method="post" action="{% url 'store:customer_dashboard' %}">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="update_profile">
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:12px;">
+                  <div>
+                    <label style="display:block; font-size:12px; font-weight:600; color:#4b5563; margin-bottom:4px;">First Name</label>
+                    <input type="text" name="first_name" value="{{ customer.first_name }}" class="form-input-cust">
+                  </div>
+                  <div>
+                    <label style="display:block; font-size:12px; font-weight:600; color:#4b5563; margin-bottom:4px;">Last Name</label>
+                    <input type="text" name="last_name" value="{{ customer.last_name }}" class="form-input-cust">
+                  </div>
+                </div>
+                <div style="margin-bottom:16px;">
+                  <label style="display:block; font-size:12px; font-weight:600; color:#4b5563; margin-bottom:4px;">Email Address</label>
+                  <input type="email" name="email" value="{{ customer.email }}" class="form-input-cust" required>
+                </div>
+                <button type="submit" class="cust-banner-action-btn" style="border:none; cursor:pointer;">Save Profile Changes</button>
+              </form>
+            </div>
+
+            <!-- Delivery Info -->
+            <div class="form-card-cust">
+              <h3 style="font-size:17px; font-weight:700; color:#014e37; margin:0 0 16px;">📍 Default Delivery Address</h3>
+              {% if shipping_address %}
+                <div style="background:#f8fafc; border-radius:10px; padding:16px; border:1px solid #e2e8f0; font-size:14px; line-height:1.5;">
+                  <strong>{{ customer.first_name|default:customer.username }}</strong><br>
+                  {% if phone %}📞 {{ phone }}<br>{% endif %}
+                  {{ shipping_address|linebreaksbr }}
+                </div>
+              {% else %}
+                <p style="color:#6b7280; font-size:13px;">No address on file yet. Address is automatically captured during plant checkout.</p>
+              {% endif %}
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================
+             TAB 5: CARE GUIDES
+             ============================================================ -->
+        <section class="cust-pane {% if active_tab == 'guides' %}active{% endif %}" id="pane-guides">
+          <h2 style="font-size:20px; font-weight:700; color:#014e37; margin:0 0 16px;">📖 Expert Plant Care Guides</h2>
+          <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:16px;">
+            {% for g in guides %}
+              <div class="form-card-cust" style="display:flex; flex-direction:column; justify-content:space-between;">
+                <div>
+                  <h4 style="margin:0 0 6px; font-size:16px; color:#014e37;">{{ g.title }}</h4>
+                  <p style="font-size:13px; color:#4b5563; line-height:1.5; margin:0 0 14px;">{{ g.summary }}</p>
+                </div>
+                <a href="{% url 'store:guide_detail' g.slug %}" class="cust-foot-link" style="align-self:flex-start; padding:6px 10px; border:1px solid #a7f3d0; border-radius:6px;">Read Guide →</a>
+              </div>
+            {% endfor %}
+          </div>
+        </section>
+      </main>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  // Sidebar Tab Switching
+  function switchCustTab(tabId, btnEl) {
+    if (!tabId) return;
+    
+    // Update active tab buttons in sidebar
+    document.querySelectorAll('.cust-menu-btn').forEach(btn => btn.classList.remove('active'));
+    if (btnEl) {
+      btnEl.classList.add('active');
+    }
+
+    // Update active panes
+    document.querySelectorAll('.cust-pane').forEach(pane => pane.classList.remove('active'));
+    const targetPane = document.getElementById('pane-' + tabId);
+    if (targetPane) {
+      targetPane.classList.add('active');
+    }
+
+    // Update URL query state
+    try {
+      const url = new URL(window.location);
+      url.searchParams.set('tab', tabId);
+      window.history.pushState({}, '', url);
+    } catch(e) {}
+  }
+
+  // Handle URL state on load
+  document.addEventListener('DOMContentLoaded', function () {
+    const params = new URLSearchParams(window.location.search);
+    const initialTab = params.get('tab') || '{{ active_tab|default:"overview" }}';
+    
+    const matchingBtn = Array.from(document.querySelectorAll('.cust-menu-btn')).find(b => {
+      const onclickAttr = b.getAttribute('onclick') || '';
+      return onclickAttr.includes("'" + initialTab + "'");
+    });
+    
+    if (matchingBtn && initialTab !== 'overview') {
+      switchCustTab(initialTab, matchingBtn);
+    }
+
+    // ==========================================
+    // INITIALIZE CUSTOMER CHARTS VIA CHART.JS
+    // ==========================================
+    const monthsData = {{ chart_months_json|safe }};
+    const spendingData = {{ chart_spending_json|safe }};
+    const catLabels = {{ chart_cat_labels_json|safe }};
+    const catCounts = {{ chart_cat_data_json|safe }};
+
+    // 1. Line/Area Chart: Spending Trend
+    const ctxSpend = document.getElementById('custSpendingChart');
+    if (ctxSpend) {
+      new Chart(ctxSpend, {
+        type: 'line',
+        data: {
+          labels: monthsData,
+          datasets: [{
+            label: 'Plant Investment (₹)',
+            data: spendingData,
+            borderColor: '#10b981',
+            backgroundColor: 'rgba(16, 185, 129, 0.12)',
+            fill: true,
+            tension: 0.35,
+            borderWidth: 2.5,
+            pointBackgroundColor: '#014e37',
+            pointRadius: 4,
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: { color: '#f1f5f9' },
+              ticks: { callback: val => '₹' + val }
+            },
+            x: {
+              grid: { display: false }
+            }
+          }
+        }
+      });
+    }
+
+    // 2. Doughnut Chart: Plant Varieties
+    const ctxCat = document.getElementById('custCategoryChart');
+    if (ctxCat) {
+      new Chart(ctxCat, {
+        type: 'doughnut',
+        data: {
+          labels: catLabels,
+          datasets: [{
+            data: catCounts,
+            backgroundColor: [
+              '#014e37',
+              '#10b981',
+              '#34d399',
+              '#059669',
+              '#6ee7b7'
+            ],
+            borderWidth: 2,
+            borderColor: '#ffffff'
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: { boxWidth: 12, font: { size: 11 } }
+            }
+          },
+          cutout: '65%'
+        }
+      });
+    }
+  });
+</script>
+{% endblock %}

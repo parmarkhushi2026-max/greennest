@@ -1,0 +1,343 @@
+{% extends "store/base.html" %}
+{% block title %}Green Nest Nursery – Best Online Plant Nursery Chennai{% endblock %}
+{% block content %}
+
+<!-- Hero Slider Section (Plantish Theme Style from greennestnursery.com) -->
+<section class="hero-slider" aria-label="Featured nursery collections">
+  <div class="hero-slides-wrapper">
+    <!-- Slide 1 -->
+    <div class="hero-slide-item is-active">
+      <img class="hero-bg-img" src="https://images.unsplash.com/photo-1463936575829-25148e1db1b8?auto=format&fit=crop&w=2000&q=88" alt="Green Nest Nursery Plant Collection">
+      <div class="hero-slide-overlay"></div>
+      <div class="theme-container hero-slide-content">
+        <span class="hero-slide-kicker">NEW ARRIVAL 2025</span>
+        <h1 class="hero-slide-title">New Perfect Plant Collection</h1>
+        <p class="hero-slide-desc">A beautiful collection of indoor and outdoor plants, vibrant flowers, stylish pots, and gardening essentials – all at special discounted prices.</p>
+        <div class="hero-btn-row">
+          <a class="btn-green-main" href="#shop">SHOP NOW <span>→</span></a>
+          <a class="btn-outline-white" href="{% url 'store:guides' %}">CARE GUIDES</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="hero-slide-item">
+      <img class="hero-bg-img" src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=2000&q=88" alt="Awesome Outdoor Plants">
+      <div class="hero-slide-overlay"></div>
+      <div class="theme-container hero-slide-content">
+        <span class="hero-slide-kicker">SPECIAL COLLECTIONS</span>
+        <h2 class="hero-slide-title">Awesome Outdoor Plant Collection</h2>
+        <p class="hero-slide-desc">Shop fresh plants, pretty pots, and garden goodies — all at great prices. Easy delivery, happy plants, and a greener home await!</p>
+        <div class="hero-btn-row">
+          <a class="btn-green-main" href="?category=outdoor-plants#shop">EXPLORE OUTDOOR <span>→</span></a>
+          <a class="btn-outline-white" href="#shop">VIEW ALL OFFERS</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="hero-slide-item">
+      <img class="hero-bg-img" src="https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=2000&q=88" alt="Air Purifying Plants">
+      <div class="hero-slide-overlay"></div>
+      <div class="theme-container hero-slide-content">
+        <span class="hero-slide-kicker">JUST FOR YOU</span>
+        <h2 class="hero-slide-title">Healthy Indoor & Air Purifying Plants</h2>
+        <p class="hero-slide-desc">Naturally detoxify your living spaces with hardy sansevierias, spider plants, and glossy monsteras curated by Green Nest Nursery botanists.</p>
+        <div class="hero-btn-row">
+          <a class="btn-green-main" href="?category=indoor-plants#shop">SHOP INDOOR <span>→</span></a>
+          <a class="btn-outline-white" href="{% url 'store:guides' %}">PLANT HEALTH TIPS</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Arrows and Controls -->
+  <button class="slider-arrow slider-prev" type="button" aria-label="Previous slide">‹</button>
+  <button class="slider-arrow slider-next" type="button" aria-label="Next slide">›</button>
+  <div class="slider-dots" role="group" aria-label="Slide selectors">
+    <button class="slider-dot is-active" type="button" aria-label="Slide 1"></button>
+    <button class="slider-dot" type="button" aria-label="Slide 2"></button>
+    <button class="slider-dot" type="button" aria-label="Slide 3"></button>
+  </div>
+</section>
+
+<!-- 3 Promo Category Banners (greennestnursery style-2 cms banners) -->
+<section class="collbnr-section theme-container" aria-label="Featured Plant Highlights">
+  <div class="collbnr-grid">
+    <!-- Banner 1 -->
+    <div class="cms-banner-card style-2">
+      <div class="cms-banner-img-wrap">
+        <img src="https://images.unsplash.com/photo-1463936575829-25148e1db1b8?auto=format&fit=crop&w=800&q=85" alt="Hanging Plants and Flowers" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=700&q=85';">
+        <div class="cms-banner-overlay"></div>
+      </div>
+      <div class="cms-banner-content">
+        <span class="bnr-text1">Fresh Flower</span>
+        <h3 class="bnr-text2">Hanging & Flowering</h3>
+        <a class="bnr-link-btn" href="?category=outdoor-plants#shop">Shop Now <span>→</span></a>
+      </div>
+    </div>
+
+    <!-- Banner 2 -->
+    <div class="cms-banner-card style-2">
+      <div class="cms-banner-img-wrap">
+        <img src="https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=800&q=85" alt="Outdoor Plants" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=700&q=85';">
+        <div class="cms-banner-overlay"></div>
+      </div>
+      <div class="cms-banner-content">
+        <span class="bnr-text1">Sale Off · Up to 40%</span>
+        <h3 class="bnr-text2">Outdoor Plants</h3>
+        <a class="bnr-link-btn" href="?category=outdoor-plants#shop">Shop Now <span>→</span></a>
+      </div>
+    </div>
+
+    <!-- Banner 3 -->
+    <div class="cms-banner-card style-2">
+      <div class="cms-banner-img-wrap">
+        <img src="https://images.unsplash.com/photo-1545241047-6083a3684587?auto=format&fit=crop&w=800&q=85" alt="Indoor Plants" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=700&q=85';">
+        <div class="cms-banner-overlay"></div>
+      </div>
+      <div class="cms-banner-content">
+        <span class="bnr-text1">Just For You</span>
+        <h3 class="bnr-text2">Indoor Plants</h3>
+        <a class="bnr-link-btn" href="?category=indoor-plants#shop">Shop Now <span>→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Welcome to Green Nest Nursery Story (Exact copy & layout from greennestnursery.com) -->
+<section class="about-showcase-section theme-container" aria-label="About Green Nest Nursery">
+  <div class="about-showcase-grid">
+    <div class="about-image-col">
+      <div class="about-img-frame">
+        <img src="https://images.unsplash.com/photo-1545241047-6083a3684587?auto=format&fit=crop&w=900&q=85" alt="Green Nest Nursery Greenhouse Plants" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=700&q=85';">
+        <div class="about-floating-badge">
+          <span class="badge-number">100%</span>
+          <span class="badge-text">Locally Grown & Acclimatized</span>
+        </div>
+      </div>
+    </div>
+    <div class="about-copy-col">
+      <div class="winter-title-block">
+        <span class="winter-subtitle">New Collections 2025</span>
+        <h2 class="winter-main-title">Green Nest Nursery</h2>
+      </div>
+      <p class="about-lead-paragraph">
+        Welcome to <strong>Green Nest Nursery</strong>, where our passion for plants meets our dedication to helping you cultivate your ideal garden. By focusing on locally sourced plants, we ensure that each variety is well-suited to our region's conditions, promoting healthier growth and sustainability.
+      </p>
+      <p class="about-secondary-paragraph">
+        Supporting our nursery means investing in plants that are not only more likely to thrive but also contribute to the local environment and green ecosystem.
+      </p>
+      <div class="about-perks-grid">
+        <div class="about-perk-item">
+          <span class="perk-check">✓</span>
+          <div>
+            <strong>Nursery Direct Quality</strong>
+            <small>Direct from Chennai greenhouses with zero middlemen.</small>
+          </div>
+        </div>
+        <div class="about-perk-item">
+          <span class="perk-check">✓</span>
+          <div>
+            <strong>Safe Transit Packaging</strong>
+            <small>Specially engineered breathable plant cartons.</small>
+          </div>
+        </div>
+        <div class="about-perk-item">
+          <span class="perk-check">✓</span>
+          <div>
+            <strong>Lifetime Care Guidance</strong>
+            <small>Continuous botanical support for all your green companions.</small>
+          </div>
+        </div>
+      </div>
+      <div class="about-action-row">
+        <a class="btn-green-main" href="{% url 'store:guides' %}">READ OUR CARE GUIDES <span>→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Popular Products Section (like greennestnursery.com .winter_title h2 "popular products") -->
+<section class="products-showcase-section" id="shop">
+  <div class="theme-container">
+    <!-- Header with Greennest Title Styling -->
+    <div class="section-center-heading">
+      <div class="winter_title">
+        <h2>popular products</h2>
+      </div>
+      <p class="winter-subtitle-lead">Browse our in-stock nursery grown plants, ceramic planters, and essentials. Use coupon <strong>GREEN10</strong> at checkout!</p>
+    </div>
+
+    <!-- Category Filter Tabs -->
+    <div class="filter-tab-bar">
+      <ul class="filter-tab-list" role="tablist">
+        <li class="tab-item">
+          <a class="tab-btn {% if not category_slug %}is-active{% endif %}" href="{% url 'store:home' %}#shop">
+            All Products <span class="tab-count">{{ products|length }}</span>
+          </a>
+        </li>
+        {% for cat in categories %}
+        <li class="tab-item">
+          <a class="tab-btn {% if category_slug == cat.slug %}is-active{% endif %}" href="?category={{ cat.slug }}#shop">
+            {{ cat.name }} <span class="tab-count">{{ cat.product_count }}</span>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <!-- Active Filter or Search Notification -->
+    {% if query or category_slug %}
+    <div class="search-filter-active-bar">
+      <span>Showing results {% if query %}for "<strong>{{ query }}</strong>"{% endif %} {% if category_slug %}in category "<strong>{{ category_slug }}</strong>"{% endif %}</span>
+      <a class="clear-filter-link" href="{% url 'store:home' %}#shop">✕ Clear filters</a>
+    </div>
+    {% endif %}
+
+    <!-- Products Grid (Plantish Product Card Layout) -->
+    <div class="plantish-products-grid">
+      {% for product in products %}
+      <article class="plant-product-card">
+        <!-- Card Top / Image Block -->
+        <div class="card-image-wrapper">
+          <a class="card-image-link" href="{% url 'store:product_detail' product.id %}">
+            <img class="primary-thumb" src="{{ product.image_url|default:'https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=700&q=85' }}" alt="{{ product.alt_text|default:product.name }}" loading="lazy" onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=700&q=85';">
+          </a>
+          <!-- Badges -->
+          <div class="card-badge-container">
+            {% if product.tag %}
+            <span class="badge-sale">{{ product.tag }}</span>
+            {% else %}
+            <span class="badge-sale">Sale!</span>
+            {% endif %}
+          </div>
+          {% if not product.stock %}
+          <div class="card-soldout-overlay">
+            <span>SOLD OUT</span>
+          </div>
+          {% endif %}
+          <!-- Hover quick actions -->
+          <div class="card-hover-actions">
+            <a class="quick-view-btn" href="{% url 'store:product_detail' product.id %}" title="View details">👁 Quick View</a>
+            <a class="quick-review-btn" href="{% url 'store:review' product.id %}" title="Write review">✍ Review</a>
+          </div>
+        </div>
+
+        <!-- Card Body -->
+        <div class="card-body-wrapper">
+          <span class="card-category-label">{{ product.category.name }}</span>
+          <h3 class="card-product-title">
+            <a href="{% url 'store:product_detail' product.id %}">{{ product.name }}</a>
+          </h3>
+          <div class="card-star-rating">
+            <span class="stars-gold">★★★★★</span>
+            <span class="rating-text">{% if product.review_count %}{{ product.average_rating|floatformat:1 }} ({{ product.review_count }}){% else %}5.0 (Nursery){% endif %}</span>
+          </div>
+          <div class="card-price-row">
+            <span class="card-original-price"><del>₹{{ product.price|add:"40" }}</del></span>
+            <span class="card-current-price">₹{{ product.price }}</span>
+            <span class="card-stock-hint">({{ product.stock }} in stock)</span>
+          </div>
+          <!-- Add to Cart Action -->
+          <div class="card-action-bottom">
+            <form method="post" action="{% url 'store:add_to_cart' product.id %}">
+              {% csrf_token %}
+              <input type="hidden" name="next" value="{{ request.get_full_path }}">
+              <button class="btn-card-add-to-cart" type="submit" {% if not product.stock %}disabled{% endif %}>
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2zM1 2v2h2l3.6 7.59-1.35 2.45c-.16.28-.25.61-.25.96 0 1.1.9 2 2 2h12v-2H7.42c-.14 0-.25-.11-.25-.25l.03-.12.9-1.63h7.45c.75 0 1.41-.41 1.75-1.03l3.58-6.49c.08-.14.12-.31.12-.48 0-.55-.45-1-1-1H5.21l-.94-2H1zm16 16c-1.1 0-1.99.9-1.99 2s.89 2 1.99 2 2-.9 2-2-.9-2-2-2z"/></svg>
+                <span>{% if product.stock %}ADD TO CART{% else %}OUT OF STOCK{% endif %}</span>
+              </button>
+            </form>
+          </div>
+        </div>
+      </article>
+      {% empty %}
+      <div class="empty-products-box">
+        <p>No products found matching your search. Try another category or search term.</p>
+        <a class="btn-green-main" href="{% url 'store:home' %}#shop">VIEW ALL PLANTS</a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- 4 Nursery Value Props Bar (Greennest signature service features) -->
+<section class="services-features-bar">
+  <div class="theme-container services-features-grid">
+    <div class="service-feature-card">
+      <div class="feature-icon-circle">🚚</div>
+      <div class="feature-text">
+        <h4>Safe Doorstep Delivery</h4>
+        <p>Pan-India plant safe transit with specialized ventilation boxes.</p>
+      </div>
+    </div>
+    <div class="service-feature-card">
+      <div class="feature-icon-circle">🌱</div>
+      <div class="feature-text">
+        <h4>100% Healthy Guarantee</h4>
+        <p>Every specimen checked by botanists before dispatched from nursery.</p>
+      </div>
+    </div>
+    <div class="service-feature-card">
+      <div class="feature-icon-circle">🛡️</div>
+      <div class="feature-text">
+        <h4>Secure Checkout & COD</h4>
+        <p>Cash on delivery and instant encrypted online payment options.</p>
+      </div>
+    </div>
+    <div class="service-feature-card">
+      <div class="feature-icon-circle">📞</div>
+      <div class="feature-text">
+        <h4>Expert Care Support</h4>
+        <p>Free ongoing advice on soil, watering, and repotting for all customers.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Care Guides / Notes Section -->
+<section class="home-journal-section theme-container" id="guides">
+  <div class="section-top-row">
+    <div>
+      <span class="winter-subtitle">NURSERY CARE ADVICE</span>
+      <h2 class="winter-main-title">Plant Care, Made <em>Simple.</em></h2>
+    </div>
+    <a class="btn-outline-green" href="{% url 'store:guides' %}">ALL CARE GUIDES <span>→</span></a>
+  </div>
+  <div class="journal-cards-grid">
+    {% for guide in guides %}
+    <article class="journal-blog-card">
+      <div class="guide-card-icon">🌿</div>
+      <span class="guide-tag">GREENNEST BOTANICAL NOTE</span>
+      <h3 class="guide-card-title">{{ guide.title }}</h3>
+      <p class="guide-card-summary">{{ guide.summary }}</p>
+      <a class="guide-read-link" href="{% url 'store:guide_detail' guide.slug %}">READ CARE GUIDE <span>→</span></a>
+    </article>
+    {% empty %}
+    <p>Our botanists are preparing new seasonal care guides. Please check back soon.</p>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- Plant Notes Newsletter Banner -->
+<section class="home-newsletter-banner theme-container" id="newsletter">
+  <div class="newsletter-banner-box">
+    <div class="newsletter-copy">
+      <span class="newsletter-kicker">SUBSCRIBE & SAVE</span>
+      <h2>Cultivate Your Dream Garden With Us</h2>
+      <p>Get weekly plant tips, nursery arrivals, and exclusive secret discount codes.</p>
+    </div>
+    <form class="newsletter-inline-form" method="post" action="{% url 'store:subscribe' %}">
+      {% csrf_token %}
+      <input type="hidden" name="next" value="{% url 'store:home' %}#newsletter">
+      <div class="newsletter-input-wrap">
+        <input type="email" name="email" placeholder="Enter your email address" required>
+        <button type="submit">SUBSCRIBE</button>
+      </div>
+      <p class="newsletter-microcopy">No spam ever. Unsubscribe with a single click anytime.</p>
+    </form>
+  </div>
+</section>
+
+{% endblock %}
