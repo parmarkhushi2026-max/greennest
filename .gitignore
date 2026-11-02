@@ -6,3 +6,4 @@ sent_emails/
 .env
 .DS_Store
 *.log
+

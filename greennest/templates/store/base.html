@@ -290,7 +290,7 @@
         <form class="header-search-form" method="get" action="{% url 'store:shop' %}" id="headerSearchForm">
           <div class="search-category-dropdown">
             <select name="category" id="headerCategorySelect" aria-label="Filter by category" onchange="handleHeaderCategorySelect(this)">
-              <option value="" {% if not category_slug %}selected{% endif %}>All Categories ({{ total_active_plants|default:"95" }})</option>
+              <option value="" {% if not category_slug %}selected{% endif %}>All Categories ({{ total_active_plants|default:"78" }})</option>
               {% for cat in nav_categories %}
               <option value="{{ cat.slug }}" {% if category_slug == cat.slug %}selected{% endif %}>{{ cat.name }} ({{ cat.product_count }})</option>
               {% endfor %}

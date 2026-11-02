@@ -578,7 +578,7 @@
         {% elif query %}
           Showing all nursery plants and accessories matching your search query.
         {% else %}
-          Discover over 95+ varieties of hand-nurtured indoor air purifiers, flowering outdoor plants, hardy succulents, ceramic planters, and organic fertilizers.
+          Discover over 75+ varieties of hand-nurtured indoor air purifiers, flowering outdoor plants, hardy succulents, ceramic planters, and organic fertilizers.
         {% endif %}
       </p>
 
@@ -677,7 +677,7 @@
         <div class="shop-category-pills-bar">
           <a href="{% url 'store:shop' %}{% if query %}?q={{ query }}{% endif %}" class="cat-pill-item {% if not category_slug %}is-active{% endif %}">
             <span>🪴 All Plants</span>
-            <span class="cat-pill-count">{{ all_products_count|default:"95" }}</span>
+            <span class="cat-pill-count">{{ all_products_count|default:"78" }}</span>
           </a>
           {% for cat in categories %}
           <a href="{% url 'store:shop' %}?category={{ cat.slug }}{% if query %}&q={{ query }}{% endif %}" class="cat-pill-item {% if category_slug == cat.slug %}is-active{% endif %}">
