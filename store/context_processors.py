@@ -23,3 +23,6 @@ def shopping_bag(request):
         "nav_categories": categories,
         "total_active_plants": total_active_plants,
     }
+
+# Alias for compatibility with cart_context
+cart_context = shopping_bag

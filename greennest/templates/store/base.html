@@ -16,6 +16,7 @@
     rel="stylesheet">
   <link rel="stylesheet" href="{% static 'storefront/css/styles.css' %}">
   <link rel="stylesheet" href="{% static 'storefront/css/responsive_enhancements.css' %}">
+  <link rel="stylesheet" href="{% static 'storefront/css/journal.css' %}">
   {% block extra_css %}{% endblock %}
   <style>
     #greennest-preloader {
@@ -337,8 +338,10 @@
             <a href="{% url 'store:customer_dashboard' %}?tab=orders">My Orders & Tracking</a>
             <a href="{% url 'store:customer_dashboard' %}?tab=reminders">Plant Care Reminders</a>
             <a href="{% url 'store:customer_dashboard' %}?tab=profile">Profile & Address</a>
+            <a href="{% url 'store:customer_dashboard' %}?tab=bookmarks">Saved Articles (Journal)</a>
             {% if user.is_staff %}
             <a href="{% url 'store:admin_dashboard' %}">Store Management</a>
+            <a href="{% url 'store:manage_journal' %}">Plant Journal Editorial</a>
             <a href="/admin/">Django Admin</a>
             {% endif %}
             <form method="post" action="{% url 'store:logout' %}">
@@ -408,6 +411,9 @@
         </li>
         <li class="nav-item">
           <a class="nav-link {% if request.resolver_match.url_name == 'guides' or request.resolver_match.url_name == 'guide_detail' %}active{% endif %}" href="{% url 'store:guides' %}">Care Guides</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% if 'journal' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'store:journal_list' %}">Plant Journal</a>
         </li>
         <li class="nav-item">
           <a class="nav-link nav-offer-link" href="{% url 'store:shop' %}">Offers <span class="offer-pill">10% OFF</span></a>

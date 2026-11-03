@@ -694,6 +694,12 @@
               <span>Care Guides</span>
             </span>
           </button>
+          <button type="button" class="cust-menu-btn {% if active_tab == 'bookmarks' %}active{% endif %}" onclick="switchCustTab('bookmarks', this)">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
+            <span>Saved Articles</span>
+            <span class="cust-menu-badge">{{ bookmarks_count|default:0 }}</span>
+          </button>
+
         </nav>
 
         <div class="cust-sidebar-footer">
@@ -1074,6 +1080,57 @@
             {% endfor %}
           </div>
         </section>
+
+        <!-- PANE: SAVED ARTICLES (BOOKMARKS) -->
+        <section class="cust-pane {% if active_tab == 'bookmarks' %}active{% endif %}" id="pane-bookmarks">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
+            <div>
+              <h2 style="font-size:20px; font-weight:700; color:#014e37; margin:0 0 4px;">🔖 My Saved Journal Articles</h2>
+              <p style="color:#5a6a64; font-size:14px; margin:0;">Your bookmarked plant guides, growing wisdom, and styling notes.</p>
+            </div>
+            <a href="{% url 'store:journal_list' %}" class="cust-foot-link" style="padding:8px 14px; border:1px solid #014e37; color:#014e37; border-radius:8px; font-weight:700; text-decoration:none;">Browse Journal ↗</a>
+          </div>
+
+          {% if user_bookmarks %}
+            <div style="display:grid; grid-template-columns:repeat(auto-fill, minmax(280px, 1fr)); gap:20px;">
+              {% for bm in user_bookmarks %}
+                <article style="background:#ffffff; border:1px solid #e2ece6; border-radius:12px; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 2px 8px rgba(1,78,55,0.06);">
+                  <div style="height:150px; position:relative; overflow:hidden;">
+                    <a href="{% url 'store:journal_detail' bm.post.slug %}">
+                      <img src="{{ bm.post.cover_image|default:'https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=600&q=85' }}" alt="{{ bm.post.title }}" style="width:100%; height:100%; object-fit:cover; display:block;">
+                    </a>
+                    {% if bm.post.category %}
+                      <span style="position:absolute; top:8px; left:8px; background:rgba(1,78,55,0.85); color:#fff; font-size:11px; font-weight:700; padding:2px 8px; border-radius:12px; text-transform:uppercase;">{{ bm.post.category.name }}</span>
+                    {% endif %}
+                  </div>
+                  <div style="padding:16px; display:flex; flex-direction:column; flex:1;">
+                    <span style="font-size:11px; color:#5a6a64; margin-bottom:4px;">Saved {{ bm.created_at|date:"M d, Y" }} · {{ bm.post.reading_time }}</span>
+                    <h4 style="font-size:15px; font-weight:700; line-height:1.35; margin:0 0 8px 0;">
+                      <a href="{% url 'store:journal_detail' bm.post.slug %}" style="color:#1a202c; text-decoration:none;">{{ bm.post.title }}</a>
+                    </h4>
+                    <p style="font-size:13px; color:#5a6a64; line-height:1.5; margin:0 0 16px 0; flex:1;">{{ bm.post.excerpt|truncatewords:14 }}</p>
+                    <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid #f0f4f2; padding-top:10px;">
+                      <a href="{% url 'store:journal_detail' bm.post.slug %}" style="color:#014e37; font-weight:700; font-size:13px; text-decoration:none;">Read Article →</a>
+                      <form method="post" action="{% url 'store:journal_toggle_bookmark' bm.post.slug %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                        <button type="submit" style="background:none; border:none; color:#dc2626; font-size:12px; font-weight:600; cursor:pointer;" title="Remove from bookmarks">Remove ✕</button>
+                      </form>
+                    </div>
+                  </div>
+                </article>
+              {% endfor %}
+            </div>
+          {% else %}
+            <div style="text-align:center; padding:48px 20px; background:#fafcfb; border:1px dashed #d1e2d8; border-radius:16px;">
+              <span style="font-size:40px; display:block; margin-bottom:12px;">🔖</span>
+              <h3 style="font-size:18px; font-weight:700; color:#111827; margin:0 0 6px 0;">No saved articles yet</h3>
+              <p style="color:#6b7280; font-size:14px; margin:0 0 20px 0;">Browse our Plant Journal and click the bookmark icon on any guide to save it here for fast reading.</p>
+              <a href="{% url 'store:journal_list' %}" class="btn-green-main" style="padding:10px 24px; font-size:14px; text-decoration:none; display:inline-block;">Explore Plant Journal →</a>
+            </div>
+          {% endif %}
+        </section>
+
       </main>
     </div>
 

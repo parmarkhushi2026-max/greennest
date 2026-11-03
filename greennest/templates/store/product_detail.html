@@ -706,6 +706,41 @@
     </div>
     {% endif %}
 
+    <!-- From the Plant Journal -->
+    {% if journal_posts %}
+    <section class="journal-related-section" style="margin-top: 3.5rem; padding-top: 2.5rem; border-top: 1px solid #e2ece6;">
+      <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom: 1.5rem; flex-wrap:wrap; gap:1rem;">
+        <div>
+          <span style="font-size:12px; font-weight:800; letter-spacing:1px; color:#014e37; text-transform:uppercase;">🌿 FROM THE PLANT JOURNAL</span>
+          <h3 style="font-size:1.75rem; font-weight:700; color:#1a202c; margin-top:0.25rem;">Care Wisdom &amp; Stories for {{ product.name }}</h3>
+        </div>
+        <a href="{% url 'store:journal_list' %}" style="color:#014e37; font-weight:700; text-decoration:none; font-size:0.95rem;">View All Journal Articles →</a>
+      </div>
+      <div class="journal-grid" style="display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:1.5rem;">
+        {% for j_post in journal_posts %}
+        <article class="journal-card" style="background:#ffffff; border:1px solid #e2ece6; border-radius:12px; overflow:hidden; display:flex; flex-direction:column; box-shadow:0 2px 8px rgba(1,78,55,0.06);">
+          <div style="height:170px; position:relative; overflow:hidden;">
+            <a href="{% url 'store:journal_detail' j_post.slug %}">
+              <img src="{{ j_post.cover_image|default:'https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=600&q=85' }}" alt="{{ j_post.title }}" style="width:100%; height:100%; object-fit:cover; display:block;">
+            </a>
+            {% if j_post.category %}
+              <span style="position:absolute; top:8px; left:8px; background:rgba(1,78,55,0.85); color:#fff; font-size:11px; font-weight:700; padding:2px 8px; border-radius:12px; text-transform:uppercase;">{{ j_post.category.name }}</span>
+            {% endif %}
+          </div>
+          <div style="padding:1.25rem; display:flex; flex-direction:column; flex:1;">
+            <span style="font-size:12px; color:#5a6a64; margin-bottom:0.4rem;">{{ j_post.published_at|date:"M d, Y" }} · {{ j_post.reading_time }}</span>
+            <h4 style="font-size:1.15rem; font-weight:700; line-height:1.35; margin-bottom:0.5rem;">
+              <a href="{% url 'store:journal_detail' j_post.slug %}" style="color:#1a202c; text-decoration:none;">{{ j_post.title }}</a>
+            </h4>
+            <p style="font-size:0.88rem; color:#5a6a64; line-height:1.5; margin-bottom:1rem; flex:1;">{{ j_post.excerpt|truncatewords:16 }}</p>
+            <a href="{% url 'store:journal_detail' j_post.slug %}" style="color:#014e37; font-weight:700; font-size:0.88rem; text-decoration:none;">Read Full Story →</a>
+          </div>
+        </article>
+        {% endfor %}
+      </div>
+    </section>
+    {% endif %}
+
   </div>
 </div>
 

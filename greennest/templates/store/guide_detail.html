@@ -104,6 +104,26 @@
       </div>
     </div>
 
+    {% if journal_posts %}
+    <div style="max-width:800px; margin: 32px auto 0;">
+      <h3 style="font-size: 20px; font-weight: 700; color: #014e37; margin-bottom: 16px; display:flex; align-items:center; gap:8px;">
+        <span>🌿</span> Related Stories from the Plant Journal
+      </h3>
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 16px;">
+        {% for j_post in journal_posts %}
+        <a href="{% url 'store:journal_detail' j_post.slug %}" style="display: flex; gap: 12px; background: #ffffff; border: 1px solid #eef2ef; border-radius: 12px; padding: 12px; text-decoration: none; color: inherit; box-shadow: 0 2px 8px rgba(0,0,0,0.03); transition: transform 0.2s ease;">
+          <img src="{{ j_post.cover_image|default:'https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=400&q=85' }}" alt="{{ j_post.title }}" style="width: 72px; height: 72px; border-radius: 8px; object-fit: cover; flex-shrink: 0;">
+          <div style="display: flex; flex-direction: column; justify-content: center;">
+            <span style="font-size: 11px; color: #10b981; font-weight: 700; text-transform: uppercase;">{{ j_post.reading_time }}</span>
+            <strong style="font-size: 13px; color: #111827; line-height: 1.35; margin: 3px 0;">{{ j_post.title|truncatewords:8 }}</strong>
+            <span style="font-size: 11px; color: #6b7280;">{{ j_post.published_at|date:"M d, Y" }}</span>
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+
   </div>
 </div>
 {% endblock %}
