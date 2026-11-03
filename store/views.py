@@ -1036,6 +1036,127 @@ def admin_dashboard(request):
             messages.success(request, "Review removed.")
             return redirect(f"{reverse('store:admin_dashboard')}?tab=reviews")
 
+        # 10. Plant Category Management (Direct in Web Dashboard)
+        elif action == "add_category":
+            cat_name = request.POST.get("name", "").strip()
+            cat_desc = request.POST.get("description", "").strip()
+            if cat_name:
+                cat = Category.objects.create(name=cat_name, description=cat_desc)
+                messages.success(request, f"Plant category '{cat.name}' created.")
+            return redirect(f"{reverse('store:admin_dashboard')}?tab=categories")
+
+        elif action == "edit_category":
+            cat_id = request.POST.get("category_id")
+            cat = get_object_or_404(Category, pk=cat_id)
+            cat_name = request.POST.get("name", "").strip()
+            cat_desc = request.POST.get("description", "").strip()
+            if cat_name:
+                cat.name = cat_name
+                cat.description = cat_desc
+                cat.save()
+                messages.success(request, f"Category '{cat.name}' updated successfully.")
+            return redirect(f"{reverse('store:admin_dashboard')}?tab=categories")
+
+        elif action == "delete_category":
+            cat_id = request.POST.get("category_id")
+            cat = get_object_or_404(Category, pk=cat_id)
+            name = cat.name
+            try:
+                cat.delete()
+                messages.success(request, f"Category '{name}' deleted.")
+            except Exception:
+                messages.error(request, f"Cannot delete category '{name}' because it contains active plants. Please reassign or delete the plants first.")
+            return redirect(f"{reverse('store:admin_dashboard')}?tab=categories")
+
+        # 11. Care Guide Management (Direct in Web Dashboard)
+        elif action == "add_guide":
+            title = request.POST.get("title", "").strip()
+            summary = request.POST.get("summary", "").strip()
+            body = request.POST.get("body", "").strip()
+            published = request.POST.get("published") in ["1", "true", "on", True]
+            if title and summary and body:
+                guide = CareGuide.objects.create(title=title, summary=summary, body=body, published=published)
+                messages.success(request, f"Botanical Care Guide '{guide.title}' published successfully.")
+            return redirect(f"{reverse('store:admin_dashboard')}?tab=guides")
+
+        elif action == "edit_guide":
+            guide_id = request.POST.get("guide_id")
+            guide = get_object_or_404(CareGuide, pk=guide_id)
+            title = request.POST.get("title", "").strip()
+            summary = request.POST.get("summary", "").strip()
+            body = request.POST.get("body", "").strip()
+            published = request.POST.get("published") in ["1", "true", "on", True]
+            if title:
+                guide.title = title
+            if summary:
+                guide.summary = summary
+            if body:
+                guide.body = body
+            guide.published = published
+            guide.save()
+            messages.success(request, f"Care Guide '{guide.title}' updated successfully.")
+            return redirect(f"{reverse('store:admin_dashboard')}?tab=guides")
+
+        elif action == "delete_guide":
+            guide_id = request.POST.get("guide_id")
+            guide = get_object_or_404(CareGuide, pk=guide_id)
+            title = guide.title
+            guide.delete()
+            messages.success(request, f"Care Guide '{title}' removed.")
+            return redirect(f"{reverse('store:admin_dashboard')}?tab=guides")
+
+        # 12. Care Reminder Management (Direct in Web Dashboard)
+        elif action == "delete_reminder_admin":
+            rem_id = request.POST.get("reminder_id")
+            rem = get_object_or_404(CareReminder, pk=rem_id)
+            plant_name = rem.plant_name
+            rem.delete()
+            messages.success(request, f"Care reminder for '{plant_name}' removed.")
+            return redirect(f"{reverse('store:admin_dashboard')}?tab=reminders")
+
+        # 13. Newsletter Subscriber Management (Direct in Web Dashboard)
+        elif action == "toggle_subscriber":
+            sub_id = request.POST.get("subscriber_id")
+            sub = get_object_or_404(NewsletterSubscriber, pk=sub_id)
+            sub.active = not sub.active
+            sub.save()
+            status_text = "subscribed" if sub.active else "paused/unsubscribed"
+            messages.success(request, f"Subscriber '{sub.email}' is now {status_text}.")
+            return redirect(f"{reverse('store:admin_dashboard')}?tab=subscribers")
+
+        elif action == "delete_subscriber":
+            sub_id = request.POST.get("subscriber_id")
+            sub = get_object_or_404(NewsletterSubscriber, pk=sub_id)
+            email = sub.email
+            sub.delete()
+            messages.success(request, f"Subscriber '{email}' removed.")
+            return redirect(f"{reverse('store:admin_dashboard')}?tab=subscribers")
+
+        # 14. User & Staff Management (Direct in Web Dashboard)
+        elif action == "toggle_staff":
+            user_id = request.POST.get("user_id")
+            target_user = get_object_or_404(User, pk=user_id)
+            if target_user == request.user:
+                messages.warning(request, "You cannot alter your own staff status.")
+            else:
+                target_user.is_staff = not target_user.is_staff
+                target_user.save()
+                status_text = "granted Staff permissions" if target_user.is_staff else "revoked Staff permissions"
+                messages.success(request, f"User '{target_user.username}' {status_text}.")
+            return redirect(f"{reverse('store:admin_dashboard')}?tab=customers")
+
+        elif action == "reset_user_password":
+            user_id = request.POST.get("user_id")
+            new_pw = request.POST.get("new_password", "").strip()
+            target_user = get_object_or_404(User, pk=user_id)
+            if new_pw and len(new_pw) >= 6:
+                target_user.set_password(new_pw)
+                target_user.save()
+                messages.success(request, f"Password for user '{target_user.username}' successfully reset.")
+            else:
+                messages.error(request, "Password must be at least 6 characters.")
+            return redirect(f"{reverse('store:admin_dashboard')}?tab=customers")
+
     # Metrics & Analytics
     delivered_sales = Order.objects.filter(status=Order.Status.DELIVERED).aggregate(total=Sum("total"))["total"] or Decimal("0.00")
     pending_sales = Order.objects.filter(status__in=[Order.Status.PENDING, Order.Status.CONFIRMED, Order.Status.PACKED, Order.Status.SHIPPED]).aggregate(total=Sum("total"))["total"] or Decimal("0.00")
@@ -1112,6 +1233,10 @@ def admin_dashboard(request):
         "approved_reviews": approved_reviews,
         "customers": customers_recent,
         "subscribers": subscribers_recent,
+        "care_guides": CareGuide.objects.all().order_by("-created_at"),
+        "reminders_all": CareReminder.objects.select_related("user", "product").order_by("-id"),
+        "subscribers_all": NewsletterSubscriber.objects.all().order_by("-subscribed_at"),
+        "users_all": User.objects.all().order_by("-date_joined"),
         "status_choices": Order.Status.choices,
         "admin_url": "/admin/",
         "admin_months_json": json.dumps(admin_months),

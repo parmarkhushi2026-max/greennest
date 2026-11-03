@@ -175,9 +175,25 @@
             <span>Plant Inventory (CRUD)</span>
             {% if low_stock %}<span class="tab-badge-pill danger">{{ low_stock }} Low</span>{% else %}<span class="tab-badge-pill">{{ products_count }}</span>{% endif %}
           </a>
+          <a class="admin-side-link {% if active_tab == 'categories' %}active{% endif %}" href="?tab=categories">
+            <span>Plant Categories</span>
+            <span class="tab-badge-pill">{{ categories|length }}</span>
+          </a>
           <a class="admin-side-link {% if active_tab == 'inquiries' %}active{% endif %}" href="?tab=inquiries">
             <span>Customer Requirements</span>
             {% if new_inquiries_count %}<span class="tab-badge-pill warning" style="background:#f59e0b; color:#ffffff;">{{ new_inquiries_count }} New</span>{% else %}<span class="tab-badge-pill">{{ inquiries|length }}</span>{% endif %}
+          </a>
+          <a class="admin-side-link {% if active_tab == 'guides' %}active{% endif %}" href="?tab=guides">
+            <span>Care Guides</span>
+            <span class="tab-badge-pill">{{ care_guides|length }}</span>
+          </a>
+          <a class="admin-side-link {% if active_tab == 'reminders' %}active{% endif %}" href="?tab=reminders">
+            <span>Care Reminders</span>
+            <span class="tab-badge-pill">{{ reminders_all|length }}</span>
+          </a>
+          <a class="admin-side-link {% if active_tab == 'subscribers' %}active{% endif %}" href="?tab=subscribers">
+            <span>Subscribers</span>
+            <span class="tab-badge-pill">{{ subscribers_all|length }}</span>
           </a>
           <a class="admin-side-link {% if active_tab == 'coupons' %}active{% endif %}" href="?tab=coupons">
             <span>Promo Coupons</span>
@@ -1227,49 +1243,441 @@
     {% endif %}
 
 
-    <!-- Bottom Nursery Operations Shortcuts -->
-    <div class="admin-operations-shortcuts">
-      <h3 class="shortcuts-heading">Nursery Direct Administrative Portals</h3>
-      <div class="shortcuts-grid">
-        <a class="shortcut-tile" href="{{ admin_url }}store/product/add/" target="_blank">
-          <span class="tile-icon">➕</span>
-          <strong>Add New Plant</strong>
-          <small>Create product listing</small>
+    
+    <!-- =========================================================================
+         TAB: PLANT CATEGORIES DIRECT MANAGEMENT
+         ========================================================================= -->
+    {% if active_tab == 'categories' %}
+    <div class="admin-categories-wrapper">
+      
+      <!-- Add Category Card -->
+      <div class="admin-card-section" style="background: #ffffff; border-radius: 18px; border: 1px solid #e2ebe5; padding: 24px 28px; margin-bottom: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.03);">
+        <div style="border-bottom: 1px solid #f0f4f2; padding-bottom: 14px; margin-bottom: 20px;">
+          <h2 style="font-size: 19px; font-weight: 800; color: #014e37; margin: 0 0 4px; font-family: var(--font-heading, sans-serif);">
+            + Add New Plant Category
+          </h2>
+          <p style="font-size: 13px; color: #6b7280; margin: 0;">Create a new botanical category for the store catalog.</p>
+        </div>
+
+        <form method="post" style="display: grid; grid-template-columns: 1fr 2fr auto; gap: 16px; align-items: end;">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="add_category">
+          <div>
+            <label style="display: block; font-size: 12.5px; font-weight: 700; color: #374151; margin-bottom: 5px;">Category Name <span style="color:#ef4444;">*</span></label>
+            <input type="text" name="name" required placeholder="e.g. Bonsai & Miniatures" style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #d1d5db; font-size: 13.5px;">
+          </div>
+          <div>
+            <label style="display: block; font-size: 12.5px; font-weight: 700; color: #374151; margin-bottom: 5px;">Description / Tagline</label>
+            <input type="text" name="description" placeholder="Short description of plants in this category..." style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #d1d5db; font-size: 13.5px;">
+          </div>
+          <button type="submit" style="background: #014e37; color: #ffffff; border: none; padding: 11px 22px; border-radius: 8px; font-size: 13.5px; font-weight: 700; cursor: pointer; white-space: nowrap;">
+            + Create Category
+          </button>
+        </form>
+      </div>
+
+      <!-- Categories Table -->
+      <div class="admin-card-section" style="background: #ffffff; border-radius: 18px; border: 1px solid #e2ebe5; padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.03);">
+        <div style="border-bottom: 1px solid #f0f4f2; padding-bottom: 14px; margin-bottom: 20px;">
+          <h2 style="font-size: 19px; font-weight: 800; color: #014e37; margin: 0 0 4px;">
+            All Plant Categories ({{ categories|length }})
+          </h2>
+          <p style="font-size: 13px; color: #6b7280; margin: 0;">Edit category details, inspect plant counts, or delete empty categories.</p>
+        </div>
+
+        <div class="admin-table-responsive">
+          <table class="admin-data-table" style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: #f8faf9; border-bottom: 2px solid #e2ebe5; text-align: left; font-size: 12.5px; color: #4b5563;">
+                <th style="padding: 12px 14px;">Category Name</th>
+                <th style="padding: 12px 14px;">Slug / URL</th>
+                <th style="padding: 12px 14px;">Description</th>
+                <th style="padding: 12px 14px;">Active Plants</th>
+                <th style="padding: 12px 14px; text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for cat in categories %}
+              <tr style="border-bottom: 1px solid #f0f4f2; font-size: 13.5px;">
+                <td style="padding: 14px;">
+                  <strong style="color: #111827;">{{ cat.name }}</strong>
+                </td>
+                <td style="padding: 14px;">
+                  <code style="background: #f1f5f9; padding: 3px 8px; border-radius: 6px; font-size: 12px; color: #014e37;">{{ cat.slug }}</code>
+                </td>
+                <td style="padding: 14px; color: #4b5563; max-width: 300px;">
+                  {{ cat.description|default:"No description provided" }}
+                </td>
+                <td style="padding: 14px;">
+                  <a href="?tab=products&cat={{ cat.id }}" style="background: #eaf4ee; color: #014e37; padding: 4px 10px; border-radius: 12px; font-size: 12px; font-weight: 700; text-decoration: none;">
+                    {{ cat.prod_count|default:0 }} Plants →
+                  </a>
+                </td>
+                <td style="padding: 14px; text-align: right;">
+                  <div style="display: inline-flex; align-items: center; gap: 8px;">
+                    <button type="button" onclick="openEditCategoryModal('{{ cat.id }}', '{{ cat.name|escapejs }}', '{{ cat.description|escapejs }}')" style="background: #014e37; color: #ffffff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer;">
+                      Edit
+                    </button>
+                    <form method="post" style="margin: 0;" onsubmit="return confirm('Delete category '{{ cat.name|escapejs }}'?');">
+                      {% csrf_token %}
+                      <input type="hidden" name="action" value="delete_category">
+                      <input type="hidden" name="category_id" value="{{ cat.id }}">
+                      <button type="submit" style="background: rgba(239, 68, 68, 0.1); color: #dc2626; border: 1px solid rgba(239, 68, 68, 0.3); padding: 6px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">
+                        Delete
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="5" style="padding: 24px; text-align: center; color: #6b7280;">No categories found.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+
+    <!-- =========================================================================
+         TAB: CARE GUIDES DIRECT MANAGEMENT
+         ========================================================================= -->
+    {% if active_tab == 'guides' %}
+    <div class="admin-guides-wrapper">
+      
+      <!-- Add Guide Card -->
+      <div class="admin-card-section" style="background: #ffffff; border-radius: 18px; border: 1px solid #e2ebe5; padding: 24px 28px; margin-bottom: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.03);">
+        <div style="border-bottom: 1px solid #f0f4f2; padding-bottom: 14px; margin-bottom: 20px;">
+          <h2 style="font-size: 19px; font-weight: 800; color: #014e37; margin: 0 0 4px;">
+            + Publish New Botanical Care Guide
+          </h2>
+          <p style="font-size: 13px; color: #6b7280; margin: 0;">Publish plant parenting instructions directly to the website care guides section.</p>
+        </div>
+
+        <form method="post">
+          {% csrf_token %}
+          <input type="hidden" name="action" value="add_guide">
+          
+          <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 16px; margin-bottom: 16px;">
+            <div>
+              <label style="display: block; font-size: 12.5px; font-weight: 700; color: #374151; margin-bottom: 5px;">Guide Title <span style="color:#ef4444;">*</span></label>
+              <input type="text" name="title" required placeholder="e.g. Complete Monstera Deliciosa Care Guide" style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #d1d5db; font-size: 13.5px;">
+            </div>
+            <div>
+              <label style="display: block; font-size: 12.5px; font-weight: 700; color: #374151; margin-bottom: 5px;">Status</label>
+              <label style="display: flex; align-items: center; gap: 8px; margin-top: 10px; cursor: pointer; font-size: 13px; font-weight: 600; color: #014e37;">
+                <input type="checkbox" name="published" value="1" checked style="width: 18px; height: 18px; accent-color: #014e37;">
+                <span>Publish Immediately</span>
+              </label>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 16px;">
+            <label style="display: block; font-size: 12.5px; font-weight: 700; color: #374151; margin-bottom: 5px;">Short Summary <span style="color:#ef4444;">*</span></label>
+            <input type="text" name="summary" required placeholder="Quick 1-sentence botanical overview of watering, light, and soil..." style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #d1d5db; font-size: 13.5px;">
+          </div>
+
+          <div style="margin-bottom: 20px;">
+            <label style="display: block; font-size: 12.5px; font-weight: 700; color: #374151; margin-bottom: 5px;">Full Guide Content (Botanical Instructions) <span style="color:#ef4444;">*</span></label>
+            <textarea name="body" rows="4" required placeholder="Detailed guide on sunlight, watering schedule, seasonal pruning, and fertilizer..." style="width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid #d1d5db; font-size: 13.5px; line-height: 1.5;"></textarea>
+          </div>
+
+          <button type="submit" style="background: #014e37; color: #ffffff; border: none; padding: 11px 24px; border-radius: 8px; font-size: 14px; font-weight: 700; cursor: pointer;">
+            + Publish Care Guide
+          </button>
+        </form>
+      </div>
+
+      <!-- Care Guides Table -->
+      <div class="admin-card-section" style="background: #ffffff; border-radius: 18px; border: 1px solid #e2ebe5; padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.03);">
+        <div style="border-bottom: 1px solid #f0f4f2; padding-bottom: 14px; margin-bottom: 20px;">
+          <h2 style="font-size: 19px; font-weight: 800; color: #014e37; margin: 0 0 4px;">
+            Live Botanical Care Guides ({{ care_guides|length }})
+          </h2>
+          <p style="font-size: 13px; color: #6b7280; margin: 0;">Manage published guides visible to customers under the Care Guides menu.</p>
+        </div>
+
+        <div class="admin-table-responsive">
+          <table class="admin-data-table" style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: #f8faf9; border-bottom: 2px solid #e2ebe5; text-align: left; font-size: 12.5px; color: #4b5563;">
+                <th style="padding: 12px 14px;">Guide Title</th>
+                <th style="padding: 12px 14px;">Summary</th>
+                <th style="padding: 12px 14px;">Status</th>
+                <th style="padding: 12px 14px;">Date Created</th>
+                <th style="padding: 12px 14px; text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for g in care_guides %}
+              <tr style="border-bottom: 1px solid #f0f4f2; font-size: 13.5px;">
+                <td style="padding: 14px;">
+                  <strong style="color: #111827; display: block;">{{ g.title }}</strong>
+                  <a href="{% url 'store:guide_detail' g.slug %}" target="_blank" style="font-size: 11.5px; color: #059669; text-decoration: none;">View Live Guide ↗</a>
+                </td>
+                <td style="padding: 14px; color: #4b5563; max-width: 320px;">
+                  {{ g.summary }}
+                </td>
+                <td style="padding: 14px;">
+                  <span style="background: {% if g.published %}#ecfdf5{% else %}#fef2f2{% endif %}; color: {% if g.published %}#059669{% else %}#dc2626{% endif %}; padding: 3px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 700;">
+                    {% if g.published %}● Published{% else %}○ Draft{% endif %}
+                  </span>
+                </td>
+                <td style="padding: 14px; color: #6b7280; font-size: 12px;">
+                  {{ g.created_at|date:"M d, Y" }}
+                </td>
+                <td style="padding: 14px; text-align: right;">
+                  <div style="display: inline-flex; align-items: center; gap: 8px;">
+                    <button type="button" onclick="openEditGuideModal({
+                      id: '{{ g.id }}',
+                      title: '{{ g.title|escapejs }}',
+                      summary: '{{ g.summary|escapejs }}',
+                      body: '{{ g.body|escapejs }}',
+                      published: {% if g.published %}true{% else %}false{% endif %}
+                    })" style="background: #014e37; color: #ffffff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; cursor: pointer;">
+                      Edit
+                    </button>
+                    <form method="post" style="margin: 0;" onsubmit="return confirm('Delete guide '{{ g.title|escapejs }}'?');">
+                      {% csrf_token %}
+                      <input type="hidden" name="action" value="delete_guide">
+                      <input type="hidden" name="guide_id" value="{{ g.id }}">
+                      <button type="submit" style="background: rgba(239, 68, 68, 0.1); color: #dc2626; border: 1px solid rgba(239, 68, 68, 0.3); padding: 6px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; cursor: pointer;">
+                        Delete
+                      </button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="5" style="padding: 24px; text-align: center; color: #6b7280;">No care guides published yet.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+
+    <!-- =========================================================================
+         TAB: CARE REMINDERS DIRECT MANAGEMENT
+         ========================================================================= -->
+    {% if active_tab == 'reminders' %}
+    <div class="admin-reminders-wrapper">
+      <div class="admin-card-section" style="background: #ffffff; border-radius: 18px; border: 1px solid #e2ebe5; padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.03);">
+        <div style="border-bottom: 1px solid #f0f4f2; padding-bottom: 14px; margin-bottom: 20px;">
+          <h2 style="font-size: 19px; font-weight: 800; color: #014e37; margin: 0 0 4px;">
+            Customer Plant Care Reminders ({{ reminders_all|length }})
+          </h2>
+          <p style="font-size: 13px; color: #6b7280; margin: 0;">Watering and maintenance reminders set by registered plant parents.</p>
+        </div>
+
+        <div class="admin-table-responsive">
+          <table class="admin-data-table" style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: #f8faf9; border-bottom: 2px solid #e2ebe5; text-align: left; font-size: 12.5px; color: #4b5563;">
+                <th style="padding: 12px 14px;">Customer / User</th>
+                <th style="padding: 12px 14px;">Plant Name</th>
+                <th style="padding: 12px 14px;">Interval (Days)</th>
+                <th style="padding: 12px 14px;">Next Due Date</th>
+                <th style="padding: 12px 14px;">Status</th>
+                <th style="padding: 12px 14px; text-align: right;">Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for rem in reminders_all %}
+              <tr style="border-bottom: 1px solid #f0f4f2; font-size: 13.5px;">
+                <td style="padding: 14px;">
+                  <strong>{{ rem.user.username }}</strong>
+                  <small style="color: #6b7280; display: block;">{{ rem.user.email }}</small>
+                </td>
+                <td style="padding: 14px; color: #014e37; font-weight: 700;">
+                  {{ rem.plant_name }}
+                </td>
+                <td style="padding: 14px;">
+                  Every {{ rem.interval_days }} days
+                </td>
+                <td style="padding: 14px;">
+                  {{ rem.next_reminder|date:"M d, Y" }}
+                </td>
+                <td style="padding: 14px;">
+                  <span style="background: {% if rem.active %}#ecfdf5{% else %}#f1f5f9{% endif %}; color: {% if rem.active %}#059669{% else %}#64748b{% endif %}; padding: 3px 10px; border-radius: 20px; font-size: 11.5px; font-weight: 700;">
+                    {% if rem.active %}Active{% else %}Paused{% endif %}
+                  </span>
+                </td>
+                <td style="padding: 14px; text-align: right;">
+                  <form method="post" style="margin: 0;" onsubmit="return confirm('Remove this care reminder?');">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="delete_reminder_admin">
+                    <input type="hidden" name="reminder_id" value="{{ rem.id }}">
+                    <button type="submit" style="background: rgba(239, 68, 68, 0.1); color: #dc2626; border: 1px solid rgba(239, 68, 68, 0.3); padding: 5px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 600; cursor: pointer;">
+                      Remove
+                    </button>
+                  </form>
+                </td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="6" style="padding: 24px; text-align: center; color: #6b7280;">No customer care reminders configured yet.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+
+    <!-- =========================================================================
+         TAB: NEWSLETTER SUBSCRIBERS DIRECT MANAGEMENT
+         ========================================================================= -->
+    {% if active_tab == 'subscribers' %}
+    <div class="admin-subscribers-wrapper">
+      <div class="admin-card-section" style="background: #ffffff; border-radius: 18px; border: 1px solid #e2ebe5; padding: 24px; box-shadow: 0 4px 16px rgba(0,0,0,0.03);">
+        <div style="border-bottom: 1px solid #f0f4f2; padding-bottom: 14px; margin-bottom: 20px;">
+          <h2 style="font-size: 19px; font-weight: 800; color: #014e37; margin: 0 0 4px;">
+            Newsletter Subscribers ({{ subscribers_all|length }})
+          </h2>
+          <p style="font-size: 13px; color: #6b7280; margin: 0;">Subscribed plant parents receiving weekly botanical care notes and promo offers.</p>
+        </div>
+
+        <div class="admin-table-responsive">
+          <table class="admin-data-table" style="width: 100%; border-collapse: collapse;">
+            <thead>
+              <tr style="background: #f8faf9; border-bottom: 2px solid #e2ebe5; text-align: left; font-size: 12.5px; color: #4b5563;">
+                <th style="padding: 12px 14px;">Subscriber Email</th>
+                <th style="padding: 12px 14px;">Subscription Date</th>
+                <th style="padding: 12px 14px;">Status</th>
+                <th style="padding: 12px 14px; text-align: right;">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for sub in subscribers_all %}
+              <tr style="border-bottom: 1px solid #f0f4f2; font-size: 13.5px;">
+                <td style="padding: 14px;">
+                  <strong style="color: #014e37;">{{ sub.email }}</strong>
+                </td>
+                <td style="padding: 14px; color: #6b7280; font-size: 12px;">
+                  {{ sub.subscribed_at|date:"M d, Y · H:i" }}
+                </td>
+                <td style="padding: 14px;">
+                  <form method="post" style="margin: 0;">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="toggle_subscriber">
+                    <input type="hidden" name="subscriber_id" value="{{ sub.id }}">
+                    <button type="submit" style="border: 1px solid {% if sub.active %}#a7f3d0{% else %}#fecaca{% endif %}; background: {% if sub.active %}#ecfdf5{% else %}#fef2f2{% endif %}; color: {% if sub.active %}#059669{% else %}#dc2626{% endif %}; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 20px; cursor: pointer;">
+                      {% if sub.active %}● Subscribed{% else %}○ Paused{% endif %}
+                    </button>
+                  </form>
+                </td>
+                <td style="padding: 14px; text-align: right;">
+                  <form method="post" style="margin: 0;" onsubmit="return confirm('Delete subscriber {{ sub.email|escapejs }}?');">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="delete_subscriber">
+                    <input type="hidden" name="subscriber_id" value="{{ sub.id }}">
+                    <button type="submit" style="background: rgba(239, 68, 68, 0.1); color: #dc2626; border: 1px solid rgba(239, 68, 68, 0.3); padding: 5px 10px; border-radius: 6px; font-size: 11.5px; font-weight: 600; cursor: pointer;">
+                      Delete
+                    </button>
+                  </form>
+                </td>
+              </tr>
+              {% empty %}
+              <tr><td colspan="4" style="padding: 24px; text-align: center; color: #6b7280;">No subscribers yet.</td></tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+<!-- Bottom Nursery Operations Shortcuts -->
+    <div class="admin-operations-shortcuts" style="background: #ffffff; border-radius: 18px; border: 1px solid #e2ebe5; padding: 24px 28px; margin-top: 36px; box-shadow: 0 4px 16px rgba(0,0,0,0.03);">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 18px; flex-wrap: wrap; gap: 10px;">
+        <div>
+          <h3 class="shortcuts-heading" style="font-size: 18px; font-weight: 800; color: #014e37; margin: 0; font-family: var(--font-heading, sans-serif);">
+            Nursery Direct Administrative Portals
+          </h3>
+          <p style="font-size: 12.5px; color: #6b7280; margin: 3px 0 0;">
+            Manage all Green Nest store operations directly within this web dashboard without leaving the portal.
+          </p>
+        </div>
+        <span style="background: #eaf4ee; color: #014e37; font-size: 11px; font-weight: 700; padding: 4px 12px; border-radius: 20px; border: 1px solid #c2e2d0;">
+          All 8 Web Portals Live
+        </span>
+      </div>
+
+      <div class="shortcuts-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 14px;">
+        <!-- 1. Add Plant -->
+        <a class="shortcut-tile" href="?tab=products#add-plant-card" style="display: flex; flex-direction: column; gap: 4px; padding: 16px; border-radius: 12px; background: #f8faf9; border: 1px solid #e2ebe5; text-decoration: none; transition: all 0.2s ease;">
+          <div style="width: 34px; height: 34px; border-radius: 8px; background: #eaf4ee; color: #014e37; display: flex; align-items: center; justify-content: center; margin-bottom: 6px;">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+          </div>
+          <strong style="color: #014e37; font-size: 13.5px;">Add New Plant</strong>
+          <small style="color: #64748b; font-size: 11px;">Create botanical item</small>
         </a>
-        <a class="shortcut-tile" href="{{ admin_url }}store/category/" target="_blank">
-          <span class="tile-icon">🌿</span>
-          <strong>Plant Categories</strong>
-          <small>Organize catalog</small>
+
+        <!-- 2. Categories -->
+        <a class="shortcut-tile" href="?tab=categories" style="display: flex; flex-direction: column; gap: 4px; padding: 16px; border-radius: 12px; background: #f8faf9; border: 1px solid #e2ebe5; text-decoration: none; transition: all 0.2s ease;">
+          <div style="width: 34px; height: 34px; border-radius: 8px; background: #eaf4ee; color: #014e37; display: flex; align-items: center; justify-content: center; margin-bottom: 6px;">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h7v7H4z"></path><path d="M13 4h7v7h-7z"></path><path d="M4 13h7v7H4z"></path><path d="M13 13h7v7h-7z"></path></svg>
+          </div>
+          <strong style="color: #014e37; font-size: 13.5px;">Plant Categories</strong>
+          <small style="color: #64748b; font-size: 11px;">Organize plant catalog</small>
         </a>
-        <a class="shortcut-tile" href="{{ admin_url }}store/coupon/" target="_blank">
-          <span class="tile-icon">🏷️</span>
-          <strong>Discount Coupons</strong>
-          <small>Manage GREEN10 &amp; offers</small>
+
+        <!-- 3. Coupons -->
+        <a class="shortcut-tile" href="?tab=coupons" style="display: flex; flex-direction: column; gap: 4px; padding: 16px; border-radius: 12px; background: #f8faf9; border: 1px solid #e2ebe5; text-decoration: none; transition: all 0.2s ease;">
+          <div style="width: 34px; height: 34px; border-radius: 8px; background: #eaf4ee; color: #014e37; display: flex; align-items: center; justify-content: center; margin-bottom: 6px;">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+          </div>
+          <strong style="color: #014e37; font-size: 13.5px;">Discount Coupons</strong>
+          <small style="color: #64748b; font-size: 11px;">Manage promo codes</small>
         </a>
-        <a class="shortcut-tile" href="{{ admin_url }}store/order/" target="_blank">
-          <span class="tile-icon">📦</span>
-          <strong>Order Deliveries</strong>
-          <small>Update shipment logs</small>
+
+        <!-- 4. Orders -->
+        <a class="shortcut-tile" href="?tab=orders" style="display: flex; flex-direction: column; gap: 4px; padding: 16px; border-radius: 12px; background: #f8faf9; border: 1px solid #e2ebe5; text-decoration: none; transition: all 0.2s ease;">
+          <div style="width: 34px; height: 34px; border-radius: 8px; background: #eaf4ee; color: #014e37; display: flex; align-items: center; justify-content: center; margin-bottom: 6px;">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+          </div>
+          <strong style="color: #014e37; font-size: 13.5px;">Order Deliveries</strong>
+          <small style="color: #64748b; font-size: 11px;">Shipment status &amp; tracking</small>
         </a>
-        <a class="shortcut-tile" href="{{ admin_url }}store/careguide/" target="_blank">
-          <span class="tile-icon">📖</span>
-          <strong>Care Guides</strong>
-          <small>Publish plant tips</small>
+
+        <!-- 5. Care Guides -->
+        <a class="shortcut-tile" href="?tab=guides" style="display: flex; flex-direction: column; gap: 4px; padding: 16px; border-radius: 12px; background: #f8faf9; border: 1px solid #e2ebe5; text-decoration: none; transition: all 0.2s ease;">
+          <div style="width: 34px; height: 34px; border-radius: 8px; background: #eaf4ee; color: #014e37; display: flex; align-items: center; justify-content: center; margin-bottom: 6px;">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+          </div>
+          <strong style="color: #014e37; font-size: 13.5px;">Care Guides</strong>
+          <small style="color: #64748b; font-size: 11px;">Publish &amp; edit plant tips</small>
         </a>
-        <a class="shortcut-tile" href="{{ admin_url }}store/carereminder/" target="_blank">
-          <span class="tile-icon">⏰</span>
-          <strong>Care Reminders</strong>
-          <small>Customer schedules</small>
+
+        <!-- 6. Care Reminders -->
+        <a class="shortcut-tile" href="?tab=reminders" style="display: flex; flex-direction: column; gap: 4px; padding: 16px; border-radius: 12px; background: #f8faf9; border: 1px solid #e2ebe5; text-decoration: none; transition: all 0.2s ease;">
+          <div style="width: 34px; height: 34px; border-radius: 8px; background: #eaf4ee; color: #014e37; display: flex; align-items: center; justify-content: center; margin-bottom: 6px;">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+          </div>
+          <strong style="color: #014e37; font-size: 13.5px;">Care Reminders</strong>
+          <small style="color: #64748b; font-size: 11px;">Customer watering alerts</small>
         </a>
-        <a class="shortcut-tile" href="{{ admin_url }}store/newslettersubscriber/" target="_blank">
-          <span class="tile-icon">📬</span>
-          <strong>Newsletter List</strong>
-          <small>View subscribers</small>
+
+        <!-- 7. Subscribers -->
+        <a class="shortcut-tile" href="?tab=subscribers" style="display: flex; flex-direction: column; gap: 4px; padding: 16px; border-radius: 12px; background: #f8faf9; border: 1px solid #e2ebe5; text-decoration: none; transition: all 0.2s ease;">
+          <div style="width: 34px; height: 34px; border-radius: 8px; background: #eaf4ee; color: #014e37; display: flex; align-items: center; justify-content: center; margin-bottom: 6px;">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+          </div>
+          <strong style="color: #014e37; font-size: 13.5px;">Newsletter List</strong>
+          <small style="color: #64748b; font-size: 11px;">Subscribers &amp; leads</small>
         </a>
-        <a class="shortcut-tile" href="{{ admin_url }}auth/user/" target="_blank">
-          <span class="tile-icon">👥</span>
-          <strong>Staff &amp; Users</strong>
-          <small>Permissions &amp; profiles</small>
+
+        <!-- 8. Staff & Users -->
+        <a class="shortcut-tile" href="?tab=customers" style="display: flex; flex-direction: column; gap: 4px; padding: 16px; border-radius: 12px; background: #f8faf9; border: 1px solid #e2ebe5; text-decoration: none; transition: all 0.2s ease;">
+          <div style="width: 34px; height: 34px; border-radius: 8px; background: #eaf4ee; color: #014e37; display: flex; align-items: center; justify-content: center; margin-bottom: 6px;">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+          </div>
+          <strong style="color: #014e37; font-size: 13.5px;">Staff &amp; Users</strong>
+          <small style="color: #64748b; font-size: 11px;">Permissions &amp; accounts</small>
         </a>
       </div>
     </div>
@@ -1506,6 +1914,107 @@
       closeEditPlantModal();
     }
   });
+</script>
+
+
+<!-- =========================================================================
+     MODAL: EDIT CATEGORY
+     ========================================================================= -->
+<div id="modal-edit-category-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+  <div style="background: #ffffff; border-radius: 16px; max-width: 500px; width: 100%; padding: 26px; box-shadow: 0 10px 40px rgba(0,0,0,0.3);">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f4f2; padding-bottom: 12px; margin-bottom: 16px;">
+      <h3 style="font-size: 18px; font-weight: 800; color: #014e37; margin: 0;">Edit Category Details</h3>
+      <button type="button" onclick="closeEditCategoryModal()" style="background: none; border: none; font-size: 22px; color: #9ca3af; cursor: pointer;">&times;</button>
+    </div>
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="edit_category">
+      <input type="hidden" name="category_id" id="modal-category-id-field">
+
+      <div style="margin-bottom: 14px;">
+        <label style="display: block; font-size: 12.5px; font-weight: 700; color: #374151; margin-bottom: 5px;">Category Name <span style="color:#ef4444;">*</span></label>
+        <input type="text" name="name" id="modal-category-name-field" required style="width: 100%; padding: 9px 12px; border-radius: 8px; border: 1px solid #d1d5db; font-size: 13.5px;">
+      </div>
+
+      <div style="margin-bottom: 20px;">
+        <label style="display: block; font-size: 12.5px; font-weight: 700; color: #374151; margin-bottom: 5px;">Description</label>
+        <textarea name="description" id="modal-category-desc-field" rows="3" style="width: 100%; padding: 9px 12px; border-radius: 8px; border: 1px solid #d1d5db; font-size: 13.5px;"></textarea>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px;">
+        <button type="button" onclick="closeEditCategoryModal()" style="background: #f3f4f6; color: #4b5563; border: none; padding: 9px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;">Cancel</button>
+        <button type="submit" style="background: #014e37; color: #ffffff; border: none; padding: 9px 20px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer;">Save Changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- =========================================================================
+     MODAL: EDIT CARE GUIDE
+     ========================================================================= -->
+<div id="modal-edit-guide-overlay" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 9999; align-items: center; justify-content: center; padding: 20px;">
+  <div style="background: #ffffff; border-radius: 16px; max-width: 600px; width: 100%; padding: 26px; box-shadow: 0 10px 40px rgba(0,0,0,0.3); max-height: 90vh; overflow-y: auto;">
+    <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f0f4f2; padding-bottom: 12px; margin-bottom: 16px;">
+      <h3 style="font-size: 18px; font-weight: 800; color: #014e37; margin: 0;">Edit Botanical Care Guide</h3>
+      <button type="button" onclick="closeEditGuideModal()" style="background: none; border: none; font-size: 22px; color: #9ca3af; cursor: pointer;">&times;</button>
+    </div>
+    <form method="post">
+      {% csrf_token %}
+      <input type="hidden" name="action" value="edit_guide">
+      <input type="hidden" name="guide_id" id="modal-guide-id-field">
+
+      <div style="margin-bottom: 14px;">
+        <label style="display: block; font-size: 12.5px; font-weight: 700; color: #374151; margin-bottom: 5px;">Guide Title <span style="color:#ef4444;">*</span></label>
+        <input type="text" name="title" id="modal-guide-title-field" required style="width: 100%; padding: 9px 12px; border-radius: 8px; border: 1px solid #d1d5db; font-size: 13.5px;">
+      </div>
+
+      <div style="margin-bottom: 14px;">
+        <label style="display: block; font-size: 12.5px; font-weight: 700; color: #374151; margin-bottom: 5px;">Summary <span style="color:#ef4444;">*</span></label>
+        <input type="text" name="summary" id="modal-guide-summary-field" required style="width: 100%; padding: 9px 12px; border-radius: 8px; border: 1px solid #d1d5db; font-size: 13.5px;">
+      </div>
+
+      <div style="margin-bottom: 14px;">
+        <label style="display: block; font-size: 12.5px; font-weight: 700; color: #374151; margin-bottom: 5px;">Guide Content (Botanical Instructions) <span style="color:#ef4444;">*</span></label>
+        <textarea name="body" id="modal-guide-body-field" rows="5" required style="width: 100%; padding: 9px 12px; border-radius: 8px; border: 1px solid #d1d5db; font-size: 13.5px; line-height: 1.5;"></textarea>
+      </div>
+
+      <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 20px;">
+        <input type="checkbox" name="published" id="modal-guide-published-field" value="1" style="width: 18px; height: 18px; accent-color: #014e37;">
+        <label for="modal-guide-published-field" style="font-size: 13px; font-weight: 600; color: #111827; cursor: pointer;">
+          Published on Live Website
+        </label>
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 10px;">
+        <button type="button" onclick="closeEditGuideModal()" style="background: #f3f4f6; color: #4b5563; border: none; padding: 9px 16px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;">Cancel</button>
+        <button type="submit" style="background: #014e37; color: #ffffff; border: none; padding: 9px 20px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer;">Save Guide</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function openEditCategoryModal(id, name, desc) {
+    document.getElementById('modal-category-id-field').value = id;
+    document.getElementById('modal-category-name-field').value = name;
+    document.getElementById('modal-category-desc-field').value = desc || '';
+    document.getElementById('modal-edit-category-overlay').style.display = 'flex';
+  }
+  function closeEditCategoryModal() {
+    document.getElementById('modal-edit-category-overlay').style.display = 'none';
+  }
+
+  function openEditGuideModal(g) {
+    document.getElementById('modal-guide-id-field').value = g.id;
+    document.getElementById('modal-guide-title-field').value = g.title;
+    document.getElementById('modal-guide-summary-field').value = g.summary;
+    document.getElementById('modal-guide-body-field').value = g.body;
+    document.getElementById('modal-guide-published-field').checked = !!g.published;
+    document.getElementById('modal-edit-guide-overlay').style.display = 'flex';
+  }
+  function closeEditGuideModal() {
+    document.getElementById('modal-edit-guide-overlay').style.display = 'none';
+  }
 </script>
 
 {% endblock %}
