@@ -1,0 +1,288 @@
+{% extends "store/base.html" %}
+{% load static %}
+
+{% block title %}{{ post.seo_title|default:post.title }} · GreenNest Plant Journal{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'storefront/css/journal.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="journal-detail-page">
+
+  <!-- Breadcrumbs & Back -->
+  <div class="theme-container journal-detail-top">
+    <nav class="journal-breadcrumb" aria-label="Breadcrumb">
+      <a href="{% url 'store:home' %}">Home</a>
+      <span class="sep">/</span>
+      <a href="{% url 'store:journal_list' %}">Plant Journal</a>
+      {% if post.category %}
+        <span class="sep">/</span>
+        <a href="{% url 'store:journal_list' %}?category={{ post.category.slug }}">{{ post.category.name }}</a>
+      {% endif %}
+      <span class="sep">/</span>
+      <span class="current">{{ post.title|truncatewords:6 }}</span>
+    </nav>
+    <a href="{% url 'store:journal_list' %}" class="journal-back-link">
+      <span>← Back to all articles</span>
+    </a>
+  </div>
+
+  <article class="journal-article">
+    <div class="theme-container article-container">
+
+      <!-- Draft/Scheduled Warning Banner for Staff -->
+      {% if not post.is_public %}
+        <div class="staff-preview-banner">
+          <span class="badge badge-warning">STAFF PREVIEW</span>
+          <span>Status: <strong>{{ post.get_status_display }}</strong></span>
+          {% if post.published_at %}
+            <span>· Scheduled for: <strong>{{ post.published_at|date:"M d, Y H:i" }}</strong></span>
+          {% endif %}
+          <a href="{% url 'store:manage_journal_edit' post.id %}" class="button button-small button-outline">Edit Post</a>
+        </div>
+      {% endif %}
+
+      <!-- Header -->
+      <header class="article-header">
+        <div class="article-meta-top">
+          {% if post.category %}
+            <a href="{% url 'store:journal_list' %}?category={{ post.category.slug }}" class="article-category-badge">
+              {{ post.category.name }}
+            </a>
+            <span class="meta-dot">•</span>
+          {% endif %}
+          <span class="article-read-time">📖 {{ post.reading_time }}</span>
+          <span class="meta-dot">•</span>
+          <span class="article-date">{{ post.published_at|default:post.created_at|date:"F d, Y" }}</span>
+        </div>
+
+        <h1 class="article-title">{{ post.title }}</h1>
+
+        {% if post.excerpt %}
+          <p class="article-lead">{{ post.excerpt }}</p>
+        {% endif %}
+
+        <!-- Author Bar & Actions -->
+        <div class="article-author-bar">
+          <div class="author-details">
+            <span class="author-avatar-large">{{ post.author.username|slice:":1"|upper }}</span>
+            <div class="author-text">
+              <span class="author-name-large">{{ post.author.first_name|default:post.author.username }}</span>
+              <span class="author-role-large">GreenNest Nursery Specialist</span>
+            </div>
+          </div>
+
+          <div class="article-actions-bar">
+            {% if user.is_authenticated %}
+              <form method="post" action="{% url 'store:journal_toggle_bookmark' post.slug %}" class="bookmark-form">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                <button type="submit" class="btn-action-bookmark {% if is_bookmarked %}active{% endif %}">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" stroke="currentColor" stroke-width="2">
+                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                  </svg>
+                  <span>{% if is_bookmarked %}Saved to Bookmarks{% else %}Bookmark Article{% endif %}</span>
+                </button>
+              </form>
+            {% else %}
+              <a href="{% url 'store:login' %}?next={{ request.get_full_path }}" class="btn-action-bookmark" title="Sign in to bookmark">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                </svg>
+                <span>Bookmark</span>
+              </a>
+            {% endif %}
+
+            <button type="button" class="btn-action-share" onclick="navigator.clipboard.writeText(window.location.href); alert('Article link copied to clipboard! 🌿');">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                <polyline points="16 6 12 2 8 6"></polyline>
+                <line x1="12" y1="2" x2="12" y2="15"></line>
+              </svg>
+              <span>Share</span>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <!-- Featured Cover Image -->
+      {% if post.cover_image %}
+        <div class="article-cover-wrap">
+          <img src="{{ post.cover_image }}" 
+               alt="{{ post.title }}" 
+               class="article-cover-img"
+               onerror="this.src='https://images.unsplash.com/photo-1463936575829-25148e1db1b8?auto=format&fit=crop&w=1200&q=85';">
+        </div>
+      {% endif %}
+
+      <!-- Article Body -->
+      <div class="article-body">
+        {{ post.body|linebreaks }}
+      </div>
+
+      <!-- Article Tags -->
+      {% if post.tags.all %}
+        <div class="article-tags-wrap">
+          <span class="tags-label">Tagged in:</span>
+          <div class="tags-list">
+            {% for tag in post.tags.all %}
+              <a href="{% url 'store:journal_list' %}?tag={{ tag.slug }}" class="tag-link">#{{ tag.name }}</a>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+
+      <!-- Linked Product Card (Featured Botanical Specimen) -->
+      {% if related_product %}
+        <section class="featured-plant-box">
+          <div class="featured-plant-content">
+            <span class="featured-plant-badge">FEATURED NURSERY SPECIMEN</span>
+            <h3>Grow this plant at home: {{ related_product.name }}</h3>
+            <p>{{ related_product.subtitle|default:related_product.description|truncatewords:20 }}</p>
+            <div class="featured-plant-meta">
+              <strong class="plant-price">₹{{ related_product.price }}</strong>
+              <span class="stock-status">{% if related_product.stock %}In Stock ({{ related_product.stock }} left){% else %}Sold Out{% endif %}</span>
+            </div>
+            <div class="featured-plant-cta">
+              <a href="{% url 'store:product_detail' related_product.id %}" class="button button-green">
+                View Plant Details <span>→</span>
+              </a>
+              {% if related_product.stock %}
+                <form method="post" action="{% url 'store:add_to_cart' related_product.id %}" style="display:inline;">
+                  {% csrf_token %}
+                  <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                  <button type="submit" class="button button-outline">Quick Add to Bag +</button>
+                </form>
+              {% endif %}
+            </div>
+          </div>
+          {% if related_product.image_url %}
+            <div class="featured-plant-img">
+              <img src="{{ related_product.image_url }}" alt="{{ related_product.name }}">
+            </div>
+          {% endif %}
+        </section>
+      {% endif %}
+
+      <hr class="article-divider">
+
+      <!-- Comments / Community Discussion -->
+      <section class="journal-comments-section" id="comments">
+        <div class="comments-heading">
+          <h2>Community Discussion <span>({{ comments_count }})</span></h2>
+          <p class="comments-sub">Got plant care questions or a success story to share? Leave a comment below.</p>
+        </div>
+
+        <!-- Pending Comment Alert for Customer -->
+        {% if pending_comments %}
+          <div class="pending-comments-notice">
+            <span class="notice-icon">⏳</span>
+            <div>
+              <strong>Your comment was submitted!</strong>
+              <p>It is currently awaiting routine review by our nursery botanical staff and will appear publicly shortly.</p>
+            </div>
+          </div>
+        {% endif %}
+
+        <!-- Comments List -->
+        <div class="comments-list">
+          {% for comment in comments %}
+            <article class="comment-card">
+              <div class="comment-header">
+                <div class="comment-author-info">
+                  <span class="comment-avatar">{{ comment.author.username|slice:":1"|upper }}</span>
+                  <div>
+                    <strong class="comment-author-name">
+                      {{ comment.author.first_name|default:comment.author.username }}
+                      {% if comment.author.is_staff %}
+                        <span class="badge-staff-comment">GreenNest Staff 🌱</span>
+                      {% endif %}
+                    </strong>
+                    <span class="comment-date">{{ comment.created_at|date:"M d, Y" }} at {{ comment.created_at|date:"H:i" }}</span>
+                  </div>
+                </div>
+              </div>
+              <div class="comment-body">
+                {{ comment.body|linebreaksbr }}
+              </div>
+            </article>
+          {% empty %}
+            {% if not pending_comments %}
+              <div class="no-comments-box">
+                <span class="no-comments-icon">💬</span>
+                <p>No comments yet. Start the conversation!</p>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+
+        <!-- Comment Form -->
+        <div class="comment-form-box">
+          {% if user.is_authenticated %}
+            <h3>Leave a Comment as <strong>{{ user.first_name|default:user.username }}</strong></h3>
+            <form method="post" action="{% url 'store:journal_add_comment' post.slug %}" class="comment-form">
+              {% csrf_token %}
+              {{ comment_form.body }}
+              <div class="comment-form-actions">
+                <button type="submit" class="button button-green">
+                  Post Comment <span>→</span>
+                </button>
+              </div>
+            </form>
+          {% else %}
+            <div class="comment-login-prompt">
+              <h3>Join the Plant Conversation</h3>
+              <p>Please log in with your GreenNest account to leave a comment or question for our nursery specialists.</p>
+              <div class="prompt-buttons">
+                <a href="{% url 'store:login' %}?next={{ request.get_full_path }}#comments" class="button button-green">Log In to Comment</a>
+                <a href="{% url 'store:register' %}?next={{ request.get_full_path }}#comments" class="button button-outline">Create Free Account</a>
+              </div>
+            </div>
+          {% endif %}
+        </div>
+      </section>
+
+      <!-- Related Articles -->
+      {% if related_posts %}
+        <section class="related-journal-section">
+          <div class="section-heading">
+            <span class="section-kicker">MORE FROM THE JOURNAL</span>
+            <h2>Related Plant Stories</h2>
+          </div>
+          <div class="journal-grid related-grid">
+            {% for r_post in related_posts %}
+              <article class="journal-card">
+                <div class="card-cover-wrap">
+                  <a href="{% url 'store:journal_detail' r_post.slug %}">
+                    <img src="{{ r_post.cover_image|default:'https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=700&q=85' }}" 
+                         alt="{{ r_post.title }}" 
+                         class="card-cover-img"
+                         loading="lazy">
+                  </a>
+                  {% if r_post.category %}
+                    <span class="card-category-tag">{{ r_post.category.name }}</span>
+                  {% endif %}
+                </div>
+                <div class="card-body">
+                  <div class="card-meta">
+                    <span>{{ r_post.published_at|date:"M d, Y" }}</span>
+                    <span class="meta-dot">•</span>
+                    <span>{{ r_post.reading_time }}</span>
+                  </div>
+                  <h3 class="card-title">
+                    <a href="{% url 'store:journal_detail' r_post.slug %}">{{ r_post.title }}</a>
+                  </h3>
+                  <p class="card-excerpt">{{ r_post.excerpt|truncatewords:18 }}</p>
+                </div>
+              </article>
+            {% endfor %}
+          </div>
+        </section>
+      {% endif %}
+
+    </div>
+  </article>
+
+</div>
+{% endblock %}

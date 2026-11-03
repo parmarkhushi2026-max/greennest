@@ -20,13 +20,18 @@ from django.utils import timezone
 from datetime import timedelta
 from django.views.decorators.http import require_POST
 
-from .forms import CareReminderForm, CheckoutForm, CouponForm, LoginForm, RegisterForm, ReviewForm
+from .forms import CareReminderForm, CheckoutForm, CouponForm, LoginForm, RegisterForm, ReviewForm, JournalCommentForm, JournalPostForm
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .models import (
     CareGuide,
     CareReminder,
     Category,
     ContactInquiry,
     Coupon,
+    JournalBookmark,
+    JournalComment,
+    JournalPost,
+    JournalTag,
     NewsletterSubscriber,
     Order,
     OrderItem,
@@ -291,10 +296,17 @@ def product_detail(request, product_id):
     ).exclude(pk=product.pk)[:4]
     if not related_products.exists():
         related_products = Product.objects.filter(active=True).exclude(pk=product.pk)[:4]
+    now = timezone.now()
+    journal_posts = JournalPost.objects.filter(
+        Q(product=product) | Q(category=product.category),
+        status=JournalPost.Status.PUBLISHED,
+        published_at__lte=now,
+    ).distinct()[:3]
     return render(request, "store/product_detail.html", {
         "product": product,
         "related_products": related_products,
         "reviews": Review.objects.filter(product=product, approved=True).select_related("user"),
+        "journal_posts": journal_posts,
     })
 
 
@@ -724,7 +736,7 @@ def customer_dashboard(request):
     guides = CareGuide.objects.filter(published=True)[:4]
     catalog_products = Product.objects.filter(active=True).order_by("name")[:25]
     active_tab = request.GET.get("tab", "orders").strip().lower()
-    if active_tab not in ["orders", "reminders", "profile", "guides", "analytics"]:
+    if active_tab not in ["orders", "reminders", "profile", "guides", "analytics", "bookmarks"]:
         active_tab = "orders"
 
     # Customer Chart Analytics Data
@@ -745,8 +757,11 @@ def customer_dashboard(request):
     cust_cat_labels = ["Indoor Plants", "Air Purifying", "Succulents", "Outdoor Plants", "Planters & Pots"]
     cust_cat_data = [3, 2, 1, 2, 1] if total_orders > 0 else [1, 1, 1, 1, 1]
 
+    user_bookmarks = JournalBookmark.objects.filter(user=user).select_related("post", "post__author", "post__category").order_by("-created_at")
     return render(request, "store/customer_dashboard.html", {
         "customer": user,
+        "user_bookmarks": user_bookmarks,
+        "bookmarks_count": user_bookmarks.count(),
         "orders": customer_orders,
         "total_orders": total_orders,
         "active_orders": active_orders,
@@ -775,7 +790,12 @@ def care_guides(request):
 
 def care_guide_detail(request, slug):
     guide = get_object_or_404(CareGuide, slug=slug, published=True)
-    return render(request, "store/guide_detail.html", {"guide": guide})
+    now = timezone.now()
+    journal_posts = JournalPost.objects.filter(
+        status=JournalPost.Status.PUBLISHED,
+        published_at__lte=now,
+    ).order_by("-published_at")[:3]
+    return render(request, "store/guide_detail.html", {"guide": guide, "journal_posts": journal_posts})
 
 
 @require_POST
@@ -1360,3 +1380,326 @@ def contact_view(request):
             return redirect("store:contact")
 
     return render(request, "store/contact.html")
+
+
+# ==============================================================================
+# Plant Journal (Blog) Module Views
+# ==============================================================================
+
+def journal_list(request):
+    """Public Plant Journal listing page with search, filters & pagination."""
+    now = timezone.now()
+    posts_qs = JournalPost.objects.filter(
+        status=JournalPost.Status.PUBLISHED,
+        published_at__lte=now,
+    ).select_related("author", "category", "product").prefetch_related("tags")
+
+    # Search Filter
+    query = (request.GET.get("q") or "").strip()
+    if query:
+        posts_qs = posts_qs.filter(
+            Q(title__icontains=query)
+            | Q(excerpt__icontains=query)
+            | Q(body__icontains=query)
+            | Q(tags__name__icontains=query)
+            | Q(author__username__icontains=query)
+            | Q(author__first_name__icontains=query)
+        ).distinct()
+
+    # Category Filter
+    category_slug = (request.GET.get("category") or "").strip()
+    selected_category = None
+    if category_slug:
+        posts_qs = posts_qs.filter(category__slug=category_slug)
+        selected_category = Category.objects.filter(slug=category_slug).first()
+
+    # Tag Filter
+    tag_slug = (request.GET.get("tag") or "").strip()
+    selected_tag = None
+    if tag_slug:
+        posts_qs = posts_qs.filter(tags__slug=tag_slug)
+        selected_tag = JournalTag.objects.filter(slug=tag_slug).first()
+
+    # Pagination: 6 posts per page
+    paginator = Paginator(posts_qs, 6)
+    page_number = request.GET.get("page", 1)
+    try:
+        page_obj = paginator.page(page_number)
+    except PageNotAnInteger:
+        page_obj = paginator.page(1)
+    except EmptyPage:
+        page_obj = paginator.page(paginator.num_pages)
+
+    # All active categories and tags for sidebar pills
+    categories = Category.objects.annotate(
+        journal_count=Count("journal_posts", filter=Q(journal_posts__status=JournalPost.Status.PUBLISHED, journal_posts__published_at__lte=now))
+    ).filter(journal_count__gt=0).order_by("name")
+
+    tags = JournalTag.objects.annotate(
+        post_count=Count("posts", filter=Q(posts__status=JournalPost.Status.PUBLISHED, posts__published_at__lte=now))
+    ).filter(post_count__gt=0).order_by("name")
+
+    # Featured post (hero article on first page without filters)
+    featured_post = None
+    if not query and not category_slug and not tag_slug and str(page_number) in ["1", ""]:
+        featured_post = posts_qs.first()
+
+    # User's bookmarked post IDs if logged in
+    bookmarked_ids = set()
+    if request.user.is_authenticated:
+        bookmarked_ids = set(
+            JournalBookmark.objects.filter(user=request.user).values_list("post_id", flat=True)
+        )
+
+    return render(request, "store/journal/list.html", {
+        "page_obj": page_obj,
+        "posts": page_obj.object_list,
+        "query": query,
+        "category_slug": category_slug,
+        "selected_category": selected_category,
+        "tag_slug": tag_slug,
+        "selected_tag": selected_tag,
+        "categories": categories,
+        "tags": tags,
+        "featured_post": featured_post,
+        "bookmarked_ids": bookmarked_ids,
+        "total_posts_count": posts_qs.count(),
+    })
+
+
+def journal_detail(request, slug):
+    """Single Journal Post view with reading time, related plants/posts & comments."""
+    now = timezone.now()
+    if request.user.is_staff:
+        post = get_object_or_404(
+            JournalPost.objects.select_related("author", "category", "product").prefetch_related("tags"),
+            slug=slug,
+        )
+    else:
+        post = get_object_or_404(
+            JournalPost.objects.select_related("author", "category", "product").prefetch_related("tags"),
+            slug=slug,
+            status=JournalPost.Status.PUBLISHED,
+            published_at__lte=now,
+        )
+
+    # Bookmark state
+    is_bookmarked = False
+    if request.user.is_authenticated:
+        is_bookmarked = JournalBookmark.objects.filter(user=request.user, post=post).exists()
+
+    # Approved comments
+    approved_comments = post.comments.filter(is_approved=True).select_related("author").order_by("created_at")
+    
+    # Customer's pending comments
+    user_pending_comments = []
+    if request.user.is_authenticated and not request.user.is_staff:
+        user_pending_comments = post.comments.filter(author=request.user, is_approved=False).order_by("created_at")
+
+    # Related plants / products
+    related_product = post.product
+    extra_plants = []
+    if post.category:
+        extra_plants = Product.objects.filter(category=post.category, active=True)
+        if related_product:
+            extra_plants = extra_plants.exclude(pk=related_product.pk)
+        extra_plants = extra_plants[:3]
+
+    # Related posts (by category or tags)
+    related_posts = JournalPost.objects.filter(
+        status=JournalPost.Status.PUBLISHED,
+        published_at__lte=now,
+    ).exclude(pk=post.pk)
+    if post.category:
+        related_posts = related_posts.filter(category=post.category)
+    elif post.tags.exists():
+        related_posts = related_posts.filter(tags__in=post.tags.all())
+    related_posts = related_posts.distinct().order_by("-published_at")[:3]
+
+    comment_form = JournalCommentForm()
+
+    return render(request, "store/journal/detail.html", {
+        "post": post,
+        "is_bookmarked": is_bookmarked,
+        "comments": approved_comments,
+        "pending_comments": user_pending_comments,
+        "comments_count": approved_comments.count(),
+        "related_product": related_product,
+        "extra_plants": extra_plants,
+        "related_posts": related_posts,
+        "comment_form": comment_form,
+    })
+
+
+@login_required(login_url="store:login")
+@require_POST
+def journal_add_comment(request, slug):
+    """Customer & staff comment submission for journal posts."""
+    now = timezone.now()
+    if request.user.is_staff:
+        post = get_object_or_404(JournalPost, slug=slug)
+    else:
+        post = get_object_or_404(JournalPost, slug=slug, status=JournalPost.Status.PUBLISHED, published_at__lte=now)
+
+    form = JournalCommentForm(request.POST)
+    if form.is_valid():
+        comment = form.save(commit=False)
+        comment.post = post
+        comment.author = request.user
+        if request.user.is_staff:
+            comment.is_approved = True
+            comment.save()
+            messages.success(request, "Your botanical staff response has been published directly.")
+        else:
+            comment.is_approved = False
+            comment.save()
+            messages.info(request, "Thank you for commenting! Your feedback is pending approval by GreenNest staff.")
+    else:
+        messages.error(request, "Please enter a valid comment message.")
+
+    return redirect("store:journal_detail", slug=post.slug)
+
+
+@login_required(login_url="store:login")
+@require_POST
+def journal_toggle_bookmark(request, slug):
+    """Bookmark or unbookmark a journal article."""
+    post = get_object_or_404(JournalPost, slug=slug)
+    existing = JournalBookmark.objects.filter(user=request.user, post=post).first()
+    if existing:
+        existing.delete()
+        bookmarked = False
+        msg = f"Removed '{post.title}' from your saved bookmarks."
+    else:
+        JournalBookmark.objects.create(user=request.user, post=post)
+        bookmarked = True
+        msg = f"Saved '{post.title}' to your Plant Journal bookmarks! 🌿"
+
+    if request.headers.get("x-requested-with") == "XMLHttpRequest" or request.GET.get("format") == "json":
+        return JsonResponse({"bookmarked": bookmarked, "message": msg})
+
+    messages.success(request, msg)
+    next_url = request.POST.get("next") or reverse("store:journal_detail", kwargs={"slug": post.slug})
+    return redirect(next_url)
+
+
+@login_required(login_url="store:login")
+def customer_bookmarks(request):
+    """Direct route for viewing customer bookmarks, redirects to customer dashboard tab."""
+    return redirect(f"{reverse('store:customer_dashboard')}?tab=bookmarks")
+
+
+# ==============================================================================
+# Staff Management Views for Plant Journal
+# ==============================================================================
+
+@staff_member_required(login_url="store:login")
+def manage_journal(request):
+    """Staff Plant Journal dashboard with posts list, quick status toggles, and pending comments moderation."""
+    status_filter = request.GET.get("status", "").lower()
+    query = request.GET.get("q", "").strip()
+
+    posts_qs = JournalPost.objects.select_related("author", "category", "product").prefetch_related("tags")
+    if status_filter in ["draft", "scheduled", "published"]:
+        posts_qs = posts_qs.filter(status=status_filter)
+    if query:
+        posts_qs = posts_qs.filter(Q(title__icontains=query) | Q(author__username__icontains=query))
+
+    pending_comments = JournalComment.objects.filter(is_approved=False).select_related("post", "author").order_by("-created_at")
+
+    return render(request, "store/journal/manage_list.html", {
+        "posts": posts_qs,
+        "status_filter": status_filter,
+        "query": query,
+        "total_posts": JournalPost.objects.count(),
+        "published_count": JournalPost.objects.filter(status="published").count(),
+        "drafts_count": JournalPost.objects.filter(status="draft").count(),
+        "scheduled_count": JournalPost.objects.filter(status="scheduled").count(),
+        "pending_comments": pending_comments,
+        "pending_comments_count": pending_comments.count(),
+    })
+
+
+@staff_member_required(login_url="store:login")
+def manage_journal_create(request):
+    """Staff view to author and publish a new Journal post."""
+    if request.method == "POST":
+        form = JournalPostForm(request.POST)
+        if form.is_valid():
+            post = form.save(commit=False)
+            post.author = request.user
+            if post.status == "published" and not post.published_at:
+                post.published_at = timezone.now()
+            post.save()
+            form.save(commit=True)
+            messages.success(request, f"Article '{post.title}' created successfully!")
+            return redirect("store:manage_journal")
+    else:
+        form = JournalPostForm(initial={"status": "published", "published_at": timezone.now()})
+
+    return render(request, "store/journal/manage_form.html", {
+        "form": form,
+        "is_edit": False,
+        "title": "Create Plant Journal Article",
+    })
+
+
+@staff_member_required(login_url="store:login")
+def manage_journal_edit(request, post_id):
+    """Staff view to edit an existing Journal post."""
+    post = get_object_or_404(JournalPost, pk=post_id)
+    if request.method == "POST":
+        form = JournalPostForm(request.POST, instance=post)
+        if form.is_valid():
+            p = form.save(commit=False)
+            if p.status == "published" and not p.published_at:
+                p.published_at = timezone.now()
+            p.save()
+            form.save(commit=True)
+            messages.success(request, f"Article '{post.title}' updated successfully!")
+            return redirect("store:manage_journal")
+    else:
+        form = JournalPostForm(instance=post)
+
+    return render(request, "store/journal/manage_form.html", {
+        "form": form,
+        "post": post,
+        "is_edit": True,
+        "title": f"Edit Article: {post.title}",
+    })
+
+
+@staff_member_required(login_url="store:login")
+@require_POST
+def manage_journal_toggle_publish(request, post_id):
+    """Quick toggle publish/unpublish from staff dashboard."""
+    post = get_object_or_404(JournalPost, pk=post_id)
+    if post.status == "published":
+        post.status = "draft"
+        messages.info(request, f"Article '{post.title}' is now unpublished (Draft).")
+    else:
+        post.status = "published"
+        if not post.published_at or post.published_at > timezone.now():
+            post.published_at = timezone.now()
+        messages.success(request, f"Article '{post.title}' is now Published and live!")
+    post.save()
+    return redirect("store:manage_journal")
+
+
+@staff_member_required(login_url="store:login")
+@require_POST
+def manage_journal_comment_moderate(request, comment_id):
+    """Approve or delete customer comments."""
+    comment = get_object_or_404(JournalComment, pk=comment_id)
+    action = request.POST.get("action", "approve")
+    post_slug = comment.post.slug
+    if action == "approve":
+        comment.is_approved = True
+        comment.save()
+        messages.success(request, f"Comment by {comment.author} has been approved.")
+    elif action == "delete":
+        comment.delete()
+        messages.warning(request, "Comment was deleted.")
+
+    next_url = request.POST.get("next") or reverse("store:manage_journal")
+    return redirect(next_url)

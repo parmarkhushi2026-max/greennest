@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from .models import CareReminder, Product, Review
+from .models import CareReminder, JournalComment, JournalPost, JournalTag, Product, Review
 
 
 class LoginForm(forms.Form):
@@ -181,3 +181,81 @@ class ReviewForm(forms.ModelForm):
             "rating": forms.Select(choices=[(n, f"{n} / 5") for n in range(5, 0, -1)]),
             "comment": forms.Textarea(attrs={"rows": 3}),
         }
+
+
+class JournalCommentForm(forms.ModelForm):
+    class Meta:
+        model = JournalComment
+        fields = ["body"]
+        widgets = {
+            "body": forms.Textarea(attrs={
+                "class": "journal-comment-input",
+                "rows": 3,
+                "placeholder": "Share your thoughts, tips, or experiences about this plant...",
+                "required": True,
+            }),
+        }
+        labels = {
+            "body": "Your Comment",
+        }
+
+
+class JournalPostForm(forms.ModelForm):
+    tags_input = forms.CharField(
+        label="Tags (Comma-separated)",
+        required=False,
+        widget=forms.TextInput(attrs={
+            "class": "form-field-input",
+            "placeholder": "e.g. Monstera Care, Beginner Tips, Plant Styling",
+        }),
+    )
+
+    class Meta:
+        model = JournalPost
+        fields = [
+            "title",
+            "slug",
+            "excerpt",
+            "body",
+            "cover_image",
+            "category",
+            "product",
+            "status",
+            "published_at",
+            "seo_title",
+            "seo_description",
+        ]
+        widgets = {
+            "title": forms.TextInput(attrs={"class": "form-field-input", "placeholder": "Article Title", "required": True}),
+            "slug": forms.TextInput(attrs={"class": "form-field-input", "placeholder": "leave blank to auto-generate"}),
+            "excerpt": forms.Textarea(attrs={"class": "form-field-input", "rows": 2, "placeholder": "Short summary for preview cards..."}),
+            "body": forms.Textarea(attrs={"class": "form-field-input", "rows": 10, "placeholder": "Write full plant article content...", "required": True}),
+            "cover_image": forms.URLInput(attrs={"class": "form-field-input", "placeholder": "https://images.unsplash.com/..."}),
+            "category": forms.Select(attrs={"class": "form-field-input"}),
+            "product": forms.Select(attrs={"class": "form-field-input"}),
+            "status": forms.Select(attrs={"class": "form-field-input"}),
+            "published_at": forms.DateTimeInput(attrs={"class": "form-field-input", "type": "datetime-local"}),
+            "seo_title": forms.TextInput(attrs={"class": "form-field-input", "placeholder": "SEO Title (optional)"}),
+            "seo_description": forms.TextInput(attrs={"class": "form-field-input", "placeholder": "Meta Description (optional)"}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["category"].required = False
+        self.fields["product"].required = False
+        self.fields["slug"].required = False
+        self.fields["published_at"].required = False
+        if self.instance and self.instance.pk:
+            self.fields["tags_input"].initial = ", ".join(t.name for t in self.instance.tags.all())
+
+    def save(self, commit=True):
+        post = super().save(commit=False)
+        if commit:
+            post.save()
+            tag_names = [t.strip() for t in self.cleaned_data.get("tags_input", "").split(",") if t.strip()]
+            tag_objs = []
+            for name in tag_names:
+                tag, _ = JournalTag.objects.get_or_create(name=name)
+                tag_objs.append(tag)
+            post.tags.set(tag_objs)
+        return post

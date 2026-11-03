@@ -232,3 +232,110 @@ class ContactInquiry(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.subject} ({self.get_status_display()})"
+
+
+class JournalTag(models.Model):
+    name = models.CharField(max_length=60, unique=True)
+    slug = models.SlugField(max_length=70, unique=True, blank=True)
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = "Journal Tag"
+        verbose_name_plural = "Journal Tags"
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            self.slug = slugify(self.name)
+        super().save(*args, **kwargs)
+
+    def __str__(self):
+        return self.name
+
+
+class JournalPost(models.Model):
+    class Status(models.TextChoices):
+        DRAFT = "draft", "Draft"
+        SCHEDULED = "scheduled", "Scheduled"
+        PUBLISHED = "published", "Published"
+
+    title = models.CharField(max_length=200)
+    slug = models.SlugField(max_length=220, unique=True, blank=True)
+    excerpt = models.TextField(blank=True, help_text="Short summary for preview cards & SEO snippet.")
+    body = models.TextField(help_text="Full article body. Supports formatted text & paragraphs.")
+    cover_image = models.URLField(max_length=500, blank=True, help_text="Cover photo URL (Unsplash or hosted).")
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="journal_posts")
+    status = models.CharField(max_length=16, choices=Status.choices, default=Status.DRAFT)
+    published_at = models.DateTimeField(null=True, blank=True, help_text="Date/time when post is publicly visible.")
+    product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True, related_name="journal_posts")
+    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True, related_name="journal_posts")
+    tags = models.ManyToManyField(JournalTag, blank=True, related_name="posts")
+    seo_title = models.CharField(max_length=160, blank=True)
+    seo_description = models.CharField(max_length=255, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-published_at", "-created_at"]
+        verbose_name = "Journal Post"
+        verbose_name_plural = "Journal Posts"
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.title) or "journal-post"
+            slug = base_slug
+            counter = 1
+            while JournalPost.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+            self.slug = slug
+        if self.status == self.Status.PUBLISHED and not self.published_at:
+            self.published_at = timezone.now()
+        super().save(*args, **kwargs)
+
+    @property
+    def is_public(self):
+        return (
+            self.status == self.Status.PUBLISHED
+            and self.published_at is not None
+            and self.published_at <= timezone.now()
+        )
+
+    @property
+    def reading_time(self):
+        word_count = len((self.body or "").split())
+        mins = max(1, (word_count + 180) // 180)
+        return f"{mins} min read"
+
+    def __str__(self):
+        return self.title
+
+
+class JournalComment(models.Model):
+    post = models.ForeignKey(JournalPost, on_delete=models.CASCADE, related_name="comments")
+    author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="journal_comments")
+    body = models.TextField(max_length=1200)
+    is_approved = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        verbose_name = "Journal Comment"
+        verbose_name_plural = "Journal Comments"
+
+    def __str__(self):
+        return f"Comment by {self.author} on {self.post.title}"
+
+
+class JournalBookmark(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="journal_bookmarks")
+    post = models.ForeignKey(JournalPost, on_delete=models.CASCADE, related_name="bookmarks")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+        unique_together = ("user", "post")
+        verbose_name = "Journal Bookmark"
+        verbose_name_plural = "Journal Bookmarks"
+
+    def __str__(self):
+        return f"{self.user} bookmarked {self.post.title}"

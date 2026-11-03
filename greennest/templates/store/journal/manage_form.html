@@ -1,0 +1,136 @@
+{% extends "store/base.html" %}
+{% load static %}
+
+{% block title %}{{ title }} · GreenNest Staff Portal{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'storefront/css/journal.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="journal-manage-page">
+  <div class="theme-container">
+
+    <div class="manage-header-bar">
+      <div>
+        <div class="manage-breadcrumb">
+          <a href="{% url 'store:manage_journal' %}">← Back to Journal Dashboard</a>
+        </div>
+        <h1 class="manage-title">{{ title }}</h1>
+        <p class="manage-subtitle">Craft in-depth botanical care guides, styling inspiration, and plant stories.</p>
+      </div>
+      {% if is_edit and post %}
+        <div class="manage-actions-top">
+          <a href="{% url 'store:journal_detail' post.slug %}" class="button button-outline" target="_blank">
+            Preview Article ↗
+          </a>
+        </div>
+      {% endif %}
+    </div>
+
+    <form method="post" class="journal-editor-form">
+      {% csrf_token %}
+
+      <div class="editor-layout">
+        <!-- Main Form Column -->
+        <div class="editor-main-col">
+          <div class="form-card">
+            <div class="form-group">
+              <label for="{{ form.title.id_for_label }}"><strong>Article Title *</strong></label>
+              {{ form.title }}
+              {% if form.title.errors %}<span class="field-error">{{ form.title.errors.0 }}</span>{% endif %}
+            </div>
+
+            <div class="form-group">
+              <label for="{{ form.slug.id_for_label }}">URL Slug (optional)</label>
+              {{ form.slug }}
+              <small class="field-hint">Leave blank to automatically slugify from title.</small>
+              {% if form.slug.errors %}<span class="field-error">{{ form.slug.errors.0 }}</span>{% endif %}
+            </div>
+
+            <div class="form-group">
+              <label for="{{ form.excerpt.id_for_label }}">Excerpt / Short Summary</label>
+              {{ form.excerpt }}
+              <small class="field-hint">A 1-2 sentence hook displayed on catalog cards and search engine snippets.</small>
+              {% if form.excerpt.errors %}<span class="field-error">{{ form.excerpt.errors.0 }}</span>{% endif %}
+            </div>
+
+            <div class="form-group">
+              <label for="{{ form.body.id_for_label }}"><strong>Article Body *</strong></label>
+              {{ form.body }}
+              <small class="field-hint">Tip: Use empty lines between paragraphs, <code>### Subheadings</code>, and <code>- Bullet points</code>.</small>
+              {% if form.body.errors %}<span class="field-error">{{ form.body.errors.0 }}</span>{% endif %}
+            </div>
+          </div>
+
+          <!-- SEO Card -->
+          <div class="form-card">
+            <h3>Search Engine Optimization (SEO)</h3>
+            <div class="form-group">
+              <label for="{{ form.seo_title.id_for_label }}">SEO Title</label>
+              {{ form.seo_title }}
+            </div>
+            <div class="form-group">
+              <label for="{{ form.seo_description.id_for_label }}">SEO Meta Description</label>
+              {{ form.seo_description }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar Settings Column -->
+        <div class="editor-sidebar-col">
+          <div class="form-card">
+            <h3>Publishing Status</h3>
+            <div class="form-group">
+              <label for="{{ form.status.id_for_label }}">Status</label>
+              {{ form.status }}
+            </div>
+
+            <div class="form-group">
+              <label for="{{ form.published_at.id_for_label }}">Publication Date &amp; Time</label>
+              {{ form.published_at }}
+              <small class="field-hint">Leave blank to publish immediately upon saving.</small>
+            </div>
+
+            <div class="form-actions-stacked">
+              <button type="submit" class="button button-green button-full">
+                {% if is_edit %}Save Changes{% else %}Publish Article{% endif %}
+              </button>
+              <a href="{% url 'store:manage_journal' %}" class="button button-outline button-full">
+                Cancel
+              </a>
+            </div>
+          </div>
+
+          <div class="form-card">
+            <h3>Media &amp; Categorization</h3>
+            <div class="form-group">
+              <label for="{{ form.cover_image.id_for_label }}">Cover Image URL</label>
+              {{ form.cover_image }}
+              <small class="field-hint">Paste an Unsplash or hosted image URL (1200x800 recommended).</small>
+            </div>
+
+            <div class="form-group">
+              <label for="{{ form.category.id_for_label }}">Plant Category</label>
+              {{ form.category }}
+            </div>
+
+            <div class="form-group">
+              <label for="{{ form.product.id_for_label }}">Linked Nursery Specimen</label>
+              {{ form.product }}
+              <small class="field-hint">Showcases this plant product in the article and links back from its product page.</small>
+            </div>
+
+            <div class="form-group">
+              <label for="{{ form.tags_input.id_for_label }}">Tags (Comma Separated)</label>
+              {{ form.tags_input }}
+              <small class="field-hint">e.g. Monstera Care, Beginner Tips, Repotting</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+
+  </div>
+</div>
+{% endblock %}

@@ -20,6 +20,7 @@ urlpatterns = [
     path("orders/<str:tracking_code>/", views.order_detail, name="order_detail"),
     path("orders/<str:tracking_code>/email-receipt/", views.order_email_receipt_view, name="order_email_receipt"),
     path("account/", views.customer_dashboard, name="customer_dashboard"),
+    path("account/bookmarks/", views.customer_bookmarks, name="customer_bookmarks"),
     path("reminders/", views.reminders, name="reminders"),
     path("reminders/<int:reminder_id>/delete/", views.delete_reminder, name="delete_reminder"),
     path("guides/", views.care_guides, name="guides"),
@@ -30,4 +31,17 @@ urlpatterns = [
     path("manage/sales/", views.sales_report, name="sales_report"),
     path("inbox/", views.inbox_view, name="inbox"),
     path("contact/", views.contact_view, name="contact"),
+
+    # Plant Journal Public & Customer Routes
+    path("journal/", views.journal_list, name="journal_list"),
+    path("journal/<slug:slug>/", views.journal_detail, name="journal_detail"),
+    path("journal/<slug:slug>/comment/", views.journal_add_comment, name="journal_add_comment"),
+    path("journal/<slug:slug>/bookmark/", views.journal_toggle_bookmark, name="journal_toggle_bookmark"),
+
+    # Plant Journal Staff Management Routes
+    path("manage/journal/", views.manage_journal, name="manage_journal"),
+    path("manage/journal/create/", views.manage_journal_create, name="manage_journal_create"),
+    path("manage/journal/<int:post_id>/edit/", views.manage_journal_edit, name="manage_journal_edit"),
+    path("manage/journal/<int:post_id>/toggle-publish/", views.manage_journal_toggle_publish, name="manage_journal_toggle_publish"),
+    path("manage/journal/comments/<int:comment_id>/moderate/", views.manage_journal_comment_moderate, name="manage_journal_comment_moderate"),
 ]

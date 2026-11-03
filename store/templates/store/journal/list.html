@@ -1,0 +1,260 @@
+{% extends "store/base.html" %}
+{% load static %}
+
+{% block title %}Plant Journal · GreenNest Nursery{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'storefront/css/journal.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="journal-page">
+  <!-- Hero Header -->
+  <header class="journal-hero">
+    <div class="theme-container">
+      <span class="journal-kicker"><span class="kicker-leaf">🌿</span> BOTANICAL JOURNAL &amp; GROWING WISDOM</span>
+      <h1 class="journal-title">The Plant Journal</h1>
+      <p class="journal-subtitle">
+        Hands-on plant care guides, interior green styling, and botanical stories written by our nursery growers.
+      </p>
+
+      <!-- Search Bar -->
+      <form method="get" action="{% url 'store:journal_list' %}" class="journal-search-form">
+        {% if category_slug %}<input type="hidden" name="category" value="{{ category_slug }}">{% endif %}
+        {% if tag_slug %}<input type="hidden" name="tag" value="{{ tag_slug }}">{% endif %}
+        <div class="journal-search-wrap">
+          <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          <input type="text" name="q" value="{{ query }}" placeholder="Search guides, plant species, care tips, authors..." class="journal-search-input">
+          {% if query %}
+            <a href="{% url 'store:journal_list' %}{% if category_slug %}?category={{ category_slug }}{% endif %}" class="search-clear-btn" title="Clear search">✕</a>
+          {% endif %}
+          <button type="submit" class="button button-green journal-search-submit">Search</button>
+        </div>
+      </form>
+    </div>
+  </header>
+
+  <!-- Filter Pills Bar -->
+  <section class="journal-filters-bar">
+    <div class="theme-container">
+      <!-- Categories -->
+      <div class="filter-group">
+        <span class="filter-label">Categories:</span>
+        <div class="filter-pills">
+          <a href="{% url 'store:journal_list' %}{% if query %}?q={{ query }}{% endif %}" class="pill {% if not category_slug %}active{% endif %}">
+            All Articles
+          </a>
+          {% for cat in categories %}
+            <a href="{% url 'store:journal_list' %}?category={{ cat.slug }}{% if query %}&q={{ query }}{% endif %}" class="pill {% if category_slug == cat.slug %}active{% endif %}">
+              {{ cat.name }} <span class="pill-count">({{ cat.journal_count }})</span>
+            </a>
+          {% endfor %}
+        </div>
+      </div>
+
+      <!-- Popular Tags -->
+      {% if tags %}
+      <div class="filter-group filter-tags-group">
+        <span class="filter-label">Tags:</span>
+        <div class="filter-pills">
+          {% for t in tags %}
+            <a href="{% url 'store:journal_list' %}?tag={{ t.slug }}{% if query %}&q={{ query }}{% endif %}" class="tag-pill {% if tag_slug == t.slug %}active{% endif %}">
+              #{{ t.name }}
+            </a>
+          {% endfor %}
+          {% if tag_slug %}
+            <a href="{% url 'store:journal_list' %}{% if category_slug %}?category={{ category_slug }}{% endif %}" class="tag-pill-clear">Clear Tag ✕</a>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </section>
+
+  <!-- Main Articles Content -->
+  <main class="theme-container journal-main">
+
+    <!-- Active Filters Feedback -->
+    {% if query or selected_category or selected_tag %}
+      <div class="active-filters-banner">
+        <span>Showing results for: 
+          {% if query %}<strong>"{{ query }}"</strong>{% endif %}
+          {% if selected_category %}in category <strong>{{ selected_category.name }}</strong>{% endif %}
+          {% if selected_tag %}tagged with <strong>#{{ selected_tag.name }}</strong>{% endif %}
+        </span>
+        <a href="{% url 'store:journal_list' %}" class="reset-filters-link">Reset all filters</a>
+      </div>
+    {% endif %}
+
+    <!-- Featured Post Hero (Only on page 1 without active search) -->
+    {% if featured_post and not query and not category_slug and not tag_slug %}
+      <article class="featured-journal-card">
+        <a href="{% url 'store:journal_detail' featured_post.slug %}" class="featured-cover-link">
+          <img src="{{ featured_post.cover_image|default:'https://images.unsplash.com/photo-1463936575829-25148e1db1b8?auto=format&fit=crop&w=1200&q=85' }}" 
+               alt="{{ featured_post.title }}" 
+               class="featured-cover-img"
+               loading="eager"
+               onerror="this.src='https://images.unsplash.com/photo-1463936575829-25148e1db1b8?auto=format&fit=crop&w=1200&q=85';">
+          <span class="featured-badge">FEATURED STORY</span>
+        </a>
+        <div class="featured-content">
+          <div class="card-meta">
+            {% if featured_post.category %}
+              <span class="card-category">{{ featured_post.category.name }}</span>
+              <span class="meta-dot">•</span>
+            {% endif %}
+            <span class="card-read-time">{{ featured_post.reading_time }}</span>
+            <span class="meta-dot">•</span>
+            <span class="card-date">{{ featured_post.published_at|date:"M d, Y" }}</span>
+          </div>
+          <h2 class="featured-title">
+            <a href="{% url 'store:journal_detail' featured_post.slug %}">{{ featured_post.title }}</a>
+          </h2>
+          <p class="featured-excerpt">{{ featured_post.excerpt }}</p>
+
+          <div class="featured-footer">
+            <div class="author-block">
+              <span class="author-avatar">{{ featured_post.author.username|slice:":1"|upper }}</span>
+              <div class="author-info">
+                <span class="author-name">{{ featured_post.author.first_name|default:featured_post.author.username }}</span>
+                <span class="author-role">Nursery Staff Writer</span>
+              </div>
+            </div>
+
+            <div class="card-actions">
+              {% if user.is_authenticated %}
+                <form method="post" action="{% url 'store:journal_toggle_bookmark' featured_post.slug %}" class="bookmark-form">
+                  {% csrf_token %}
+                  <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                  <button type="submit" class="btn-bookmark {% if featured_post.id in bookmarked_ids %}bookmarked{% endif %}" title="Save article">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" stroke="currentColor" stroke-width="2">
+                      <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                  </button>
+                </form>
+              {% else %}
+                <a href="{% url 'store:login' %}?next={{ request.get_full_path }}" class="btn-bookmark" title="Log in to bookmark">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                  </svg>
+                </a>
+              {% endif %}
+              <a href="{% url 'store:journal_detail' featured_post.slug %}" class="button button-green read-btn">
+                Read Story <span>→</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </article>
+    {% endif %}
+
+    <!-- Articles Grid -->
+    {% if posts %}
+      <div class="journal-grid">
+        {% for post in posts %}
+          {% if post.id != featured_post.id or query or category_slug or tag_slug or page_obj.number > 1 %}
+            <article class="journal-card">
+              <div class="card-cover-wrap">
+                <a href="{% url 'store:journal_detail' post.slug %}">
+                  <img src="{{ post.cover_image|default:'https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=700&q=85' }}" 
+                       alt="{{ post.title }}" 
+                       class="card-cover-img"
+                       loading="lazy"
+                       onerror="this.src='https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=700&q=85';">
+                </a>
+                {% if post.category %}
+                  <span class="card-category-tag">{{ post.category.name }}</span>
+                {% endif %}
+                <span class="card-read-pill">{{ post.reading_time }}</span>
+              </div>
+
+              <div class="card-body">
+                <div class="card-meta">
+                  <span>{{ post.published_at|date:"M d, Y" }}</span>
+                  {% if post.product %}
+                    <span class="meta-dot">•</span>
+                    <span class="card-product-link">Featured: {{ post.product.name }}</span>
+                  {% endif %}
+                </div>
+
+                <h3 class="card-title">
+                  <a href="{% url 'store:journal_detail' post.slug %}">{{ post.title }}</a>
+                </h3>
+
+                <p class="card-excerpt">{{ post.excerpt|truncatewords:24 }}</p>
+
+                {% if post.tags.all %}
+                  <div class="card-tags">
+                    {% for tag in post.tags.all|slice:":3" %}
+                      <span class="tag-small">#{{ tag.name }}</span>
+                    {% endfor %}
+                  </div>
+                {% endif %}
+
+                <div class="card-footer">
+                  <div class="card-author">
+                    <span class="avatar-mini">{{ post.author.username|slice:":1"|upper }}</span>
+                    <span class="author-name-text">{{ post.author.first_name|default:post.author.username }}</span>
+                  </div>
+
+                  <div class="card-actions-mini">
+                    <span class="comments-badge" title="Comments">
+                      💬 {{ post.comments.count }}
+                    </span>
+                    {% if user.is_authenticated %}
+                      <form method="post" action="{% url 'store:journal_toggle_bookmark' post.slug %}" class="bookmark-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                        <button type="submit" class="btn-bookmark-mini {% if post.id in bookmarked_ids %}bookmarked{% endif %}" title="Save article">
+                          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor" stroke="currentColor" stroke-width="2">
+                            <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                          </svg>
+                        </button>
+                      </form>
+                    {% else %}
+                      <a href="{% url 'store:login' %}?next={{ request.get_full_path }}" class="btn-bookmark-mini" title="Log in to bookmark">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                      </a>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </article>
+          {% endif %}
+        {% endfor %}
+      </div>
+
+      <!-- Pagination -->
+      {% if page_obj.has_other_pages %}
+        <nav class="journal-pagination" aria-label="Journal pages">
+          {% if page_obj.has_previous %}
+            <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if category_slug %}&category={{ category_slug }}{% endif %}{% if tag_slug %}&tag={{ tag_slug }}{% endif %}" class="pagination-link">
+              ← Previous
+            </a>
+          {% endif %}
+
+          <span class="pagination-info">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+          {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if category_slug %}&category={{ category_slug }}{% endif %}{% if tag_slug %}&tag={{ tag_slug }}{% endif %}" class="pagination-link">
+              Next →
+            </a>
+          {% endif %}
+        </nav>
+      {% endif %}
+
+    {% else %}
+      <!-- Empty State -->
+      <div class="journal-empty-state">
+        <div class="empty-icon">🌱</div>
+        <h3>No Journal Stories Found</h3>
+        <p>We couldn't find any articles matching your search or filters.</p>
+        <a href="{% url 'store:journal_list' %}" class="button button-green">View All Articles</a>
+      </div>
+    {% endif %}
+
+  </main>
+</div>
+{% endblock %}

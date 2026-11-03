@@ -4,6 +4,10 @@ from .models import (
     CareReminder,
     Category,
     Coupon,
+    JournalBookmark,
+    JournalComment,
+    JournalPost,
+    JournalTag,
     NewsletterSubscriber,
     Order,
     OrderItem,
@@ -91,3 +95,52 @@ class CareReminderAdmin(admin.ModelAdmin):
     list_display = ["plant_name", "user", "product", "interval_days", "next_reminder", "active"]
     list_filter = ["interval_days", "active"]
     search_fields = ["plant_name", "user__username", "user__email"]
+
+
+class JournalCommentInline(admin.TabularInline):
+    model = JournalComment
+    extra = 0
+    fields = ["author", "body", "is_approved", "created_at"]
+    readonly_fields = ["author", "created_at"]
+
+
+@admin.register(JournalTag)
+class JournalTagAdmin(admin.ModelAdmin):
+    list_display = ["name", "slug", "posts_count"]
+    search_fields = ["name"]
+    prepopulated_fields = {"slug": ["name"]}
+
+    def posts_count(self, obj):
+        return obj.posts.count()
+    posts_count.short_description = "Articles"
+
+
+@admin.register(JournalPost)
+class JournalPostAdmin(admin.ModelAdmin):
+    list_display = ["title", "author", "status", "published_at", "category", "product", "comments_count", "created_at"]
+    list_filter = ["status", "category", "created_at", "tags"]
+    search_fields = ["title", "excerpt", "body", "author__username"]
+    prepopulated_fields = {"slug": ["title"]}
+    list_editable = ["status"]
+    filter_horizontal = ["tags"]
+    inlines = [JournalCommentInline]
+    date_hierarchy = "published_at"
+
+    def comments_count(self, obj):
+        return obj.comments.count()
+    comments_count.short_description = "Comments"
+
+
+@admin.register(JournalComment)
+class JournalCommentAdmin(admin.ModelAdmin):
+    list_display = ["post", "author", "is_approved", "created_at"]
+    list_filter = ["is_approved", "created_at"]
+    list_editable = ["is_approved"]
+    search_fields = ["post__title", "author__username", "body"]
+
+
+@admin.register(JournalBookmark)
+class JournalBookmarkAdmin(admin.ModelAdmin):
+    list_display = ["user", "post", "created_at"]
+    search_fields = ["user__username", "post__title"]
+    list_filter = ["created_at"]
