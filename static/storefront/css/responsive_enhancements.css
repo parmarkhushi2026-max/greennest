@@ -1,0 +1,667 @@
+/* ==============================================================================
+   GREEN NEST NURSERY - COMPREHENSIVE MOBILE & RESPONSIVE SUITE
+   Ensures flawless experience on iPhones, Android phones, tablets & desktops
+   ============================================================================== */
+
+/* Prevent horizontal overflow globally */
+html, body {
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Base Mobile Bottom Padding (to prevent sticky bottom nav from overlapping content) */
+@media (max-width: 768px) {
+  body {
+    padding-bottom: 66px !important;
+  }
+}
+
+/* ==============================================================================
+   1. MOBILE APP-LIKE BOTTOM NAVIGATION BAR (Phones <= 768px)
+   ============================================================================== */
+.gn-mobile-bottom-nav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .gn-mobile-bottom-nav {
+    display: flex !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 60px !important;
+    background: #ffffff !important;
+    border-top: 1px solid #e2ebe5 !important;
+    box-shadow: 0 -4px 16px rgba(0, 0, 0, 0.08) !important;
+    z-index: 999999 !important;
+    align-items: center !important;
+    justify-content: space-around !important;
+    padding: 0 4px !important;
+  }
+
+  .gn-bottom-nav-item {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    color: #64748b !important;
+    text-decoration: none !important;
+    font-size: 10.5px !important;
+    font-weight: 600 !important;
+    padding: 6px 8px !important;
+    position: relative !important;
+    transition: color 0.15s ease !important;
+    flex: 1 !important;
+    text-align: center !important;
+  }
+
+  .gn-bottom-nav-item.active {
+    color: #014e37 !important;
+    font-weight: 700 !important;
+  }
+
+  .gn-bottom-nav-item svg {
+    width: 20px !important;
+    height: 20px !important;
+    margin-bottom: 2px !important;
+    stroke: currentColor !important;
+  }
+
+  .gn-bottom-nav-item.active svg {
+    stroke: #014e37 !important;
+  }
+
+  .gn-bottom-badge {
+    position: absolute !important;
+    top: 2px !important;
+    right: calc(50% - 15px) !important;
+    background: #ef4444 !important;
+    color: #ffffff !important;
+    font-size: 10px !important;
+    font-weight: 800 !important;
+    min-width: 17px !important;
+    height: 17px !important;
+    border-radius: 9px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 4px !important;
+    border: 2px solid #ffffff !important;
+  }
+}
+
+/* ==============================================================================
+   2. HEADER & HAMBURGER NAVIGATION DRAWER (Tablets & Phones <= 991px)
+   ============================================================================== */
+@media (max-width: 991px) {
+  .top-notification-bar {
+    font-size: 11px !important;
+    padding: 6px 0 !important;
+  }
+  .topbar-right {
+    display: none !important;
+  }
+  .topbar-inner {
+    justify-content: center !important;
+  }
+
+  .header-main {
+    padding: 10px 0 !important;
+  }
+  .header-row {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+    flex-wrap: wrap !important;
+  }
+
+  .header-logo {
+    gap: 8px !important;
+  }
+  .logo-leaf-icon {
+    width: 32px !important;
+    height: 32px !important;
+  }
+  .logo-title {
+    font-size: 18px !important;
+  }
+  .logo-subtitle {
+    font-size: 7.5px !important;
+    letter-spacing: 0.12em !important;
+  }
+
+  .header-actions-group {
+    gap: 8px !important;
+  }
+  .account-labels, .cart-labels {
+    display: none !important;
+  }
+  .action-icon-circle {
+    width: 36px !important;
+    height: 36px !important;
+  }
+  .action-icon-circle svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  /* Full Width Search Bar under Logo on Mobile */
+  .header-search-wrap {
+    order: 3 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    margin-top: 6px !important;
+  }
+  .header-search-form {
+    border-radius: 24px !important;
+    width: 100% !important;
+  }
+  .search-category-dropdown select {
+    font-size: 11px !important;
+    max-width: 95px !important;
+    padding: 6px 6px !important;
+  }
+  .search-input-wrap input {
+    font-size: 13.5px !important;
+    padding: 8px 10px !important;
+  }
+  .search-submit-btn {
+    padding: 8px 12px !important;
+  }
+
+  /* Hamburger Toggle Button */
+  .mobile-menu-toggle {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    width: 38px !important;
+    height: 38px !important;
+    border-radius: 8px !important;
+    background: #eaf4ee !important;
+    border: 1px solid #c2e2d0 !important;
+    cursor: pointer !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+    padding: 0 !important;
+  }
+  .mobile-menu-toggle span {
+    display: block !important;
+    width: 20px !important;
+    height: 2.2px !important;
+    background: #014e37 !important;
+    border-radius: 2px !important;
+    transition: all 0.25s ease !important;
+  }
+  .mobile-menu-toggle.active span:nth-child(1) {
+    transform: translateY(6.2px) rotate(45deg) !important;
+  }
+  .mobile-menu-toggle.active span:nth-child(2) {
+    opacity: 0 !important;
+  }
+  .mobile-menu-toggle.active span:nth-child(3) {
+    transform: translateY(-6.2px) rotate(-45deg) !important;
+  }
+
+  /* Sliding Navigation Drawer */
+  .navigation-bar {
+    display: none !important;
+    background: #ffffff !important;
+    border-bottom: 2px solid #e2ebe5 !important;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1) !important;
+  }
+  .navigation-bar.is-open {
+    display: block !important;
+    animation: mobileNavSlide 0.22s ease-out !important;
+  }
+
+  @keyframes mobileNavSlide {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .nav-container {
+    flex-direction: column !important;
+    padding: 12px 16px !important;
+    align-items: stretch !important;
+  }
+  .nav-list {
+    flex-direction: column !important;
+    width: 100% !important;
+    align-items: stretch !important;
+    gap: 0 !important;
+  }
+  .nav-item {
+    width: 100% !important;
+    border-bottom: 1px solid #f0f4f2 !important;
+  }
+  .nav-link {
+    padding: 12px 4px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    color: #1e293b !important;
+  }
+  .nav-submenu {
+    position: static !important;
+    display: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    background: #f8faf9 !important;
+    border-radius: 8px !important;
+    margin: 4px 0 8px 6px !important;
+    padding: 6px 12px !important;
+  }
+  .nav-has-dropdown.open-submenu .nav-submenu {
+    display: block !important;
+  }
+  .nav-submenu a {
+    padding: 8px 4px !important;
+    font-size: 13px !important;
+    display: block !important;
+  }
+  .nav-call-badge {
+    margin-top: 12px !important;
+    width: 100% !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+    padding: 10px 16px !important;
+  }
+}
+
+/* ==============================================================================
+   3. HOME PAGE MOBILE POLISH
+   ============================================================================== */
+@media (max-width: 768px) {
+  .hero-slider {
+    min-height: 380px !important;
+  }
+  .hero-slide-item {
+    min-height: 380px !important;
+  }
+  .hero-slide-content {
+    padding: 30px 16px !important;
+  }
+  .hero-slide-title {
+    font-size: 22px !important;
+    line-height: 1.25 !important;
+  }
+  .hero-slide-desc {
+    font-size: 12.5px !important;
+    margin-bottom: 18px !important;
+    max-width: 100% !important;
+    line-height: 1.5 !important;
+  }
+  .hero-btn-row {
+    flex-direction: column !important;
+    gap: 8px !important;
+    width: 100% !important;
+  }
+  .hero-btn-row a {
+    width: 100% !important;
+    text-align: center !important;
+    justify-content: center !important;
+    padding: 11px 16px !important;
+  }
+
+  /* 3 Promo Banners Grid */
+  .collbnr-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  /* Plantish Products Grid: 2 Columns on Phone */
+  .plantish-products-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+
+  .plantish-card {
+    padding: 10px !important;
+    border-radius: 12px !important;
+  }
+  .plantish-img-wrap {
+    height: 150px !important;
+  }
+  .plantish-title {
+    font-size: 13px !important;
+    line-height: 1.3 !important;
+    height: 34px !important;
+    overflow: hidden !important;
+  }
+  .plantish-price-row {
+    flex-wrap: wrap !important;
+    gap: 4px !important;
+  }
+  .plantish-current-price {
+    font-size: 14.5px !important;
+  }
+  .plantish-card-actions {
+    flex-direction: column !important;
+    gap: 6px !important;
+    margin-top: 8px !important;
+  }
+  .plantish-btn-cart, .plantish-btn-buy {
+    width: 100% !important;
+    padding: 8px 6px !important;
+    font-size: 11px !important;
+  }
+
+  /* Story Showcase & Newsletter */
+  .about-showcase-grid {
+    grid-template-columns: 1fr !important;
+    padding: 20px 16px !important;
+  }
+  .newsletter-banner-box {
+    grid-template-columns: 1fr !important;
+    padding: 24px 16px !important;
+  }
+  .footer-grid {
+    grid-template-columns: 1fr !important;
+    gap: 22px !important;
+  }
+}
+
+/* ==============================================================================
+   4. SHOP CATALOG & FILTER ACCORDION
+   ============================================================================== */
+@media (max-width: 900px) {
+  .shop-layout-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  .shop-products-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 10px !important;
+  }
+  .shop-product-card {
+    padding: 10px !important;
+    border-radius: 12px !important;
+  }
+  .shop-product-img-wrap {
+    height: 150px !important;
+  }
+  .shop-product-title {
+    font-size: 13px !important;
+    height: 34px !important;
+    overflow: hidden !important;
+  }
+  .shop-product-price {
+    font-size: 14.5px !important;
+  }
+  .shop-product-actions {
+    flex-direction: column !important;
+    gap: 6px !important;
+  }
+  .shop-btn-cart, .shop-btn-buy-now {
+    width: 100% !important;
+    padding: 8px 6px !important;
+    font-size: 11px !important;
+  }
+
+  .shop-hero-title {
+    font-size: 20px !important;
+  }
+  .shop-hero-subtitle {
+    font-size: 12.5px !important;
+  }
+  .shop-perks-row {
+    gap: 6px !important;
+  }
+  .shop-perk-pill {
+    font-size: 11px !important;
+    padding: 4px 10px !important;
+  }
+}
+
+/* ==============================================================================
+   5. PRODUCT DETAIL PAGE MOBILE POLISH
+   ============================================================================== */
+@media (max-width: 900px) {
+  .product-main-card {
+    grid-template-columns: 1fr !important;
+    padding: 18px 14px !important;
+    gap: 20px !important;
+    border-radius: 16px !important;
+  }
+  .product-main-img-wrap {
+    height: 260px !important;
+  }
+  .product-title-text {
+    font-size: 20px !important;
+  }
+  .product-price-current {
+    font-size: 22px !important;
+  }
+  .botanical-specs-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+  .action-buttons-group {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  .btn-add-bag, .btn-buy-instant {
+    width: 100% !important;
+    padding: 12px !important;
+    justify-content: center !important;
+  }
+}
+
+/* ==============================================================================
+   6. CART & CHECKOUT MOBILE POLISH
+   ============================================================================== */
+@media (max-width: 850px) {
+  .cart-grid-layout, .checkout-grid-layout {
+    grid-template-columns: 1fr !important;
+    gap: 20px !important;
+  }
+  .cart-table-wrap, .table-responsive-wrapper {
+    width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+  .checkout-form-container {
+    padding: 18px 14px !important;
+  }
+  .order-summary-sidebar {
+    position: static !important;
+    padding: 18px 14px !important;
+  }
+}
+
+/* ==============================================================================
+   7. CUSTOMER DASHBOARD MOBILE POLISH
+   ============================================================================== */
+@media (max-width: 960px) {
+  .cust-layout-grid {
+    grid-template-columns: 1fr !important;
+    gap: 16px !important;
+  }
+  .cust-sidebar-panel {
+    padding: 14px 12px !important;
+    border-radius: 14px !important;
+  }
+  .cust-profile-header {
+    margin-bottom: 12px !important;
+  }
+  .cust-nav-menu {
+    display: flex !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    gap: 8px !important;
+    padding-bottom: 6px !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: thin !important;
+  }
+  .cust-nav-btn {
+    padding: 8px 14px !important;
+    border-radius: 20px !important;
+    border: 1px solid #e2ebe5 !important;
+    font-size: 12.5px !important;
+    flex-shrink: 0 !important;
+  }
+  .cust-overview-kpi-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+}
+
+/* ==============================================================================
+   8. ADMIN DASHBOARD - FULL MOBILE OPTIMIZATION
+   ============================================================================== */
+@media (max-width: 992px) {
+  .admin-panel-page {
+    padding: 16px 0 50px !important;
+  }
+  .admin-top-banner {
+    padding: 18px 16px !important;
+    border-radius: 14px !important;
+    gap: 14px !important;
+  }
+  .admin-page-title {
+    font-size: 20px !important;
+  }
+  .admin-quick-actions {
+    width: 100% !important;
+  }
+  .admin-quick-actions a {
+    flex: 1 !important;
+    text-align: center !important;
+    justify-content: center !important;
+    padding: 8px 10px !important;
+    font-size: 11.5px !important;
+  }
+
+  .admin-two-col-layout {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  /* Horizontal Swipeable Sidebar on Mobile */
+  .admin-sidebar-box {
+    position: static !important;
+    padding: 12px 10px !important;
+    border-radius: 14px !important;
+    margin-bottom: 10px !important;
+  }
+  .admin-side-brand {
+    display: none !important;
+  }
+  .admin-side-nav-list {
+    display: flex !important;
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    gap: 8px !important;
+    padding-bottom: 4px !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: thin !important;
+  }
+  .admin-side-nav-list::-webkit-scrollbar {
+    height: 4px !important;
+  }
+  .admin-side-nav-list::-webkit-scrollbar-thumb {
+    background: #cbd5e1 !important;
+    border-radius: 4px !important;
+  }
+
+  .admin-side-link {
+    padding: 8px 14px !important;
+    border-radius: 20px !important;
+    font-size: 12.5px !important;
+    border: 1px solid #e2ebe5 !important;
+    background: #ffffff !important;
+    flex-shrink: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 6px !important;
+  }
+  .admin-side-link.active {
+    background: #014e37 !important;
+    color: #ffffff !important;
+    border-color: #014e37 !important;
+  }
+
+  /* KPI Cards: 2 Columns on Mobile */
+  .admin-kpi-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+  .admin-kpi-card {
+    padding: 12px 10px !important;
+    border-radius: 12px !important;
+  }
+  .kpi-value {
+    font-size: 18px !important;
+  }
+  .kpi-label {
+    font-size: 11px !important;
+  }
+
+  /* Charts */
+  .admin-charts-grid {
+    grid-template-columns: 1fr !important;
+    gap: 14px !important;
+  }
+
+  /* Tables: Smooth Horizontal Touch Scrolling */
+  .admin-table-responsive {
+    width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    display: block !important;
+  }
+  .admin-data-table {
+    min-width: 600px !important;
+  }
+
+  /* Form Grids in Admin */
+  .form-row-grid-3, .form-row-2col {
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+
+  /* Direct Shortcuts Grid */
+  .shortcuts-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+  .shortcut-tile {
+    padding: 12px 10px !important;
+  }
+
+  /* Modals on Mobile */
+  #modal-edit-plant-overlay > div,
+  #modal-edit-category-overlay > div,
+  #modal-edit-guide-overlay > div,
+  #loginHelpModal > div {
+    width: 95% !important;
+    max-width: 95% !important;
+    padding: 18px 14px !important;
+    max-height: 90vh !important;
+    overflow-y: auto !important;
+    border-radius: 14px !important;
+  }
+}
+
+/* ==============================================================================
+   9. INPUTS & FORM TOUCH ENHANCEMENTS
+   ============================================================================== */
+@media (max-width: 768px) {
+  /* Prevent iOS Safari 16px auto-zoom */
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="tel"],
+  input[type="search"],
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
