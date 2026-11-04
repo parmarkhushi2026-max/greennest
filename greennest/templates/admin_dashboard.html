@@ -162,58 +162,46 @@
           </div>
         </div>
 
-        <nav class="admin-side-nav-list" aria-label="Admin Sections">
+                <nav class="admin-side-nav-list" aria-label="Admin Sections">
           <a class="admin-side-link {% if active_tab == 'overview' %}active{% endif %}" href="?tab=overview">
             <span>Overview & Charts</span>
-            <span class="tab-badge-pill">Live</span>
           </a>
           <a class="admin-side-link {% if active_tab == 'orders' %}active{% endif %}" href="?tab=orders">
             <span>Orders Dispatch</span>
-            {% if pending_orders %}<span class="tab-badge-pill warning">{{ pending_orders }}</span>{% else %}<span class="tab-badge-pill">{{ orders_count }}</span>{% endif %}
           </a>
           <a class="admin-side-link {% if active_tab == 'products' %}active{% endif %}" href="?tab=products">
             <span>Plant Inventory (CRUD)</span>
-            {% if low_stock %}<span class="tab-badge-pill danger">{{ low_stock }} Low</span>{% else %}<span class="tab-badge-pill">{{ products_count }}</span>{% endif %}
           </a>
           <a class="admin-side-link {% if active_tab == 'categories' %}active{% endif %}" href="?tab=categories">
             <span>Plant Categories</span>
-            <span class="tab-badge-pill">{{ categories|length }}</span>
           </a>
           <a class="admin-side-link {% if active_tab == 'inquiries' %}active{% endif %}" href="?tab=inquiries">
             <span>Customer Requirements</span>
-            {% if new_inquiries_count %}<span class="tab-badge-pill warning" style="background:#f59e0b; color:#ffffff;">{{ new_inquiries_count }} New</span>{% else %}<span class="tab-badge-pill">{{ inquiries|length }}</span>{% endif %}
           </a>
           <a class="admin-side-link {% if active_tab == 'guides' %}active{% endif %}" href="?tab=guides">
             <span>Care Guides</span>
-            <span class="tab-badge-pill">{{ care_guides|length }}</span>
           </a>
           <a class="admin-side-link" href="{% url 'store:manage_journal' %}" style="background:#eaf4ee; color:#014e37; font-weight:700;">
             <span style="display:inline-flex; align-items:center; gap:7px;">
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"></path><path d="M6 6h10"></path><path d="M6 10h10"></path></svg>
               <span>Plant Journal Editorial</span>
             </span>
-            <span class="tab-badge-pill" style="background:#10b981; color:#fff;">NEW</span>
           </a>
 
           <a class="admin-side-link {% if active_tab == 'reminders' %}active{% endif %}" href="?tab=reminders">
             <span>Care Reminders</span>
-            <span class="tab-badge-pill">{{ reminders_all|length }}</span>
           </a>
           <a class="admin-side-link {% if active_tab == 'subscribers' %}active{% endif %}" href="?tab=subscribers">
             <span>Subscribers</span>
-            <span class="tab-badge-pill">{{ subscribers_all|length }}</span>
           </a>
           <a class="admin-side-link {% if active_tab == 'coupons' %}active{% endif %}" href="?tab=coupons">
             <span>Promo Coupons</span>
-            <span class="tab-badge-pill">{{ coupons|length }}</span>
           </a>
           <a class="admin-side-link {% if active_tab == 'reviews' %}active{% endif %}" href="?tab=reviews">
             <span>Reviews</span>
-            {% if pending_reviews %}<span class="tab-badge-pill warning">{{ pending_reviews|length }}</span>{% endif %}
           </a>
           <a class="admin-side-link {% if active_tab == 'customers' %}active{% endif %}" href="?tab=customers">
             <span>Customers</span>
-            <span class="tab-badge-pill">{{ customers_count }}</span>
           </a>
         </nav>
 
