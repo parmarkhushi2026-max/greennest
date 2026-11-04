@@ -537,13 +537,6 @@
           </a>
         </li>
         {% endif %}
-        {% else %}
-        <li class="nav-item">
-          <a class="nav-link {% if request.resolver_match.url_name == 'login' %}active{% endif %}" href="{% url 'store:login' %}">Sign In</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link {% if request.resolver_match.url_name == 'register' %}active{% endif %}" href="{% url 'store:register' %}">Join Free</a>
-        </li>
         {% endif %}
       </ul>
 
