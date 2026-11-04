@@ -3462,3 +3462,95 @@ button, input, select, textarea {
     gap: 12px;
   }
 }
+
+
+/* ==========================================================================
+   STRICT 1-LINE HORIZONTAL NAVIGATION (No wrapping, no upar-niche)
+   ========================================================================== */
+.navigation-bar {
+  background-color: #ffffff;
+  border-bottom: 1px solid var(--border-light);
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  width: 100%;
+}
+
+.navigation-bar .nav-container {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  flex-wrap: nowrap !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  padding: 0 16px !important;
+  gap: 8px !important;
+}
+
+.navigation-bar .nav-list {
+  display: flex !important;
+  align-items: center !important;
+  list-style: none !important;
+  gap: 2px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  flex-wrap: nowrap !important;
+  white-space: nowrap !important;
+  overflow-x: auto !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  min-width: 0 !important;
+}
+
+.navigation-bar .nav-list::-webkit-scrollbar {
+  display: none !important;
+}
+
+.navigation-bar .nav-item {
+  position: relative !important;
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+}
+
+.navigation-bar .nav-link {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 4px !important;
+  padding: 11px 9px !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  color: #1f2937 !important;
+  white-space: nowrap !important;
+  line-height: 1 !important;
+  text-decoration: none !important;
+  transition: all 0.15s ease !important;
+}
+
+.navigation-bar .nav-link:hover, 
+.navigation-bar .nav-link.active {
+  color: #014e37 !important;
+  background-color: #f0f7f3 !important;
+  border-radius: 6px !important;
+}
+
+.navigation-bar .nav-offer-link {
+  color: #014e37 !important;
+}
+
+.navigation-bar .offer-pill {
+  background: #ef4444 !important;
+  color: #ffffff !important;
+  font-size: 9px !important;
+  font-weight: 800 !important;
+  padding: 2px 6px !important;
+  border-radius: 8px !important;
+  margin-left: 3px !important;
+}
+
+.navigation-bar .nav-call-badge {
+  flex-shrink: 0 !important;
+  white-space: nowrap !important;
+  font-size: 12px !important;
+  padding: 6px 12px !important;
+}
+

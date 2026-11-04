@@ -241,6 +241,75 @@
       max-width: none;
     }
   }
+
+  /* 1-Line Strict Navbar Guarantee (No wrapping, no upar-niche) */
+  .navigation-bar {
+    width: 100% !important;
+  }
+  .navigation-bar .nav-container {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex-wrap: nowrap !important;
+    max-width: 100% !important;
+    width: 100% !important;
+    padding: 0 16px !important;
+    gap: 8px !important;
+  }
+  .navigation-bar .nav-list {
+    display: flex !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+    white-space: nowrap !important;
+    list-style: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    gap: 2px !important;
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+    min-width: 0 !important;
+  }
+  .navigation-bar .nav-list::-webkit-scrollbar {
+    display: none !important;
+  }
+  .navigation-bar .nav-item {
+    position: relative !important;
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+  }
+  .navigation-bar .nav-link {
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 4px !important;
+    padding: 11px 9px !important;
+    font-size: 12.5px !important;
+    font-weight: 600 !important;
+    color: #1f2937 !important;
+    white-space: nowrap !important;
+    line-height: 1 !important;
+    text-decoration: none !important;
+    transition: all 0.15s ease !important;
+  }
+  .navigation-bar .nav-link:hover,
+  .navigation-bar .nav-link.active {
+    color: #014e37 !important;
+    background-color: #f0f7f3 !important;
+    border-radius: 6px !important;
+  }
+  .navigation-bar .nav-call-badge {
+    flex-shrink: 0 !important;
+    white-space: nowrap !important;
+    font-size: 12px !important;
+    padding: 6px 14px !important;
+  }
+  @media (max-width: 991px) {
+    .navigation-bar.is-open .nav-list {
+      flex-direction: column !important;
+      overflow-x: visible !important;
+      width: 100% !important;
+    }
+  }
 </style>
 </head>
 
