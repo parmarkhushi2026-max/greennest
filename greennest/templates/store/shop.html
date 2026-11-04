@@ -819,11 +819,19 @@
         </div>
         {% else %}
         <!-- Empty State -->
-        <div class="shop-empty-state">
-          <div class="shop-empty-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><path d="M11 20A7 7 0 0 1 4 13C4 7 11 2 20 2c0 9-5 16-11 16Z"/><path d="M4 21c2-4 6-7 11-9"/></svg></div>
-          <h2 class="shop-empty-title">No plants found</h2>
-          <p class="shop-empty-desc">We couldn't find any botanical products matching your current filters. Try selecting a different category or clearing search filters.</p>
-          <a class="btn-green-main" href="{% url 'store:shop' %}" style="display: inline-block;">Browse All Nursery Plants <span>→</span></a>
+        <div class="shop-empty-state" style="background: #ffffff; border-radius: 20px; border: 1.5px dashed #cbd5e1; padding: 54px 28px; text-align: center; margin: 20px 0;">
+          <div style="width: 72px; height: 72px; border-radius: 50%; background: #eaf4ee; color: #014e37; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; box-shadow: 0 4px 14px rgba(1, 78, 55, 0.08);">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M11 20A7 7 0 0 1 4 13C4 7 11 2 20 2c0 9-5 16-11 16Z"/>
+              <path d="M4 21c2-4 6-7 11-9"/>
+            </svg>
+          </div>
+          <h2 style="font-size: 22px; font-weight: 800; color: #0f172a; margin: 0 0 8px;">No Plants Found</h2>
+          <p style="font-size: 14.5px; color: #64748b; line-height: 1.5; max-width: 460px; margin: 0 auto 22px;">We couldn't find any botanical specimens matching your search. Try checking your spelling, removing filters, or browsing our full nursery catalog.</p>
+          <a href="{% url 'store:shop' %}" style="display: inline-flex; align-items: center; gap: 8px; background: #014e37; color: #ffffff; font-size: 13.5px; font-weight: 700; padding: 12px 28px; border-radius: 24px; text-decoration: none; box-shadow: 0 4px 14px rgba(1, 78, 55, 0.22); transition: all 0.2s ease;">
+            <span>Browse All Nursery Plants</span>
+            <span>?</span>
+          </a>
         </div>
         {% endif %}
       </section>
