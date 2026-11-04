@@ -377,9 +377,9 @@
     <!-- Horizontal Navigation Bar -->
   <nav class="navigation-bar">
     <div class="theme-container nav-container">
-      <ul class="nav-list">
+            <ul class="nav-list">
         <li class="nav-item">
-          <a class="nav-link {% if request.path == '/' and not category_slug %}active{% endif %}" href="{% url 'store:home' %}">
+          <a class="nav-link {% if request.path == '/' and not category_slug and not request.GET.offer %}active{% endif %}" href="{% url 'store:home' %}">
             <span>Home</span>
           </a>
         </li>
@@ -410,16 +410,22 @@
           <a class="nav-link {% if request.resolver_match.url_name == 'guides' or request.resolver_match.url_name == 'guide_detail' %}active{% endif %}" href="{% url 'store:guides' %}">Care Guides</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link nav-offer-link" href="{% url 'store:shop' %}">Offers <span class="offer-pill">10% OFF</span></a>
+          <a class="nav-link {% if 'journal' in request.path %}active{% endif %}" href="{% url 'store:journal_list' %}">Plant Journal</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link nav-offer-link {% if request.GET.offer == 'true' %}active{% endif %}" href="{% url 'store:shop' %}?offer=true" style="display: inline-flex; align-items: center; gap: 7px;">
+            <span>Offers</span>
+            <span class="offer-pill" style="margin-left: 4px; display: inline-block;">10% OFF</span>
+          </a>
         </li>
         <li class="nav-item">
           <a class="nav-link {% if request.resolver_match.url_name == 'contact' %}active{% endif %}" href="{% url 'store:contact' %}">Contact Us</a>
         </li>
         <!-- Direct Live Customer Mailbox Tab -->
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'store:inbox' %}" style="color: #014e37; font-weight: 700; background: #eaf4ee; border-radius: 8px; margin-block: 4px;" title="View Live Email Invoices">
+          <a class="nav-link {% if 'inbox' in request.path %}active{% endif %}" href="{% url 'store:inbox' %}" style="color: #014e37; font-weight: 700; background: #eaf4ee; border-radius: 8px; margin-block: 4px; display: inline-flex; align-items: center; gap: 7px; padding: 6px 12px;" title="View Live Email Invoices">
             <span>Customer Mailbox</span>
-            <span style="background: #10b981; color: #ffffff; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 10px; margin-left: 5px;">LIVE</span>
+            <span style="background: #10b981; color: #ffffff; font-size: 10px; font-weight: 800; padding: 2px 7px; border-radius: 10px; letter-spacing: 0.5px;">LIVE</span>
           </a>
         </li>
 
@@ -436,6 +442,8 @@
             <li><a href="{% url 'store:customer_dashboard' %}?tab=reminders">Care Reminders</a></li>
             <li><a href="{% url 'store:customer_dashboard' %}?tab=profile">Profile Settings</a></li>
             <li><a href="{% url 'store:inbox' %}" style="color: #059669; font-weight: 700;">Customer Mailbox</a></li>
+            <li class="nav-submenu-divider" style="border-top: 1px solid #eef2f0; margin: 4px 0;"></li>
+            <li><a href="{% url 'store:logout' %}" style="color: #dc2626;">Log Out</a></li>
           </ul>
         </li>
         {% if user.is_staff %}
@@ -447,16 +455,22 @@
         {% endif %}
         {% else %}
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'store:login' %}">Sign In</a>
+          <a class="nav-link {% if request.resolver_match.url_name == 'login' %}active{% endif %}" href="{% url 'store:login' %}">Sign In</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'store:register' %}">Join Free</a>
+          <a class="nav-link {% if request.resolver_match.url_name == 'register' %}active{% endif %}" href="{% url 'store:register' %}">Join Free</a>
         </li>
         {% endif %}
       </ul>
 
       <!-- Primary Action CTA: Track Order Live -->
-      <a href="{% url 'store:orders' %}" class="nav-call-badge" style="text-decoration: none; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; font-weight: 700; background: #eaf4ee; color: #014e37; padding: 7px 16px; border-radius: 20px; border: 1px solid #c2e2d0; transition: all 0.2s ease;" title="Track Your Live Shipment Status">
+      <a href="{% url 'store:orders' %}" class="nav-call-badge" style="text-decoration: none; cursor: pointer; display: inline-flex; align-items: center; gap: 7px; font-weight: 700; background: #eaf4ee; color: #014e37; padding: 7px 16px; border-radius: 20px; border: 1.5px solid #a3d9bc; transition: all 0.2s ease; box-shadow: 0 2px 6px rgba(1, 78, 55, 0.08);" title="Track Your Live Shipment Status">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="1" y="3" width="15" height="13"></rect>
+          <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+          <circle cx="5.5" cy="18.5" r="2.5"></circle>
+          <circle cx="18.5" cy="18.5" r="2.5"></circle>
+        </svg>
         <span>Track Order Live</span>
       </a>
     </div>

@@ -674,6 +674,23 @@
 
       <!-- Main Shop Products Section -->
       <section class="shop-main-content">
+        {% if is_offer %}
+        <div class="shop-offer-callout" style="background: linear-gradient(135deg, #e8f5ed 0%, #ccead9 100%); border: 1.5px solid #10b981; border-radius: 14px; padding: 18px 24px; margin-bottom: 22px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; box-shadow: 0 4px 16px rgba(1, 78, 55, 0.08);">
+          <div style="display: flex; align-items: center; gap: 14px;">
+            <div style="width: 44px; height: 44px; border-radius: 50%; background: #014e37; color: #ffffff; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 20px; flex-shrink: 0; box-shadow: 0 4px 10px rgba(1, 78, 55, 0.25);">
+              %
+            </div>
+            <div>
+              <div style="font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #047857;">Exclusive Seasonal Offer</div>
+              <h3 style="margin: 0; font-size: 17px; font-weight: 800; color: #013827;">Flat 10% OFF on Bestsellers &amp; Nursery Collection</h3>
+              <p style="margin: 2px 0 0; font-size: 13px; color: #065f46;">Use coupon code <strong style="background: #ffffff; padding: 2px 8px; border-radius: 6px; border: 1px dashed #059669; color: #014e37; font-family: monospace; font-size: 14px;">GREEN10</strong> at checkout!</p>
+            </div>
+          </div>
+          <button type="button" onclick="copyAndApplyCoupon('GREEN10', this)" style="background: #014e37; color: #ffffff; border: none; padding: 10px 22px; border-radius: 20px; font-weight: 700; font-size: 13px; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 3px 10px rgba(1, 78, 55, 0.2);">
+            Copy Code GREEN10
+          </button>
+        </div>
+        {% endif %}
         <!-- Quick Category Selection Pills -->
         <div class="shop-category-pills-bar">
           <a href="{% url 'store:shop' %}{% if query %}?q={{ query }}{% endif %}" class="cat-pill-item {% if not category_slug %}is-active{% endif %}">

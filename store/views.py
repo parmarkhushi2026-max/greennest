@@ -108,11 +108,20 @@ def shop(request, category_slug=None):
     sort = request.GET.get("sort", "featured").strip()
     price_range = request.GET.get("price", "").strip()
     tag = request.GET.get("tag", "").strip()
+    is_offer = request.GET.get("offer", "").strip().lower() in ("true", "1", "yes")
 
     if category_slug.lower() in ["all", "all-categories"]:
         category_slug = ""
 
     products = Product.objects.filter(active=True, stock__gt=0).select_related("category")
+    if is_offer:
+        products = products.filter(
+            Q(tag__icontains="Bestseller") |
+            Q(tag__icontains="Popular") |
+            Q(tag__icontains="Trending") |
+            Q(tag__icontains="NASA") |
+            Q(price__lte=500)
+        )
 
     if query:
         products = products.filter(
@@ -173,6 +182,7 @@ def shop(request, category_slug=None):
         "tag": tag,
         "total_count": total_count,
         "all_products_count": Product.objects.filter(active=True, stock__gt=0).count(),
+        "is_offer": is_offer,
     })
 
 
