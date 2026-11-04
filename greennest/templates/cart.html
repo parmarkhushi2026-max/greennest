@@ -282,7 +282,7 @@ function applyCartCoupon(code) {
   <div class="theme-container">
 
     <div class="cart-heading-bar">
-      <span class="cart-subhead">🌱 Nursery Fresh Cart</span>
+      <span class="cart-subhead">Your Shopping Bag</span>
       <h1>Your Plant Shopping Bag</h1>
     </div>
 
@@ -319,7 +319,7 @@ function applyCartCoupon(code) {
               {% csrf_token %}
               <input type="hidden" name="action" value="remove">
               <input type="hidden" name="product_id" value="{{ line.product.id }}">
-              <button type="submit" class="cart-btn-remove" title="Remove item">✕ Remove</button>
+              <button type="submit" class="cart-btn-remove" title="Remove item">Remove</button>
             </form>
           </div>
         </div>
@@ -370,7 +370,7 @@ function applyCartCoupon(code) {
 
         <!-- Checkout Button -->
         <a href="{% url 'store:checkout' %}" class="btn-checkout-cta">
-          PROCEED TO CHECKOUT 🌿 →
+          PROCEED TO CHECKOUT →
         </a>
 
         <div style="text-align: center; margin-top: 10px;">
@@ -380,17 +380,17 @@ function applyCartCoupon(code) {
         </div>
 
         <div style="text-align:center; font-size:12px; color:#6b7280; margin-top:14px; display:flex; align-items:center; justify-content:center; gap:6px;">
-          <span>🔒</span> 256-bit Secure Checkout · COD & Razorpay Available
+          <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg></span> 256-bit Secure Checkout · COD & Razorpay Available
         </div>
       </div>
     </div>
     {% else %}
     <div class="cart-empty-box">
-      <div style="font-size:52px; margin-bottom:12px;">🪴</div>
+      <div style="margin-bottom:12px;"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v4"/><path d="M14 2v4"/><path d="M6 6h12l-2 14H8L6 6z"/></svg></div>
       <h2 style="font-size:24px; color:#014e37; margin:0 0 8px;">Your Plant Bag is Empty</h2>
       <p style="color:#6b7280; margin:0 0 24px;">Discover our thriving selection of indoor air-purifying plants, flowering shrubs, and handcrafted ceramic pots.</p>
       <a href="{% url 'store:shop' %}" class="btn-checkout-cta" style="display:inline-flex; width:auto; padding:12px 32px;">
-        BROWSE ALL PLANTS CATALOG 🌿 →
+        BROWSE ALL PLANTS CATALOG →
       </a>
     </div>
     {% endif %}

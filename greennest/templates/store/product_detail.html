@@ -519,7 +519,7 @@
             {% if product.tag %}{{ product.tag }}{% else %}Fresh Nursery Batch{% endif %}
           </span>
           <span class="plant-badge-greenhouse">
-            🌱 Chennai Greenhouse Acclimatized
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><path d="M11 20A7 7 0 0 1 4 13C4 7 11 2 20 2c0 9-5 16-11 16Z"/><path d="M4 21c2-4 6-7 11-9"/></svg> Chennai Greenhouse Acclimatized
           </span>
         </div>
       </div>
@@ -533,7 +533,7 @@
 
           <!-- Rating -->
           <div class="product-rating-row">
-            <span class="product-rating-stars">★★★★★</span>
+            <span class="product-rating-stars"><svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
             <span style="font-weight:600; color:#111827;">
               {% if product.review_count %}{{ product.average_rating|floatformat:1 }} ({{ product.review_count }} Customer Reviews){% else %}5.0 (Nursery Certified){% endif %}
             </span>
@@ -548,7 +548,7 @@
               {% if product.stock > 0 %}
                 <span class="in-stock">● In Stock ({{ product.stock }} units left)</span>
               {% else %}
-                <span class="out-stock">✕ Out of Stock</span>
+                <span class="out-stock">Out of Stock</span>
               {% endif %}
             </div>
           </div>
@@ -556,22 +556,22 @@
           <!-- Botanical Care Specs (Live Working from Database) -->
           <div class="botanical-specs-grid">
             <div class="botanical-spec-item" title="Recommended sunlight exposure for this plant">
-              <div class="spec-icon">☀️</div>
+              <div class="spec-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></div>
               <div class="spec-label">Sunlight</div>
               <div class="spec-val">{{ product.sunlight|default:"Bright Indirect" }}</div>
             </div>
             <div class="botanical-spec-item" title="Recommended watering frequency schedule">
-              <div class="spec-icon">💧</div>
+              <div class="spec-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg></div>
               <div class="spec-label">Watering</div>
               <div class="spec-val">Every {{ product.water_days|default:"5" }} Days</div>
             </div>
             <div class="botanical-spec-item" title="Included container and pot material">
-              <div class="spec-icon">🪴</div>
+              <div class="spec-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v4"/><path d="M14 2v4"/><path d="M6 6h12l-2 14H8L6 6z"/></svg></div>
               <div class="spec-label">Pot Type</div>
               <div class="spec-val">{{ product.pot_type|default:"Nursery Pot Inc." }}</div>
             </div>
             <div class="botanical-spec-item" title="Air purification capability">
-              <div class="spec-icon">🍃</div>
+              <div class="spec-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 4 13C4 7 11 2 20 2c0 9-5 16-11 16Z"/><path d="M4 21c2-4 6-7 11-9"/></svg></div>
               <div class="spec-label">Air Purifying</div>
               <div class="spec-val">{{ product.air_purifying|default:"High Oxygen" }}</div>
             </div>
@@ -604,7 +604,7 @@
               </button>
 
               <button type="button" class="btn-buy-now" onclick="submitPlantForm('buy_now')" {% if not product.stock %}disabled{% endif %}>
-                <span>⚡ BUY NOW (Instant)</span>
+                <span>BUY NOW</span>
               </button>
             </div>
           </form>
@@ -612,13 +612,13 @@
           <!-- GreenNest Guarantee Perks -->
           <div class="plant-trust-perks">
             <div class="trust-perk-item">
-              <span>✓</span> 7-Day Live Plant Guarantee
+              <span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-1px;"><polyline points="20 6 9 17 4 12"/></svg></span> 7-Day Live Plant Guarantee
             </div>
             <div class="trust-perk-item">
-              <span>✓</span> Safe Transit Box Packaging
+              <span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-1px;"><polyline points="20 6 9 17 4 12"/></svg></span> Safe Transit Box Packaging
             </div>
             <div class="trust-perk-item">
-              <span>✓</span> COD & Razorpay Available
+              <span><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-1px;"><polyline points="20 6 9 17 4 12"/></svg></span> COD & Razorpay Available
             </div>
           </div>
         </div>
@@ -639,11 +639,11 @@
     <div class="details-tab-section" style="margin-top: 28px;">
       <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eef2ef; padding-bottom: 14px; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
         <div>
-          <h3 style="margin: 0 0 4px; font-size: 1.28rem; color: #014e37;">⭐ Customer Reviews & Ratings</h3>
+          <h3 style="margin: 0 0 4px; font-size: 1.28rem; color: #014e37;">Customer Reviews & Ratings</h3>
           <span style="font-size: 0.84rem; color: #64748b;">Feedback from verified plant buyers</span>
         </div>
         <a href="{% url 'store:review' product.id %}" style="display: inline-flex; align-items: center; gap: 6px; background: #014e37; color: #ffffff; padding: 9px 18px; border-radius: 8px; font-weight: 700; font-size: 0.88rem; text-decoration: none; transition: background 0.2s;">
-          ✍️ Write a Review
+          Write a Review
         </a>
       </div>
 
@@ -658,17 +658,17 @@
               </span>
               <div>
                 <strong style="color: #0f172a; font-size: 0.95rem;">{{ r.user.first_name|default:r.user.username }}</strong>
-                <span style="font-size: 0.78rem; color: #059669; font-weight: 600; margin-left: 6px;">✓ Verified Plant Parent</span>
+                <span style="font-size: 0.78rem; color: #059669; font-weight: 600; margin-left: 6px;"> Verified Plant Parent</span>
               </div>
             </div>
             <span style="font-size: 0.82rem; color: #94a3b8;">{{ r.created_at|date:"M j, Y" }}</span>
           </div>
           <div style="color: #f59e0b; font-size: 0.95rem; margin-bottom: 6px;">
-            {% if r.rating == 5 %}★★★★★
-            {% elif r.rating == 4 %}★★★★☆
-            {% elif r.rating == 3 %}★★★☆☆
-            {% elif r.rating == 2 %}★★☆☆☆
-            {% else %}★☆☆☆☆{% endif %}
+            {% if r.rating == 5 %}<svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            {% elif r.rating == 4 %}<svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            {% elif r.rating == 3 %}<svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            {% elif r.rating == 2 %}<svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            {% else %}<svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>{% endif %}
             <span style="font-size: 0.84rem; color: #64748b; margin-left: 6px; font-weight: 600;">{{ r.rating }}.0 / 5.0</span>
           </div>
           <p style="margin: 0; color: #334155; font-size: 0.92rem; line-height: 1.5;">{{ r.comment }}</p>
@@ -679,7 +679,7 @@
       <div style="text-align: center; padding: 32px 20px; background: #fbfdfc; border-radius: 12px; border: 1px dashed #cbd5e1;">
         <p style="font-size: 1rem; color: #64748b; margin-bottom: 14px;">No reviews yet for {{ product.name }}. Be the first plant parent to share your experience!</p>
         <a href="{% url 'store:review' product.id %}" style="display: inline-block; background: #014e37; color: #ffffff; padding: 9px 20px; border-radius: 8px; font-weight: 700; font-size: 0.88rem; text-decoration: none;">
-          ✍️ Write First Review
+          Write First Review
         </a>
       </div>
       {% endif %}
@@ -711,7 +711,7 @@
     <section class="journal-related-section" style="margin-top: 3.5rem; padding-top: 2.5rem; border-top: 1px solid #e2ece6;">
       <div style="display:flex; justify-content:space-between; align-items:flex-end; margin-bottom: 1.5rem; flex-wrap:wrap; gap:1rem;">
         <div>
-          <span style="font-size:12px; font-weight:800; letter-spacing:1px; color:#014e37; text-transform:uppercase;">🌿 FROM THE PLANT JOURNAL</span>
+          <span style="font-size:12px; font-weight:800; letter-spacing:1px; color:#014e37; text-transform:uppercase;"> FROM THE PLANT JOURNAL</span>
           <h3 style="font-size:1.75rem; font-weight:700; color:#1a202c; margin-top:0.25rem;">Care Wisdom &amp; Stories for {{ product.name }}</h3>
         </div>
         <a href="{% url 'store:journal_list' %}" style="color:#014e37; font-weight:700; text-decoration:none; font-size:0.95rem;">View All Journal Articles →</a>

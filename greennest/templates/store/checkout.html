@@ -682,7 +682,7 @@
                 <input type="radio" name="payment_method" value="cod" class="payment-radio" checked onchange="handlePaymentMethodChange('cod')">
                 <div class="payment-content">
                   <div class="payment-title-row">
-                    <span class="payment-name">💵 Cash on Delivery (COD)</span>
+                    <span class="payment-name"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/></svg> Cash on Delivery (COD)</span>
                     <span class="payment-badge badge-cod">Pay upon Arrival</span>
                   </div>
                   <p class="payment-desc">
@@ -696,7 +696,7 @@
                 <input type="radio" name="payment_method" value="razorpay" class="payment-radio" onchange="handlePaymentMethodChange('razorpay')">
                 <div class="payment-content">
                   <div class="payment-title-row">
-                    <span class="payment-name">💳 Razorpay Online Payment</span>
+                    <span class="payment-name"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg> Razorpay Online Payment</span>
                     <span class="payment-badge badge-razorpay">Instant & Secure</span>
                   </div>
                   <p class="payment-desc">
@@ -758,7 +758,7 @@
             </button>
 
             <div style="text-align:center; font-size:11px; color:#6b7280; margin-top:14px; line-height:1.4;">
-              🛡️ GreenNest 100% Transit Guarantee · Delivered in Breathable Protective Plant Boxes
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> GreenNest 100% Transit Guarantee · Delivered in Breathable Protective Plant Boxes
             </div>
           </div>
         </div>
@@ -776,7 +776,7 @@
     <!-- Header -->
     <div class="rzp-modal-header">
       <div class="rzp-brand-row">
-        <div class="rzp-brand-icon">🌿</div>
+        <div class="rzp-brand-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><path d="M11 20A7 7 0 0 1 4 13C4 7 11 2 20 2c0 9-5 16-11 16Z"/><path d="M4 21c2-4 6-7 11-9"/></svg></div>
         <div class="rzp-brand-info">
           <h4>Green Nest Nursery</h4>
           <span>Chennai Botanical Store</span>
@@ -786,22 +786,22 @@
         <small>Amount Due</small>
         <strong>₹{{ total }}</strong>
       </div>
-      <button type="button" class="rzp-close-btn" onclick="closeRazorpayModal()">✕</button>
+      <button type="button" class="rzp-close-btn" onclick="closeRazorpayModal()"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-1px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></button>
     </div>
 
     <!-- Contact Subbar -->
     <div class="rzp-user-subbar">
-      <span id="rzpModalCustPhone">📞 +91 9876543210</span>
-      <span>🔒 256-Bit SSL Encrypted</span>
+      <span id="rzpModalCustPhone">+91 9876543210</span>
+      <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg> 256-Bit SSL Encrypted</span>
     </div>
 
     <!-- Normal Payment Selection View -->
     <div id="rzpPaymentMainView">
       <!-- Tabs -->
       <div class="rzp-tabs-bar">
-        <button type="button" class="rzp-tab-item active" onclick="switchRzpTab('upi', this)">📱 UPI</button>
-        <button type="button" class="rzp-tab-item" onclick="switchRzpTab('cards', this)">💳 Cards</button>
-        <button type="button" class="rzp-tab-item" onclick="switchRzpTab('netbanking', this)">🏛️ NetBanking</button>
+        <button type="button" class="rzp-tab-item active" onclick="switchRzpTab('upi', this)">UPI</button>
+        <button type="button" class="rzp-tab-item" onclick="switchRzpTab('cards', this)">Cards</button>
+        <button type="button" class="rzp-tab-item" onclick="switchRzpTab('netbanking', this)"> NetBanking</button>
       </div>
 
       <div class="rzp-tab-body">
@@ -809,19 +809,19 @@
         <div class="rzp-tab-panel active" id="rzp-panel-upi">
           <div class="upi-apps-row">
             <div class="upi-app-btn selected" onclick="selectUpiApp(this, 'Google Pay')">
-              <span class="upi-app-icon">🔵</span>
+              <span class="upi-app-badge" style="font-weight:700; color:#2563eb;">GPay</span>
               <span class="upi-app-name">GPay</span>
             </div>
             <div class="upi-app-btn" onclick="selectUpiApp(this, 'PhonePe')">
-              <span class="upi-app-icon">🟣</span>
+              <span class="upi-app-badge" style="font-weight:700; color:#7c3aed;">PhonePe</span>
               <span class="upi-app-name">PhonePe</span>
             </div>
             <div class="upi-app-btn" onclick="selectUpiApp(this, 'Paytm')">
-              <span class="upi-app-icon">🔷</span>
+              <span class="upi-app-badge" style="font-weight:700; color:#0284c7;">Paytm</span>
               <span class="upi-app-name">Paytm</span>
             </div>
             <div class="upi-app-btn" onclick="selectUpiApp(this, 'BHIM')">
-              <span class="upi-app-icon">🇮🇳</span>
+              <span class="upi-app-badge" style="font-weight:700; color:#059669;">BHIM</span>
               <span class="upi-app-name">BHIM</span>
             </div>
           </div>
@@ -832,7 +832,7 @@
           </div>
 
           <button type="button" class="rzp-btn-pay" onclick="simulateRazorpayPayment('UPI')">
-            <span>Pay ₹{{ total }} via UPI ⚡</span>
+            <span>Pay ₹{{ total }} via UPI </span>
           </button>
         </div>
 
@@ -854,21 +854,21 @@
           </div>
 
           <button type="button" class="rzp-btn-pay" onclick="simulateRazorpayPayment('Card')">
-            <span>Pay ₹{{ total }} with Card 🔒</span>
+            <span>Pay ₹{{ total }} with Card </span>
           </button>
         </div>
 
         <!-- TAB 3: NETBANKING -->
         <div class="rzp-tab-panel" id="rzp-panel-netbanking">
           <div class="bank-pills-grid">
-            <div class="bank-pill selected" onclick="selectBank(this)">🏦 HDFC Bank</div>
-            <div class="bank-pill" onclick="selectBank(this)">🏦 State Bank of India</div>
-            <div class="bank-pill" onclick="selectBank(this)">🏦 ICICI Bank</div>
-            <div class="bank-pill" onclick="selectBank(this)">🏦 Axis Bank</div>
+            <div class="bank-pill selected" onclick="selectBank(this)">HDFC Bank</div>
+            <div class="bank-pill" onclick="selectBank(this)">State Bank of India</div>
+            <div class="bank-pill" onclick="selectBank(this)">ICICI Bank</div>
+            <div class="bank-pill" onclick="selectBank(this)">Axis Bank</div>
           </div>
 
           <button type="button" class="rzp-btn-pay" onclick="simulateRazorpayPayment('NetBanking')">
-            <span>Pay ₹{{ total }} via NetBanking 🏛️</span>
+            <span>Pay ₹{{ total }} via NetBanking </span>
           </button>
         </div>
       </div>
@@ -883,7 +883,7 @@
       </div>
 
       <div id="rzpSuccessAnim" class="rzp-success-checkmark">
-        ✓
+        
       </div>
       <div id="rzpSuccessText" style="display:none;">
         <h4 style="font-size:18px; color:#15803d; margin:0 0 6px;">Payment Successful!</h4>
@@ -917,7 +917,7 @@
       rzpCard.classList.add('selected');
       codCard.classList.remove('selected');
       submitBtn.classList.add('btn-rzp-style');
-      submitBtn.innerHTML = `<span>💳 Pay ₹{{ total }} with Razorpay</span>`;
+      submitBtn.innerHTML = `<span>Pay ₹{{ total }} with Razorpay</span>`;
     }
   }
 
@@ -955,7 +955,7 @@
 
   function openRazorpayModal() {
     const phone = document.getElementById('id_phone').value.trim();
-    document.getElementById('rzpModalCustPhone').innerText = '📞 +91 ' + phone;
+    document.getElementById('rzpModalCustPhone').innerText = '+91 ' + phone;
     document.getElementById('rzpPaymentMainView').style.display = 'block';
     document.getElementById('rzpProcessingView').style.display = 'none';
     document.getElementById('rzpPaymentModal').classList.add('show');

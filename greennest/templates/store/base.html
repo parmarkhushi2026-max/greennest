@@ -20,6 +20,10 @@
   {% block extra_css %}{% endblock %}
   <style>
     #greennest-preloader {
+      display: none !important;
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
       position: fixed !important;
       top: 0 !important;
       left: 0 !important;
@@ -323,7 +327,7 @@
 
 <body class="site-body">
   <!-- Botanical Preloader Overlay (100% Styled & Responsive) -->
-  <div id="greennest-preloader">
+  <div id="greennest-preloader" style="display:none !important;">
     <div class="gn-box">
       <div class="gn-circle-wrap">
         <div class="gn-circle-orbit"></div>
@@ -561,7 +565,7 @@
   <div class="message-stack theme-container" aria-live="polite">
     {% for message in messages %}
     <div class="message-banner {{ message.tags }}">
-      <span class="msg-icon">✓</span>
+      <span class="msg-icon"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg></span>
       <span>{{ message }}</span>
     </div>
     {% endfor %}

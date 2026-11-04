@@ -76,12 +76,12 @@
                 <form method="post" action="{% url 'store:manage_journal_comment_moderate' comm.id %}">
                   {% csrf_token %}
                   <input type="hidden" name="action" value="approve">
-                  <button type="submit" class="btn-approve">Approve &amp; Publish ✓</button>
+                  <button type="submit" class="btn-approve">Approve &amp; Publish </button>
                 </form>
                 <form method="post" action="{% url 'store:manage_journal_comment_moderate' comm.id %}">
                   {% csrf_token %}
                   <input type="hidden" name="action" value="delete">
-                  <button type="submit" class="btn-delete" onclick="return confirm('Delete this comment?');">Delete ✕</button>
+                  <button type="submit" class="btn-delete" onclick="return confirm('Delete this comment?');">Delete</button>
                 </form>
                 <a href="{% url 'store:journal_detail' comm.post.slug %}" class="btn-view" target="_blank">View Post ↗</a>
               </div>
@@ -173,7 +173,7 @@
                   <span class="table-date">{{ post.published_at|default:post.created_at|date:"M d, Y" }}</span>
                 </td>
                 <td>
-                  <span class="table-comments">💬 {{ post.comments.count }}</span>
+                  <span class="table-comments"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> {{ post.comments.count }}</span>
                 </td>
                 <td class="text-right">
                   <div class="table-actions">

@@ -559,7 +559,7 @@
     {% if is_staff_viewer %}
     <div class="staff-status-box">
       <div>
-        <strong style="color:#014e37; font-size:0.95rem;">⚙️ Admin Controls: Update Live Tracker Status</strong>
+        <strong style="color:#014e37; font-size:0.95rem;">Admin Controls: Update Live Tracker Status</strong>
         <p style="margin:2px 0 0; font-size:0.82rem; color:#047857;">Change the status below to test and watch the delivery stepper progress bar update in real-time!</p>
       </div>
       <form method="post" style="display:flex; align-items:center; gap:8px;">
@@ -585,7 +585,7 @@
       <div class="track-card-title-row">
         <div>
           <span style="font-size:0.78rem; text-transform:uppercase; font-weight:700; color:#059669; letter-spacing:0.06em;">
-            🌿 Green Nest Nursery Verified Shipment
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><polyline points="20 6 9 17 4 12"/></svg> Green Nest Nursery Verified Shipment
           </span>
           <h1 class="track-order-title">
             Order <span class="track-code-chip">{{ order.tracking_code }}</span>
@@ -608,12 +608,12 @@
       {% if order.status != 'cancelled' %}
       <div class="est-delivery-banner">
         <div class="est-left">
-          <div class="est-icon">🚚</div>
+          <div class="est-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px;"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg></div>
           <div>
             <div class="est-label">Estimated Doorstep Delivery</div>
             <div class="est-date">
               {% if order.status == 'delivered' %}
-                Delivered Successfully to Your Doorstep! 🎉
+                Delivered Successfully to Your Doorstep! 
               {% else %}
                 Expected by {{ estimated_delivery|date:"l, F j, Y" }}
               {% endif %}
@@ -622,9 +622,9 @@
         </div>
         <div class="est-right">
           {% if order.status == 'delivered' %}
-            ✅ Completed & Handed Over
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><polyline points="20 6 9 17 4 12"/></svg> Completed & Handed Over
           {% else %}
-            🟢 On Schedule · Transit Safe
+            On Schedule · Transit Safe
           {% endif %}
         </div>
       </div>
@@ -647,28 +647,28 @@
 
           <!-- Step 1: Confirmed -->
           <div class="step-node {% if order.status != 'pending' %}completed{% else %}active{% endif %}">
-            <div class="step-circle">{% if order.status != 'pending' %}✓{% else %}1{% endif %}</div>
+            <div class="step-circle">{% if order.status != 'pending' %}{% else %}1{% endif %}</div>
             <div class="step-title">Order Confirmed</div>
             <div class="step-subtitle">Payment verified & order accepted</div>
           </div>
 
           <!-- Step 2: Nursery Packed -->
           <div class="step-node {% if order.status in 'packed,shipped,delivered' %}completed{% elif order.status == 'confirmed' %}active{% endif %}">
-            <div class="step-circle">{% if order.status in 'packed,shipped,delivered' %}✓{% else %}2{% endif %}</div>
+            <div class="step-circle">{% if order.status in 'packed,shipped,delivered' %}{% else %}2{% endif %}</div>
             <div class="step-title">Nursery Packed</div>
             <div class="step-subtitle">Botanist inspected & secured in moss</div>
           </div>
 
           <!-- Step 3: In-Transit -->
           <div class="step-node {% if order.status in 'shipped,delivered' %}completed{% elif order.status == 'packed' %}active{% endif %}">
-            <div class="step-circle">{% if order.status in 'shipped,delivered' %}✓{% else %}3{% endif %}</div>
+            <div class="step-circle">{% if order.status in 'shipped,delivered' %}{% else %}3{% endif %}</div>
             <div class="step-title">In-Transit</div>
             <div class="step-subtitle">Dispatched via Courier to City Hub</div>
           </div>
 
           <!-- Step 4: Delivered -->
           <div class="step-node {% if order.status == 'delivered' %}completed{% elif order.status == 'shipped' %}active{% endif %}">
-            <div class="step-circle">{% if order.status == 'delivered' %}✓{% else %}4{% endif %}</div>
+            <div class="step-circle">{% if order.status == 'delivered' %}{% else %}4{% endif %}</div>
             <div class="step-title">Delivered</div>
             <div class="step-subtitle">Handover with care instructions</div>
           </div>
@@ -683,7 +683,7 @@
           <!-- Ordered Items -->
           <div class="track-panel" style="margin-bottom:24px;">
             <h3 class="track-panel-title">
-              <span>🪴 Ordered Plants & Items ({{ order.items.count }})</span>
+              <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><path d="M11 20A7 7 0 0 1 4 13C4 7 11 2 20 2c0 9-5 16-11 16Z"/><path d="M4 21c2-4 6-7 11-9"/></svg> Ordered Plants & Items ({{ order.items.count }})</span>
               <span style="font-size:0.8rem; color:#64748b; font-weight:normal;">Safe Crating</span>
             </h3>
             {% for item in order.items.all %}
@@ -698,7 +698,7 @@
                   <span>·</span>
                   <span>Price: ₹{{ item.unit_price }}</span>
                   <span>·</span>
-                  <a href="{% url 'store:guides' %}" class="plant-care-link">🌱 Care Tips</a>
+                  <a href="{% url 'store:guides' %}" class="plant-care-link"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg> Care Tips</a>
                 </div>
               </div>
               <div class="plant-item-price">
@@ -711,14 +711,14 @@
           <!-- Live Transit Checkpoint Log -->
           <div class="track-panel">
             <h3 class="track-panel-title">
-              <span>📍 Live Shipment Activity Log</span>
+              <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg> Live Shipment Activity Log</span>
               <span style="font-size:0.78rem; font-weight:600; color:#059669;">AWB: GNBLU{{ order.id }}942</span>
             </h3>
             <ul class="timeline-list">
               {% if order.status == 'delivered' %}
               <li class="timeline-item active">
                 <div class="timeline-dot"></div>
-                <div class="timeline-title">✅ Delivered to Doorstep</div>
+                <div class="timeline-title">Delivered to Doorstep</div>
                 <div class="timeline-desc">Package handed over safely with plant unboxing instructions.</div>
                 <div class="timeline-time">{{ estimated_delivery|date:"M j, Y · 02:30 PM" }}</div>
               </li>
@@ -727,7 +727,7 @@
               {% if order.status in 'shipped,delivered' %}
               <li class="timeline-item active">
                 <div class="timeline-dot"></div>
-                <div class="timeline-title">🚚 Out for Delivery / In-Transit</div>
+                <div class="timeline-title">Out for Delivery / In-Transit</div>
                 <div class="timeline-desc">Package arrived at local delivery hub. Dispatched with delivery executive.</div>
                 <div class="timeline-time">{{ order.created_at|date:"M j, Y · 09:15 AM" }}</div>
               </li>
@@ -736,7 +736,7 @@
               {% if order.status in 'packed,shipped,delivered' %}
               <li class="timeline-item active">
                 <div class="timeline-dot"></div>
-                <div class="timeline-title">📦 Nursery Packaging Completed</div>
+                <div class="timeline-title">Nursery Packaging Completed</div>
                 <div class="timeline-desc">Roots hydrated with nutrient gel and secured in eco-friendly bamboo carton. Inspected by Chief Botanist.</div>
                 <div class="timeline-time">{{ order.created_at|date:"M j, Y · 03:45 PM" }}</div>
               </li>
@@ -744,7 +744,7 @@
 
               <li class="timeline-item active">
                 <div class="timeline-dot"></div>
-                <div class="timeline-title">📋 Order Confirmed & Booked</div>
+                <div class="timeline-title">Order Confirmed & Booked</div>
                 <div class="timeline-desc">Order verified at Green Nest Central Nursery, Chennai. Plants allocated from greenhouse.</div>
                 <div class="timeline-time">{{ order.created_at|date:"M j, Y · h:i A" }}</div>
               </li>
@@ -757,26 +757,26 @@
           <!-- Delivery Address -->
           <div class="track-panel" style="margin-bottom:24px;">
             <h3 class="track-panel-title">
-              <span>🏡 Delivery Address</span>
+              <span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-3px; margin-right:6px;"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Delivery Address</span>
             </h3>
             <div style="font-weight:700; color:#0f172a; font-size:1.02rem; margin-bottom:4px;">
               {{ order.customer_name }}
             </div>
             <div style="font-size:0.88rem; color:#475569; margin-bottom:8px;">
-              📞 {{ order.phone }}
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> {{ order.phone }}
             </div>
             <div style="font-size:0.88rem; color:#334155; line-height:1.55; background:#f8fafc; padding:12px 14px; border-radius:8px; border:1px solid #e2e8f0;">
               {{ order.address|linebreaksbr }}
             </div>
             <div style="margin-top:12px; font-size:0.78rem; color:#059669; font-weight:600; display:flex; align-items:center; gap:6px;">
-              <span>🛡️ 100% Transit Safe Guarantee · Free Replacement if Damaged</span>
+              <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> 100% Transit Safe Guarantee · Free Replacement if Damaged</span>
             </div>
           </div>
 
           <!-- Payment Invoice Summary -->
           <div class="track-panel" style="margin-bottom:24px;">
             <h3 class="track-panel-title">
-              <span>💳 Payment Invoice</span>
+              <span>Payment Invoice</span>
               <span style="font-size:0.82rem; font-weight:600; color:#014e37;">Official Receipt</span>
             </h3>
 
@@ -825,14 +825,14 @@
           <!-- Help & Support -->
           <div class="track-panel" style="background:#f0fdf4; border:1px solid #bbf7d0;">
             <h4 style="font-size:0.95rem; font-weight:700; color:#014e37; margin:0 0 6px;">
-              🌱 Green Nest Nursery Support
+              Green Nest Nursery Support
             </h4>
             <p style="font-size:0.82rem; color:#166534; margin:0 0 12px; line-height:1.45;">
               Have questions about your plants or delivery timing? Our Chennai nursery botanists are here to help.
             </p>
             <div style="font-size:0.85rem; font-weight:600; color:#014e37; display:flex; flex-direction:column; gap:4px;">
-              <span>📞 Helpline: +91 98400 12345</span>
-              <span>✉️ Email: support@greennest.local</span>
+              <span>Helpline: +91 98400 12345</span>
+              <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg> Email: support@greennest.local</span>
             </div>
           </div>
 

@@ -12,7 +12,7 @@
   <!-- Hero Header -->
   <header class="journal-hero">
     <div class="theme-container">
-      <span class="journal-kicker"><span class="kicker-leaf">🌿</span> BOTANICAL JOURNAL &amp; GROWING WISDOM</span>
+      <span class="journal-kicker"> BOTANICAL JOURNAL &amp; GROWING WISDOM</span>
       <h1 class="journal-title">The Plant Journal</h1>
       <p class="journal-subtitle">
         Hands-on plant care guides, interior green styling, and botanical stories written by our nursery growers.
@@ -26,7 +26,7 @@
           <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
           <input type="text" name="q" value="{{ query }}" placeholder="Search guides, plant species, care tips, authors..." class="journal-search-input">
           {% if query %}
-            <a href="{% url 'store:journal_list' %}{% if category_slug %}?category={{ category_slug }}{% endif %}" class="search-clear-btn" title="Clear search">✕</a>
+            <a href="{% url 'store:journal_list' %}{% if category_slug %}?category={{ category_slug }}{% endif %}" class="search-clear-btn" title="Clear search"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-1px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></a>
           {% endif %}
           <button type="submit" class="button button-green journal-search-submit">Search</button>
         </div>
@@ -63,7 +63,7 @@
             </a>
           {% endfor %}
           {% if tag_slug %}
-            <a href="{% url 'store:journal_list' %}{% if category_slug %}?category={{ category_slug }}{% endif %}" class="tag-pill-clear">Clear Tag ✕</a>
+            <a href="{% url 'store:journal_list' %}{% if category_slug %}?category={{ category_slug }}{% endif %}" class="tag-pill-clear">Clear Tag </a>
           {% endif %}
         </div>
       </div>
@@ -199,7 +199,7 @@
 
                   <div class="card-actions-mini">
                     <span class="comments-badge" title="Comments">
-                      💬 {{ post.comments.count }}
+                      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> {{ post.comments.count }}
                     </span>
                     {% if user.is_authenticated %}
                       <form method="post" action="{% url 'store:journal_toggle_bookmark' post.slug %}" class="bookmark-form">
@@ -248,7 +248,7 @@
     {% else %}
       <!-- Empty State -->
       <div class="journal-empty-state">
-        <div class="empty-icon">🌱</div>
+        <div class="empty-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><path d="M11 20A7 7 0 0 1 4 13C4 7 11 2 20 2c0 9-5 16-11 16Z"/><path d="M4 21c2-4 6-7 11-9"/></svg></div>
         <h3>No Journal Stories Found</h3>
         <p>We couldn't find any articles matching your search or filters.</p>
         <a href="{% url 'store:journal_list' %}" class="button button-green">View All Articles</a>

@@ -584,10 +584,10 @@
       </p>
 
       <div class="shop-perks-row">
-        <span class="shop-perk-pill">🌿 100% Healthy Nursery Grown</span>
-        <span class="shop-perk-pill">📦 Transit-Safe Bamboo Crates</span>
-        <span class="shop-perk-pill">🚚 Free Delivery on ₹499+</span>
-        <span class="shop-perk-pill" onclick="copyAndApplyCoupon('GREEN10', this)" style="cursor:pointer;" title="Click to copy & activate 10% coupon">🏷️ Coupon: <strong>GREEN10</strong> (10% Off)</span>
+        <span class="shop-perk-pill"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><path d="M11 20A7 7 0 0 1 4 13C4 7 11 2 20 2c0 9-5 16-11 16Z"/><path d="M4 21c2-4 6-7 11-9"/></svg> 100% Healthy Nursery Grown</span>
+        <span class="shop-perk-pill"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><path d="m7.5 4.27 9 5.15"></path><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path><path d="m3.3 7 8.7 5 8.7-5"></path><line x1="12" y1="22" x2="12" y2="12"></line></svg> Transit-Safe Bamboo Crates</span>
+        <span class="shop-perk-pill"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg> Free Delivery on ₹499+</span>
+        <span class="shop-perk-pill" onclick="copyAndApplyCoupon('GREEN10', this)" style="cursor:pointer;" title="Click to copy & activate 10% coupon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"></path><circle cx="7" cy="7" r=".5" fill="currentColor"></circle></svg> Coupon: <strong>GREEN10</strong> (10% Off)</span>
       </div>
     </div>
   </header>
@@ -605,7 +605,7 @@
             {% if price_range %}<input type="hidden" name="price" value="{{ price_range }}">{% endif %}
             <div style="display: flex; gap: 6px;">
               <input type="text" name="q" value="{{ query }}" placeholder="Search name or type..." style="flex:1; padding: 8px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.88rem; outline: none;">
-              <button type="submit" style="background: #014e37; color: white; border: none; border-radius: 6px; padding: 0 12px; cursor: pointer; font-size: 0.88rem;">🔍</button>
+              <button type="submit" style="background: #014e37; color: white; border: none; border-radius: 6px; padding: 0 12px; cursor: pointer; font-size: 0.88rem;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg></button>
             </div>
           </form>
         </div>
@@ -616,7 +616,7 @@
           <ul class="shop-cat-list">
             <li class="shop-cat-item">
               <a class="shop-cat-link {% if not category_slug %}is-active{% endif %}" href="{% url 'store:shop' %}{% if query %}?q={{ query }}{% endif %}">
-                <span>🪴 All Plants</span>
+                <span>All Plants</span>
                 <span class="shop-cat-badge">{{ total_count }}</span>
               </a>
             </li>
@@ -656,7 +656,7 @@
         <!-- Promo Banner -->
         <div class="sidebar-widget">
           <div class="shop-promo-card" id="shopPromoCard" onclick="copyAndApplyCoupon('GREEN10', this)" style="cursor:pointer;" title="Click to copy GREEN10 and activate 10% discount!">
-            <span class="promo-badge-text">⚡ Special Offer</span>
+            <span class="promo-badge-text"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><path d="M12 2H2v10l9.29 9.29c.94.94 2.48.94 3.42 0l6.58-6.58c.94-.94.94-2.48 0-3.42L12 2Z"></path><circle cx="7" cy="7" r=".5" fill="currentColor"></circle></svg> Special Offer</span>
             <div class="promo-discount-num">GET 10% OFF</div>
             <p style="font-size: 0.8rem; color: #047857; margin: 0 0 6px;">On all live plants and planters order!</p>
             <span class="promo-code-pill" id="promoCodePill" title="Click code to copy">GREEN10</span>
@@ -666,7 +666,7 @@
 
         <!-- Plant Care Guides Helper -->
         <div class="sidebar-widget" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 14px;">
-          <h4 style="font-size: 0.88rem; font-weight: 700; color: #0f172a; margin: 0 0 6px;">📖 Need Plant Help?</h4>
+          <h4 style="font-size: 0.88rem; font-weight: 700; color: #0f172a; margin: 0 0 6px;">Need Plant Help?</h4>
           <p style="font-size: 0.8rem; color: #64748b; margin: 0 0 10px; line-height: 1.4;">Read our expert botanist watering and sunlight care articles.</p>
           <a href="{% url 'store:guides' %}" style="display: inline-block; font-size: 0.82rem; font-weight: 600; color: #014e37; text-decoration: none;">Explore Guides →</a>
         </div>
@@ -694,7 +694,7 @@
         <!-- Quick Category Selection Pills -->
         <div class="shop-category-pills-bar">
           <a href="{% url 'store:shop' %}{% if query %}?q={{ query }}{% endif %}" class="cat-pill-item {% if not category_slug %}is-active{% endif %}">
-            <span>🪴 All Plants</span>
+            <span>All Plants</span>
             <span class="cat-pill-count">{{ all_products_count|default:"78" }}</span>
           </a>
           {% for cat in categories %}
@@ -736,25 +736,25 @@
           {% if current_category %}
           <span class="active-filter-tag">
             Category: {{ current_category.name }}
-            <a href="{% url 'store:shop' %}?{% if query %}q={{ query }}&{% endif %}{% if price_range %}price={{ price_range }}&{% endif %}{% if sort %}sort={{ sort }}{% endif %}" title="Remove filter">✕</a>
+            <a href="{% url 'store:shop' %}?{% if query %}q={{ query }}&{% endif %}{% if price_range %}price={{ price_range }}&{% endif %}{% if sort %}sort={{ sort }}{% endif %}" title="Remove filter"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-1px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></a>
           </span>
           {% endif %}
           {% if query %}
           <span class="active-filter-tag">
             Keyword: "{{ query }}"
-            <a href="{% url 'store:shop' %}?{% if category_slug %}category={{ category_slug }}&{% endif %}{% if price_range %}price={{ price_range }}&{% endif %}{% if sort %}sort={{ sort }}{% endif %}" title="Remove filter">✕</a>
+            <a href="{% url 'store:shop' %}?{% if category_slug %}category={{ category_slug }}&{% endif %}{% if price_range %}price={{ price_range }}&{% endif %}{% if sort %}sort={{ sort }}{% endif %}" title="Remove filter"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-1px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></a>
           </span>
           {% endif %}
           {% if price_range %}
           <span class="active-filter-tag">
             Price: {{ price_range }}
-            <a href="{% url 'store:shop' %}?{% if category_slug %}category={{ category_slug }}&{% endif %}{% if query %}q={{ query }}&{% endif %}{% if sort %}sort={{ sort }}{% endif %}" title="Remove filter">✕</a>
+            <a href="{% url 'store:shop' %}?{% if category_slug %}category={{ category_slug }}&{% endif %}{% if query %}q={{ query }}&{% endif %}{% if sort %}sort={{ sort }}{% endif %}" title="Remove filter"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-1px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></a>
           </span>
           {% endif %}
           {% if tag %}
           <span class="active-filter-tag">
             Tag: {{ tag }}
-            <a href="{% url 'store:shop' %}?{% if category_slug %}category={{ category_slug }}&{% endif %}{% if query %}q={{ query }}&{% endif %}{% if price_range %}price={{ price_range }}&{% endif %}{% if sort %}sort={{ sort }}{% endif %}" title="Remove filter">✕</a>
+            <a href="{% url 'store:shop' %}?{% if category_slug %}category={{ category_slug }}&{% endif %}{% if query %}q={{ query }}&{% endif %}{% if price_range %}price={{ price_range }}&{% endif %}{% if sort %}sort={{ sort }}{% endif %}" title="Remove filter"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-1px;"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg></a>
           </span>
           {% endif %}
           <a class="active-filter-clear-all" href="{% url 'store:shop' %}">Clear All Filters</a>
@@ -786,8 +786,8 @@
               {% endif %}
               <!-- Hover quick actions -->
               <div class="card-hover-actions">
-                <a class="quick-view-btn" href="{% url 'store:product_detail' product.id %}" title="View details">👁 Quick View</a>
-                <a class="quick-review-btn" href="{% url 'store:review' product.id %}" title="Write review">✍ Review</a>
+                <a class="quick-view-btn" href="{% url 'store:product_detail' product.id %}" title="View details">Quick View</a>
+                <a class="quick-review-btn" href="{% url 'store:review' product.id %}" title="Write review">Write Review</a>
               </div>
             </div>
 
@@ -798,7 +798,7 @@
                 <a href="{% url 'store:product_detail' product.id %}">{{ product.name }}</a>
               </h3>
               <div class="card-star-rating">
-                <span class="stars-gold">★★★★★</span>
+                <span class="stars-gold"><svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span>
                 <span class="rating-text">{% if product.review_count %}{{ product.average_rating|floatformat:1 }} ({{ product.review_count }}){% else %}5.0 (Nursery){% endif %}</span>
               </div>
               <div class="card-price-row">
@@ -825,7 +825,7 @@
                   {% csrf_token %}
                   <input type="hidden" name="action" value="buy_now">
                   <button class="shop-btn-buy-now" type="submit">
-                    <span>⚡ BUY NOW</span>
+                    <span>BUY NOW</span>
                   </button>
                 </form>
                 {% endif %}
@@ -837,7 +837,7 @@
         {% else %}
         <!-- Empty State -->
         <div class="shop-empty-state">
-          <div class="shop-empty-icon">🪴</div>
+          <div class="shop-empty-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><path d="M11 20A7 7 0 0 1 4 13C4 7 11 2 20 2c0 9-5 16-11 16Z"/><path d="M4 21c2-4 6-7 11-9"/></svg></div>
           <h2 class="shop-empty-title">No plants found</h2>
           <p class="shop-empty-desc">We couldn't find any botanical products matching your current filters. Try selecting a different category or clearing search filters.</p>
           <a class="btn-green-main" href="{% url 'store:shop' %}" style="display: inline-block;">Browse All Nursery Plants <span>→</span></a>

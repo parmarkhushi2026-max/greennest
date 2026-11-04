@@ -280,7 +280,7 @@
 
     <!-- Hero Search Section -->
     <div class="track-hub-hero">
-      <span class="track-hub-kicker">🌱 100% TRANSIT SAFE BOTANICAL LOGISTICS</span>
+      <span class="track-hub-kicker"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> 100% TRANSIT SAFE BOTANICAL LOGISTICS</span>
       <h1 class="track-hub-title">Track Your Green Nest Shipment</h1>
       <p class="track-hub-subtitle">
         Enter your order tracking code to check real-time nursery packaging, BlueDart transit status, and estimated doorstep delivery.
@@ -291,7 +291,7 @@
           <input type="text" name="tracking_code" value="{{ searched_code|default:'' }}" class="track-input-field" placeholder="Enter Order Code (e.g. GN-2025-9843 or 10852DC09B)..." required autocomplete="off">
           <button type="submit" class="track-submit-btn">
             <span>Track Live</span>
-            <span>🔍</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px;"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
           </button>
         </div>
       </form>
@@ -300,14 +300,14 @@
     <!-- 4-Step Quick Demo Clickable Testing Strip -->
     <div class="demo-strip-section">
       <div class="demo-strip-title">
-        <span>⚡ Quick Test Live Tracking (1-Click Demonstration):</span>
+        <span> Quick Test Live Tracking (1-Click Demonstration):</span>
       </div>
       <div class="demo-cards-grid">
         <!-- Confirmed -->
         {% if demo_orders.confirmed %}
         <a href="{% url 'store:order_detail' demo_orders.confirmed.tracking_code %}" class="demo-card">
           <span class="demo-step-num">Step 1</span>
-          <div class="demo-step-name">📋 Confirmed</div>
+          <div class="demo-step-name"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><polyline points="20 6 9 17 4 12"/></svg> Confirmed</div>
           <div class="demo-step-code">Code: {{ demo_orders.confirmed.tracking_code }}</div>
         </a>
         {% endif %}
@@ -316,7 +316,7 @@
         {% if demo_orders.packed %}
         <a href="{% url 'store:order_detail' demo_orders.packed.tracking_code %}" class="demo-card">
           <span class="demo-step-num">Step 2</span>
-          <div class="demo-step-name">🪴 Nursery Packed</div>
+          <div class="demo-step-name"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><path d="m7.5 4.27 9 5.15"></path><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path><path d="m3.3 7 8.7 5 8.7-5"></path><line x1="12" y1="22" x2="12" y2="12"></line></svg> Nursery Packed</div>
           <div class="demo-step-code">Code: {{ demo_orders.packed.tracking_code }}</div>
         </a>
         {% endif %}
@@ -325,7 +325,7 @@
         {% if demo_orders.shipped %}
         <a href="{% url 'store:order_detail' demo_orders.shipped.tracking_code %}" class="demo-card">
           <span class="demo-step-num">Step 3</span>
-          <div class="demo-step-name">🚚 In-Transit</div>
+          <div class="demo-step-name"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg> In-Transit</div>
           <div class="demo-step-code">Code: {{ demo_orders.shipped.tracking_code }}</div>
         </a>
         {% endif %}
@@ -334,7 +334,7 @@
         {% if demo_orders.delivered %}
         <a href="{% url 'store:order_detail' demo_orders.delivered.tracking_code %}" class="demo-card">
           <span class="demo-step-num">Step 4</span>
-          <div class="demo-step-name">🏡 Delivered</div>
+          <div class="demo-step-name"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-3px; margin-right:6px;"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg> Delivered</div>
           <div class="demo-step-code">Code: {{ demo_orders.delivered.tracking_code }}</div>
         </a>
         {% endif %}
@@ -344,7 +344,7 @@
     <!-- User Recent Orders Section -->
     <div class="user-orders-card">
       <div class="user-orders-header">
-        <span>📦 Your Recent Orders</span>
+        <span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><path d="m7.5 4.27 9 5.15"></path><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path><path d="m3.3 7 8.7 5 8.7-5"></path><line x1="12" y1="22" x2="12" y2="12"></line></svg> Your Recent Orders</span>
         {% if user.is_authenticated %}
         <span style="font-size:0.88rem; font-weight:600; color:#014e37;">Logged in as: {{ user.username }}</span>
         {% else %}
@@ -357,7 +357,7 @@
         {% for order in user_orders %}
         <div class="order-track-row">
           <div class="order-main-info">
-            <div class="order-icon-badge">🪴</div>
+            <div class="order-icon-badge"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><path d="m7.5 4.27 9 5.15"></path><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path><path d="m3.3 7 8.7 5 8.7-5"></path><line x1="12" y1="22" x2="12" y2="12"></line></svg></div>
             <div>
               <div class="order-code-title">Order {{ order.tracking_code }}</div>
               <div class="order-sub-meta">

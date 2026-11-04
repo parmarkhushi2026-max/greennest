@@ -2055,14 +2055,15 @@ button, input, select, textarea {
     display: none;
   }
   .navigation-bar.is-open {
-    display: block;
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: #ffffff;
-    box-shadow: var(--shadow-lg);
-    border-top: 1px solid var(--border-light);
+    display: block !important;
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    background: #ffffff !important;
+    border-top: 1px solid var(--border-light) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05) !important;
   }
   .nav-container {
     flex-direction: column;

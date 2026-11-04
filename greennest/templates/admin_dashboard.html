@@ -462,7 +462,7 @@
                 <input type="hidden" name="action" value="update_stock">
                 <input type="hidden" name="product_id" value="{{ prod.id }}">
                 <input type="number" name="stock" value="{{ prod.stock }}" min="0" max="999" class="inv-stock-input">
-                <button type="submit" class="inv-stock-save" title="Save stock">✓</button>
+                <button type="submit" class="inv-stock-save" title="Save stock"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-1px;"><polyline points="20 6 9 17 4 12"/></svg></button>
               </form>
               <span class="stock-status-pill {% if prod.stock == 0 %}out{% elif prod.stock <= 5 %}low{% else %}ok{% endif %}">
                 {{ prod.stock }} left
@@ -486,7 +486,7 @@
           <div class="pending-review-card">
             <div class="rev-header">
               <strong>{{ rev.user.username }}</strong>
-              <span class="rev-stars">★★★★★ ({{ rev.rating }}/5)</span>
+              <span class="rev-stars"><svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> ({{ rev.rating }}/5)</span>
             </div>
             <span class="rev-plant">Plant: {{ rev.product.name }}</span>
             <p class="rev-comment">"{{ rev.comment }}"</p>
@@ -494,7 +494,7 @@
               {% csrf_token %}
               <input type="hidden" name="action" value="approve_review">
               <input type="hidden" name="review_id" value="{{ rev.id }}">
-              <button type="submit" class="btn-approve-review">✓ Approve Review</button>
+              <button type="submit" class="btn-approve-review">Approve Review</button>
             </form>
           </div>
           {% endfor %}
@@ -1119,7 +1119,7 @@
               <strong>{{ rev.user.first_name|default:rev.user.username }}</strong>
               <span class="user-sub-tag">({{ rev.user.email }})</span>
             </div>
-            <span class="rev-stars">★★★★★ ({{ rev.rating }} / 5)</span>
+            <span class="rev-stars"><svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg><svg width="13" height="13" viewBox="0 0 24 24" fill="#f59e0b" stroke="#f59e0b" stroke-width="1" style="display:inline; vertical-align:-1px;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg> ({{ rev.rating }} / 5)</span>
           </div>
           <span class="rev-plant">Plant: <strong>{{ rev.product.name }}</strong></span>
           <p class="rev-comment">"{{ rev.comment }}"</p>
@@ -1128,7 +1128,7 @@
               {% csrf_token %}
               <input type="hidden" name="action" value="approve_review">
               <input type="hidden" name="review_id" value="{{ rev.id }}">
-              <button type="submit" class="btn-approve-review">✓ Approve &amp; Publish</button>
+              <button type="submit" class="btn-approve-review">Approve &amp; Publish</button>
             </form>
             <form method="post" style="display:inline;">
               {% csrf_token %}
@@ -1140,7 +1140,7 @@
         </div>
         {% empty %}
         <div class="empty-box-card">
-          <span>✓ All customer reviews have been moderated. Zero pending reviews!</span>
+          <span>All customer reviews have been moderated. Zero pending reviews!</span>
         </div>
         {% endfor %}
       </div>
@@ -1158,7 +1158,7 @@
         <div class="approved-review-card">
           <div class="rev-header">
             <strong>{{ rev.user.username }}</strong>
-            <span class="rev-stars">★ {{ rev.rating }}/5</span>
+            <span class="rev-stars">Rating: {{ rev.rating }}/5</span>
           </div>
           <small class="rev-plant">{{ rev.product.name }} · {{ rev.created_at|date:"M d, Y" }}</small>
           <p class="rev-comment">"{{ rev.comment }}"</p>
@@ -1881,7 +1881,7 @@
           Cancel
         </button>
         <button type="submit" style="background: #014e37; color: #ffffff; border: none; padding: 10px 22px; border-radius: 8px; font-size: 13px; font-weight: 700; cursor: pointer; box-shadow: 0 2px 8px rgba(1, 78, 55, 0.25);">
-          ✓ Save Plant Changes
+          Save Plant Changes
         </button>
       </div>
     </form>

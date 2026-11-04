@@ -52,7 +52,7 @@
             </a>
             <span class="meta-dot">•</span>
           {% endif %}
-          <span class="article-read-time">📖 {{ post.reading_time }}</span>
+          <span class="article-read-time"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg> {{ post.reading_time }}</span>
           <span class="meta-dot">•</span>
           <span class="article-date">{{ post.published_at|default:post.created_at|date:"F d, Y" }}</span>
         </div>
@@ -94,7 +94,7 @@
               </a>
             {% endif %}
 
-            <button type="button" class="btn-action-share" onclick="navigator.clipboard.writeText(window.location.href); alert('Article link copied to clipboard! 🌿');">
+            <button type="button" class="btn-action-share" onclick="navigator.clipboard.writeText(window.location.href); alert('Article link copied to clipboard! ');">
               <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
                 <polyline points="16 6 12 2 8 6"></polyline>
@@ -177,7 +177,7 @@
         <!-- Pending Comment Alert for Customer -->
         {% if pending_comments %}
           <div class="pending-comments-notice">
-            <span class="notice-icon">⏳</span>
+            <span class="notice-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
             <div>
               <strong>Your comment was submitted!</strong>
               <p>It is currently awaiting routine review by our nursery botanical staff and will appear publicly shortly.</p>
@@ -196,7 +196,7 @@
                     <strong class="comment-author-name">
                       {{ comment.author.first_name|default:comment.author.username }}
                       {% if comment.author.is_staff %}
-                        <span class="badge-staff-comment">GreenNest Staff 🌱</span>
+                        <span class="badge-staff-comment">GreenNest Staff</span>
                       {% endif %}
                     </strong>
                     <span class="comment-date">{{ comment.created_at|date:"M d, Y" }} at {{ comment.created_at|date:"H:i" }}</span>
@@ -210,7 +210,7 @@
           {% empty %}
             {% if not pending_comments %}
               <div class="no-comments-box">
-                <span class="no-comments-icon">💬</span>
+                <span class="no-comments-icon"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span>
                 <p>No comments yet. Start the conversation!</p>
               </div>
             {% endif %}
