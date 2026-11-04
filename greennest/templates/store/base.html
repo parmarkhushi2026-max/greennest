@@ -242,9 +242,11 @@
     }
   }
 
-  /* 1-Line Strict Navbar Guarantee (No wrapping, no upar-niche) */
+  /* 1-Line Strict Navbar Guarantee (Spacious, elegant, single line) */
   .navigation-bar {
     width: 100% !important;
+    background-color: #ffffff !important;
+    border-bottom: 1px solid #e5e7eb !important;
   }
   .navigation-bar .nav-container {
     display: flex !important;
@@ -253,8 +255,8 @@
     flex-wrap: nowrap !important;
     max-width: 100% !important;
     width: 100% !important;
-    padding: 0 16px !important;
-    gap: 8px !important;
+    padding: 0 24px !important;
+    gap: 16px !important;
   }
   .navigation-bar .nav-list {
     display: flex !important;
@@ -264,7 +266,7 @@
     list-style: none !important;
     margin: 0 !important;
     padding: 0 !important;
-    gap: 2px !important;
+    gap: 8px !important;
     overflow-x: auto !important;
     scrollbar-width: none !important;
     -ms-overflow-style: none !important;
@@ -281,33 +283,39 @@
   .navigation-bar .nav-link {
     display: inline-flex !important;
     align-items: center !important;
-    gap: 4px !important;
-    padding: 11px 9px !important;
-    font-size: 12.5px !important;
+    gap: 6px !important;
+    padding: 10px 14px !important;
+    font-size: 13.5px !important;
     font-weight: 600 !important;
     color: #1f2937 !important;
     white-space: nowrap !important;
-    line-height: 1 !important;
+    line-height: 1.2 !important;
     text-decoration: none !important;
-    transition: all 0.15s ease !important;
+    border-radius: 8px !important;
+    transition: all 0.18s ease !important;
   }
   .navigation-bar .nav-link:hover,
   .navigation-bar .nav-link.active {
     color: #014e37 !important;
-    background-color: #f0f7f3 !important;
-    border-radius: 6px !important;
+    background-color: #eaf4ee !important;
   }
   .navigation-bar .nav-call-badge {
     flex-shrink: 0 !important;
     white-space: nowrap !important;
-    font-size: 12px !important;
-    padding: 6px 14px !important;
+    font-size: 13px !important;
+    font-weight: 700 !important;
+    padding: 8px 18px !important;
+    border-radius: 24px !important;
+    gap: 8px !important;
+    display: inline-flex !important;
+    align-items: center !important;
   }
   @media (max-width: 991px) {
     .navigation-bar.is-open .nav-list {
       flex-direction: column !important;
       overflow-x: visible !important;
       width: 100% !important;
+      gap: 2px !important;
     }
   }
 </style>
