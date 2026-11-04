@@ -362,15 +362,15 @@
     <div class="report-kpi-grid">
       <!-- Delivered Revenue -->
       <div class="report-kpi-card">
-        <div class="kpi-icon-badge">💵</div>
+        <div class="kpi-icon-badge"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"></rect><circle cx="12" cy="12" r="3"></circle><path d="M6 12h.01M18 12h.01"></path></svg></div>
         <div class="kpi-title">Delivered Revenue</div>
         <div class="kpi-value" style="color:#014e37;">₹{{ total_sales }}</div>
-        <div class="kpi-subtext">✓ Realized & Confirmed Cashflow</div>
+        <div class="kpi-subtext">Realized & Confirmed Cashflow</div>
       </div>
 
       <!-- Total Fulfillment Count -->
       <div class="report-kpi-card">
-        <div class="kpi-icon-badge">📦</div>
+        <div class="kpi-icon-badge"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"></path><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path><path d="m3.3 7 8.7 5 8.7-5"></path><line x1="12" y1="22" x2="12" y2="12"></line></svg></div>
         <div class="kpi-title">Fulfilled Shipments</div>
         <div class="kpi-value">{{ delivered_count }}</div>
         <div class="kpi-subtext">{{ total_orders }} total non-cancelled orders</div>
@@ -378,7 +378,7 @@
 
       <!-- Average Order Value -->
       <div class="report-kpi-card">
-        <div class="kpi-icon-badge">📈</div>
+        <div class="kpi-icon-badge"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg></div>
         <div class="kpi-title">Average Order Value (AOV)</div>
         <div class="kpi-value">₹{{ aov }}</div>
         <div class="kpi-subtext">Per delivered plant basket</div>
@@ -386,7 +386,7 @@
 
       <!-- In-Transit Pipeline -->
       <div class="report-kpi-card">
-        <div class="kpi-icon-badge">🚚</div>
+        <div class="kpi-icon-badge"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg></div>
         <div class="kpi-title">Transit Pipeline Revenue</div>
         <div class="kpi-value" style="color:#0284c7;">₹{{ pipeline_revenue }}</div>
         <div class="kpi-subtext">Active packed & in-transit orders</div>

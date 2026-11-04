@@ -662,7 +662,7 @@
               
               <span>Overview & Charts</span>
             </span>
-            <span class="cust-menu-badge">Live</span>
+            
           </button>
 
           <button type="button" class="cust-menu-btn" onclick="switchCustTab('orders', this)">
@@ -670,7 +670,7 @@
               
               <span>My Orders</span>
             </span>
-            <span class="cust-menu-badge">{{ total_orders }}</span>
+            
           </button>
 
           <button type="button" class="cust-menu-btn {% if active_tab == 'reminders' %}active{% endif %}" onclick="switchCustTab('reminders', this)">
@@ -678,7 +678,7 @@
               
               <span>Care Reminders</span>
             </span>
-            <span class="cust-menu-badge">{{ active_reminders_count }}</span>
+            
           </button>
 
           <button type="button" class="cust-menu-btn {% if active_tab == 'profile' %}active{% endif %}" onclick="switchCustTab('profile', this)">
@@ -697,7 +697,7 @@
           <button type="button" class="cust-menu-btn {% if active_tab == 'bookmarks' %}active{% endif %}" onclick="switchCustTab('bookmarks', this)">
             <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"></path></svg>
             <span>Saved Articles</span>
-            <span class="cust-menu-badge">{{ bookmarks_count|default:0 }}</span>
+            
           </button>
 
         </nav>
@@ -723,7 +723,7 @@
                 {% if customer.username == 'visitor' %}
         <div style="background:linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); border:1.5px solid #a7f3d0; border-radius:16px; padding:18px 22px; margin-bottom:22px; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:14px;">
           <div>
-            <span style="font-size:11px; text-transform:uppercase; font-weight:800; color:#047857; letter-spacing:0.06em;">👀 VISITOR EXPLORATION MODE (PUBLIC READ-ONLY)</span>
+            <span style="font-size:11px; text-transform:uppercase; font-weight:800; color:#047857; letter-spacing:0.06em;">VISITOR EXPLORATION MODE (PUBLIC READ-ONLY)</span>
             <h3 style="margin:4px 0 2px; font-size:17px; color:#014e37;">Logged in as Guest Visitor</h3>
             <p style="margin:0; font-size:13px; color:#4b5563;">Browse plant categories, search & filter nursery plants, explore botanical care specs, and read plant-care guides freely.</p>
           </div>
@@ -751,7 +751,7 @@
         <!-- 4 KPI Metrics -->
         <div class="cust-kpi-row">
           <div class="cust-kpi-box">
-            <div class="cust-kpi-icon-circ circ-green">📦</div>
+            <div class="cust-kpi-icon-circ circ-green"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"></path><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path><path d="m3.3 7 8.7 5 8.7-5"></path><line x1="12" y1="22" x2="12" y2="12"></line></svg></div>
             <div>
               <div class="cust-kpi-num">{{ total_orders }}</div>
               <div class="cust-kpi-title">Total Orders</div>
@@ -759,7 +759,7 @@
           </div>
 
           <div class="cust-kpi-box">
-            <div class="cust-kpi-icon-circ circ-blue">🚚</div>
+            <div class="cust-kpi-icon-circ circ-blue"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg></div>
             <div>
               <div class="cust-kpi-num">{{ active_orders }}</div>
               <div class="cust-kpi-title">Active Deliveries</div>
@@ -775,7 +775,7 @@
           </div>
 
           <div class="cust-kpi-box">
-            <div class="cust-kpi-icon-circ circ-amber">💧</div>
+            <div class="cust-kpi-icon-circ circ-amber"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"></path></svg></div>
             <div>
               <div class="cust-kpi-num">{{ active_reminders_count }}</div>
               <div class="cust-kpi-title">Care Schedules</div>
@@ -876,7 +876,7 @@
              TAB 2: ALL ORDERS & TRACKING
              ============================================================ -->
         <section class="cust-pane" id="pane-orders">
-          <h2 style="font-size:20px; font-weight:700; color:#014e37; margin:0 0 16px;">📦 My Orders ({{ total_orders }})</h2>
+          <h2 style="font-size:20px; font-weight:700; color:#014e37; margin:0 0 16px;"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="m7.5 4.27 9 5.15"></path><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"></path><path d="m3.3 7 8.7 5 8.7-5"></path><line x1="12" y1="22" x2="12" y2="12"></line></svg> My Orders ({{ total_orders }})</h2>
           {% for order in orders %}
             <div class="cust-order-card">
               <div class="cust-order-header">
@@ -920,7 +920,7 @@
               <div style="padding:14px 22px;">
                 {% for item in order.items.all %}
                   <div style="display:flex; justify-content:space-between; padding:6px 0; border-bottom:1px dashed #eef2ef; font-size:14px;">
-                    <span>🌱 {{ item.product_name }} <small style="color:#6b7280;">× {{ item.quantity }}</small></span>
+                    <span><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><path d="M11 20A7 7 0 0 1 4 13C4 7 11 2 20 2c0 9-5 16-11 16Z"/><path d="M4 21c2-4 6-7 11-9"/></svg> { item.product_name } <small style="color:#6b7280;">× {{ item.quantity }}</small></span>
                     <strong>₹{{ item.line_total }}</strong>
                   </div>
                 {% endfor %}
@@ -936,7 +936,7 @@
             </div>
           {% empty %}
             <div class="form-card-cust" style="text-align:center; padding:40px;">
-              <div style="font-size:42px; margin-bottom:10px;">🪴</div>
+              <div><svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#059669" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline-block; margin-bottom:10px;"><path d="M10 2v4"/><path d="M14 2v4"/><path d="M6 6h12l-2 14H8L6 6z"/></svg></div>
               <h3 style="color:#014e37; margin:0 0 6px;">No Orders Placed Yet</h3>
               <p style="color:#6b7280; margin:0 0 16px;">Explore our Chennai greenhouse collection of lush indoor & outdoor plants.</p>
               <a href="{% url 'store:home' %}#shop" class="cust-banner-action-btn">Shop Plants Now</a>
@@ -949,7 +949,7 @@
              ============================================================ -->
         <section class="cust-pane {% if active_tab == 'reminders' %}active{% endif %}" id="pane-reminders">
           <div class="form-card-cust">
-            <h3 style="font-size:17px; font-weight:700; color:#014e37; margin:0 0 14px;">🌱 Add a Plant Watering Schedule</h3>
+            <h3 style="font-size:17px; font-weight:700; color:#014e37; margin:0 0 14px;">Add a Plant Watering Schedule</h3>
             <form method="post" action="{% url 'store:customer_dashboard' %}">
               {% csrf_token %}
               <input type="hidden" name="action" value="add_reminder">
@@ -1025,7 +1025,7 @@
           <div style="display:grid; grid-template-columns:1.2fr 1fr; gap:20px;">
             <!-- Profile Form -->
             <div class="form-card-cust">
-              <h3 style="font-size:17px; font-weight:700; color:#014e37; margin:0 0 16px;">👤 Personal Account Info</h3>
+              <h3 style="font-size:17px; font-weight:700; color:#014e37; margin:0 0 16px;">Personal Account Info</h3>
               <form method="post" action="{% url 'store:customer_dashboard' %}">
                 {% csrf_token %}
                 <input type="hidden" name="action" value="update_profile">
@@ -1049,11 +1049,11 @@
 
             <!-- Delivery Info -->
             <div class="form-card-cust">
-              <h3 style="font-size:17px; font-weight:700; color:#014e37; margin:0 0 16px;">📍 Default Delivery Address</h3>
+              <h3 style="font-size:17px; font-weight:700; color:#014e37; margin:0 0 16px;">Default Delivery Address</h3>
               {% if shipping_address %}
                 <div style="background:#f8fafc; border-radius:10px; padding:16px; border:1px solid #e2e8f0; font-size:14px; line-height:1.5;">
                   <strong>{{ customer.first_name|default:customer.username }}</strong><br>
-                  {% if phone %}📞 {{ phone }}<br>{% endif %}
+                  {% if phone %}<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-2px; margin-right:4px;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg> { phone }<br>{% endif %}
                   {{ shipping_address|linebreaksbr }}
                 </div>
               {% else %}
@@ -1067,7 +1067,7 @@
              TAB 5: CARE GUIDES
              ============================================================ -->
         <section class="cust-pane {% if active_tab == 'guides' %}active{% endif %}" id="pane-guides">
-          <h2 style="font-size:20px; font-weight:700; color:#014e37; margin:0 0 16px;">📖 Expert Plant Care Guides</h2>
+          <h2 style="font-size:20px; font-weight:700; color:#014e37; margin:0 0 16px;">Expert Plant Care Guides</h2>
           <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:16px;">
             {% for g in guides %}
               <div class="form-card-cust" style="display:flex; flex-direction:column; justify-content:space-between;">
@@ -1085,7 +1085,7 @@
         <section class="cust-pane {% if active_tab == 'bookmarks' %}active{% endif %}" id="pane-bookmarks">
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
             <div>
-              <h2 style="font-size:20px; font-weight:700; color:#014e37; margin:0 0 4px;">🔖 My Saved Journal Articles</h2>
+              <h2 style="font-size:20px; font-weight:700; color:#014e37; margin:0 0 4px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-3px; margin-right:6px;"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg> My Saved Journal Articles</h2>
               <p style="color:#5a6a64; font-size:14px; margin:0;">Your bookmarked plant guides, growing wisdom, and styling notes.</p>
             </div>
             <a href="{% url 'store:journal_list' %}" class="cust-foot-link" style="padding:8px 14px; border:1px solid #014e37; color:#014e37; border-radius:8px; font-weight:700; text-decoration:none;">Browse Journal ↗</a>
@@ -1123,7 +1123,7 @@
             </div>
           {% else %}
             <div style="text-align:center; padding:48px 20px; background:#fafcfb; border:1px dashed #d1e2d8; border-radius:16px;">
-              <span style="font-size:40px; display:block; margin-bottom:12px;">🔖</span>
+              <div style="margin-bottom:12px;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:inline; vertical-align:-3px; margin-right:6px;"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></div>
               <h3 style="font-size:18px; font-weight:700; color:#111827; margin:0 0 6px 0;">No saved articles yet</h3>
               <p style="color:#6b7280; font-size:14px; margin:0 0 20px 0;">Browse our Plant Journal and click the bookmark icon on any guide to save it here for fast reading.</p>
               <a href="{% url 'store:journal_list' %}" class="btn-green-main" style="padding:10px 24px; font-size:14px; text-decoration:none; display:inline-block;">Explore Plant Journal →</a>
