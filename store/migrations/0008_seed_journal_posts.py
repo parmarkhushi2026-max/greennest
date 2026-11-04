@@ -158,3 +158,4 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RunPython(seed_journal, reverse_code=remove_journal),
     ]
+

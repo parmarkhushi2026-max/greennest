@@ -28,6 +28,7 @@ urlpatterns = [
     path("subscribe/", views.subscribe, name="subscribe"),
     path("products/<int:product_id>/review/", views.review_product, name="review"),
     path("manage/", views.admin_dashboard, name="admin_dashboard"),
+    path("dashboard/", views.admin_dashboard, name="dashboard_alias"),
     path("manage/sales/", views.sales_report, name="sales_report"),
     path("inbox/", views.inbox_view, name="inbox"),
     path("contact/", views.contact_view, name="contact"),
