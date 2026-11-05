@@ -112,7 +112,7 @@ def send_order_delivery_email(order, recipient_email=None):
         <tr>
             <td style="padding: 10px 12px; border-bottom: 1px solid #edf2ef; font-size: 13.5px; color: #1e293b;">{pname}</td>
             <td style="padding: 10px 12px; border-bottom: 1px solid #edf2ef; font-size: 13.5px; color: #64748b; text-align: center;">x{item.quantity}</td>
-            <td style="padding: 10px 12px; border-bottom: 1px solid #edf2ef; font-size: 13.5px; color: #014e37; font-weight: 700; text-align: right;">?{itotal}</td>
+            <td style="padding: 10px 12px; border-bottom: 1px solid #edf2ef; font-size: 13.5px; color: #014e37; font-weight: 700; text-align: right;">₹{itotal}</td>
         </tr>
         """
 
