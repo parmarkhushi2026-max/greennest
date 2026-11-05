@@ -996,10 +996,19 @@ def admin_dashboard(request):
             order = get_object_or_404(Order, pk=order_id)
             if new_status in Order.Status.values:
                 order.status = new_status
-                if new_status == Order.Status.DELIVERED and order.payment_method == Order.PaymentMethod.COD:
-                    order.payment_status = Order.PaymentStatus.PAID
-                order.save()
-                messages.success(request, f"Order #{order.tracking_code} status updated to '{order.get_status_display()}'.")
+                if new_status == Order.Status.DELIVERED:
+                    if order.payment_method == Order.PaymentMethod.COD:
+                        order.payment_status = Order.PaymentStatus.PAID
+                    order.save()
+                    try:
+                        from store.email_utils import send_order_delivery_email
+                        send_order_delivery_email(order)
+                        messages.success(request, f"Order #{order.tracking_code} marked as Delivered! Real delivery confirmation email dispatched to customer.")
+                    except Exception as mail_e:
+                        messages.success(request, f"Order #{order.tracking_code} status updated to Delivered.")
+                else:
+                    order.save()
+                    messages.success(request, f"Order #{order.tracking_code} status updated to '{order.get_status_display()}'.")
             return redirect(f"{reverse('store:admin_dashboard')}?tab=orders")
 
         # 7. Customer Inquiries Management
