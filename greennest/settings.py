@@ -88,7 +88,7 @@ LOGIN_URL = "store:login"
 LOGOUT_REDIRECT_URL = "store:home"
 
 # ==============================================================================
-# EMAIL CONFIGURATION (Brevo / Sendinblue SMTP Relay)
+# EMAIL CONFIGURATION (Google Gmail SMTP Relay - Real Direct Delivery)
 # ==============================================================================
 import socket
 orig_getaddrinfo = socket.getaddrinfo
@@ -99,12 +99,12 @@ def getaddrinfo_ipv4(host, port, family=0, type=0, proto=0, flags=0):
 socket.getaddrinfo = getaddrinfo_ipv4
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp-relay.brevo.com")
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "smtp.gmail.com")
 EMAIL_PORT = int(os.environ.get("EMAIL_PORT", 587))
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "c16495001@smtp-brevo.com")
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "khushiparmar4037@gmail.com")
 EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
-DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "Green Nest Nursery <parmarkhushi2026@gmail.com>")
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "Green Nest Nursery <khushiparmar4037@gmail.com>")
 
 # Razorpay Payment Gateway Settings
 RAZORPAY_KEY_ID = "rzp_test_greenNestStore"
