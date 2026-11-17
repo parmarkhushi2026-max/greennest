@@ -5,6 +5,13 @@
 {% block extra_css %}
   <link rel="stylesheet" href="{% static 'storefront/css/auth.css' %}">
   <style>
+    /* HIDE NAVBAR & BOTTOM NAV ON REGISTER */
+    .navigation-bar,
+    .gn-bottom-nav,
+    .gn-mobile-bottom-nav,
+    .mobile-bottom-nav {
+      display: none !important;
+    }
     .auth-page-wrap {
       padding: 48px 16px 80px;
       background: linear-gradient(180deg, #f0f7f3 0%, #fbfdfc 60%, #ffffff 100%);
@@ -195,6 +202,33 @@
     }
   </style>
 {% endblock %}
+
+{% block site_header %}
+  <!-- Minimalist Clean Header for Register Page (No Navigation Bar) -->
+  <header class="header-main" style="background: #ffffff; border-bottom: 1px solid #e5e7eb; padding: 14px 0;">
+    <div class="theme-container" style="display: flex; justify-content: space-between; align-items: center;">
+      <!-- Logo -->
+      <a class="header-logo" href="{% url 'store:home' %}" aria-label="Green Nest Nursery home" style="text-decoration: none; display: flex; align-items: center; gap: 10px;">
+        <div class="logo-leaf-icon" aria-hidden="true" style="width: 36px; height: 36px; background: #014e37; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: #fff;">
+          <svg viewBox="0 0 36 36" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M30 6C17 6 7 11 7 21c0 5.5 4 9 9 9 10.5 0 14-11 14-24Z" fill="#10b981" stroke="#10b981" />
+            <path d="M6 30c4-7.5 9.5-12 17-15.5" stroke="#ffffff" stroke-width="2.2" />
+          </svg>
+        </div>
+        <div class="logo-text-block">
+          <span class="logo-title" style="font-size: 1.25rem; font-weight: 800; color: #014e37; display: block; line-height: 1.1;">Green Nest</span>
+          <span class="logo-subtitle" style="font-size: 0.65rem; font-weight: 700; color: #64748b; letter-spacing: 0.12em; text-transform: uppercase;">NURSERY CHENNAI</span>
+        </div>
+      </a>
+
+      <!-- Quick Back to Store Link -->
+      <a href="{% url 'store:home' %}" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.88rem; font-weight: 600; color: #014e37; text-decoration: none; background: #eaf4ee; padding: 8px 16px; border-radius: 20px; border: 1px solid #a3d9bc; transition: all 0.2s ease;">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+        <span>Back to Store</span>
+      </a>
+    </div>
+  </header>
+{% endblock site_header %}
 
 {% block content %}
 <div class="auth-page-wrap">
