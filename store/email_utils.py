@@ -43,7 +43,7 @@ def send_order_receipt_email(order, recipient_email=None):
         recipient_email = f"{order.user.username if order.user else 'customer'}@greennest.local"
 
     subject = f"Receipt & Order Confirmation - #{order.tracking_code} | Green Nest Nursery"
-    from_email = getattr(settings, "DEFAULT_FROM_EMAIL", "Green Nest Nursery <hello@greennest.local>")
+    from_email = getattr(settings, "DEFAULT_FROM_EMAIL", "Green Nest Nursery <khushiparmar4037@gmail.com>")
 
     try:
         html_content = render_order_receipt_html(order)
@@ -98,10 +98,10 @@ def send_order_delivery_email(order, recipient_email=None):
         if order.user and order.user.email:
             recipient_email = order.user.email
     if not recipient_email:
-        recipient_email = getattr(settings, "DEFAULT_FROM_EMAIL", "parmarkhushi2026@gmail.com")
+        recipient_email = getattr(settings, "DEFAULT_FROM_EMAIL", "khushiparmar4037@gmail.com")
 
     subject = f"Delivered: Your Green Nest Order #{order.tracking_code} Has Arrived! - Green Nest Nursery"
-    from_email = getattr(settings, "DEFAULT_FROM_EMAIL", "Green Nest Nursery <parmarkhushi2026@gmail.com>")
+    from_email = getattr(settings, "DEFAULT_FROM_EMAIL", "Green Nest Nursery <khushiparmar4037@gmail.com>")
     customer_name = order.customer_name or (order.user.first_name if order.user else "Plant Parent")
 
     items_html = ""
