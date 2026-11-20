@@ -9,6 +9,7 @@
 </p>
 
 <p align="center">
+  <a href="#-project-team--contributors"><img src="https://img.shields.io/badge/Team-Khushi%20Parmar%20%26%20Aastha%20Prajapati-014e37?style=flat-square&logo=github" alt="Team"></a>
   <a href="#-key-features"><img src="https://img.shields.io/badge/Features-eCommerce%20%2B%20Care%20Platform-014e37?style=flat-square" alt="Features"></a>
   <a href="#-tech-stack"><img src="https://img.shields.io/badge/Backend-Django%206.0%20%7C%20Python%203.13-10b981?style=flat-square" alt="Tech Stack"></a>
   <a href="#-real-email-system"><img src="https://img.shields.io/badge/Email-Google%20SMTP%20Relay-34d399?style=flat-square" alt="Email System"></a>
@@ -176,6 +177,17 @@ The automated transactional email system uses **Django's `django.core.mail`** fr
 
 ---
 
+## 👥 Project Team & Contributors
+
+This project is a collaborative academic group project co-developed by:
+
+| Contributor | GitHub Profile | Responsibilities |
+| :--- | :--- | :--- |
+| **Khushi Parmar** | [![GitHub](https://img.shields.io/badge/GitHub-parmarkhushi2026--max-014e37?style=flat&logo=github)](https://github.com/parmarkhushi2026-max) | Full-Stack Architecture, Django MTV Setup, Google SMTP Mail Relay, Admin & Sales Engine |
+| **Aastha Prajapati** | [![GitHub](https://img.shields.io/badge/GitHub-prajapatiaastha844--png-10b981?style=flat&logo=github)](https://github.com/prajapatiaastha844-png) | Botanical Storefront UI/UX, Plant Catalog Schema, Care Guides & Responsive Aesthetics |
+
+---
+
 ## 📜 License & Acknowledgments
 
-This project is open-source and built for botanical nursery management and eCommerce study. Developed with passion by **Khushi Parmar** and the Green Nest development team.
+This project is open-source and built for botanical nursery management and eCommerce study. Developed with passion as a group project by **Khushi Parmar** and **Aastha Prajapati**.
